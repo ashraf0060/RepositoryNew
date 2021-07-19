@@ -1,0 +1,45 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="vocaplusDataSet1" targetNamespace="http://tempuri.org/vocaplusDataSet1.xsd" xmlns:mstns="http://tempuri.org/vocaplusDataSet1.xsd" xmlns="http://tempuri.org/vocaplusDataSet1.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections>
+          <Connection AppSettingsObjectName="MySettings" AppSettingsPropertyName="vocaplusConnectionString" ConnectionStringObject="" IsAppSettingsProperty="true" Modifier="Assembly" Name="vocaplusConnectionString (MySettings)" ParameterPrefix="@" PropertyReference="ApplicationSettings.VOCAPlus.My.MySettings.GlobalReference.Default.vocaplusConnectionString" Provider="System.Data.SqlClient" />
+        </Connections>
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="vocaplusDataSet1" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="vocaplusDataSet1" msprop:Generator_UserDSName="vocaplusDataSet1">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="ExportView2" msprop:Generator_TableClassName="ExportView2DataTable" msprop:Generator_TableVarName="tableExportView2" msprop:Generator_RowChangedName="ExportView2RowChanged" msprop:Generator_TablePropName="ExportView2" msprop:Generator_RowDeletingName="ExportView2RowDeleting" msprop:Generator_RowChangingName="ExportView2RowChanging" msprop:Generator_RowEvHandlerName="ExportView2RowChangeEventHandler" msprop:Generator_RowDeletedName="ExportView2RowDeleted" msprop:Generator_RowClassName="ExportView2Row" msprop:Generator_UserTableName="ExportView2" msprop:Generator_RowEvArgName="ExportView2RowChangeEvent">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="TkupTkSql" msprop:Generator_ColumnVarNameInTable="columnTkupTkSql" msprop:Generator_ColumnPropNameInRow="TkupTkSql" msprop:Generator_ColumnPropNameInTable="TkupTkSqlColumn" msprop:Generator_UserColumnName="TkupTkSql" type="xs:int" minOccurs="0" />
+              <xs:element name="TkupSTime" msprop:Generator_ColumnVarNameInTable="columnTkupSTime" msprop:Generator_ColumnPropNameInRow="TkupSTime" msprop:Generator_ColumnPropNameInTable="TkupSTimeColumn" msprop:Generator_UserColumnName="TkupSTime" type="xs:dateTime" />
+              <xs:element name="TkupTxt" msprop:Generator_ColumnVarNameInTable="columnTkupTxt" msprop:Generator_ColumnPropNameInRow="TkupTxt" msprop:Generator_ColumnPropNameInTable="TkupTxtColumn" msprop:Generator_UserColumnName="TkupTxt">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="2147483647" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="UsrRealNm" msprop:Generator_ColumnVarNameInTable="columnUsrRealNm" msprop:Generator_ColumnPropNameInRow="UsrRealNm" msprop:Generator_ColumnPropNameInTable="UsrRealNmColumn" msprop:Generator_UserColumnName="UsrRealNm">
+                <xs:simpleType>
+                  <xs:restriction base="xs:string">
+                    <xs:maxLength value="50" />
+                  </xs:restriction>
+                </xs:simpleType>
+              </xs:element>
+              <xs:element name="TkupSQL" msprop:Generator_ColumnVarNameInTable="columnTkupSQL" msprop:Generator_ColumnPropNameInRow="TkupSQL" msprop:Generator_ColumnPropNameInTable="TkupSQLColumn" msprop:Generator_UserColumnName="TkupSQL" type="xs:string" minOccurs="0" />
+              <xs:element name="UCatLvl" msprop:Generator_ColumnVarNameInTable="columnUCatLvl" msprop:Generator_ColumnPropNameInRow="UCatLvl" msprop:Generator_ColumnPropNameInTable="UCatLvlColumn" msprop:Generator_UserColumnName="UCatLvl" type="xs:string" minOccurs="0" />
+              <xs:element name="EvSusp" msprop:Generator_ColumnVarNameInTable="columnEvSusp" msprop:Generator_ColumnPropNameInRow="EvSusp" msprop:Generator_ColumnPropNameInTable="EvSuspColumn" msprop:Generator_UserColumnName="EvSusp" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
