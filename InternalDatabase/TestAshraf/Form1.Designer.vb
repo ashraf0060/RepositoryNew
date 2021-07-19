@@ -1,0 +1,188 @@
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
+Partial Class Form1
+    Inherits System.Windows.Forms.Form
+
+    'Form overrides dispose to clean up the component list.
+    <System.Diagnostics.DebuggerNonUserCode()>
+    Protected Overrides Sub Dispose(ByVal disposing As Boolean)
+        Try
+            If disposing AndAlso components IsNot Nothing Then
+                components.Dispose()
+            End If
+        Finally
+            MyBase.Dispose(disposing)
+        End Try
+    End Sub
+
+    'Required by the Windows Form Designer
+    Private components As System.ComponentModel.IContainer
+
+    'NOTE: The following procedure is required by the Windows Form Designer
+    'It can be modified using the Windows Form Designer.  
+    'Do not modify it using the code editor.
+    <System.Diagnostics.DebuggerStepThrough()>
+    Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(Form1))
+        Me.WebBrowser2 = New System.Windows.Forms.WebBrowser()
+        Me.ContextMenuStrip1 = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.FilterToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.RemoveFilterToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.MaxmizeToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripTextBox1 = New System.Windows.Forms.ToolStripTextBox()
+        Me.AddToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.WebBrowser1 = New System.Windows.Forms.WebBrowser()
+        Me.FlowLayoutPanel1 = New System.Windows.Forms.FlowLayoutPanel()
+        Me.WebBrowser3 = New System.Windows.Forms.WebBrowser()
+        Me.WebBrowser4 = New System.Windows.Forms.WebBrowser()
+        Me.ToolStripMenuItem1 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripMenuItem2 = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ContextMenuStrip1.SuspendLayout()
+        Me.FlowLayoutPanel1.SuspendLayout()
+        Me.SuspendLayout()
+        '
+        'WebBrowser2
+        '
+        Me.WebBrowser2.ContextMenuStrip = Me.ContextMenuStrip1
+        Me.WebBrowser2.IsWebBrowserContextMenuEnabled = False
+        Me.WebBrowser2.Location = New System.Drawing.Point(232, 0)
+        Me.WebBrowser2.Margin = New System.Windows.Forms.Padding(0)
+        Me.WebBrowser2.MinimumSize = New System.Drawing.Size(20, 20)
+        Me.WebBrowser2.Name = "WebBrowser2"
+        Me.WebBrowser2.ScrollBarsEnabled = False
+        Me.WebBrowser2.Size = New System.Drawing.Size(284, 202)
+        Me.WebBrowser2.TabIndex = 2
+        Me.WebBrowser2.Url = New System.Uri("", System.UriKind.Relative)
+        '
+        'ContextMenuStrip1
+        '
+        Me.ContextMenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ToolStripMenuItem1, Me.RemoveFilterToolStripMenuItem, Me.MaxmizeToolStripMenuItem, Me.ToolStripTextBox1, Me.AddToolStripMenuItem, Me.ToolStripMenuItem2, Me.FilterToolStripMenuItem})
+        Me.ContextMenuStrip1.Name = "ContextMenuStrip1"
+        Me.ContextMenuStrip1.Size = New System.Drawing.Size(181, 183)
+        '
+        'FilterToolStripMenuItem
+        '
+        Me.FilterToolStripMenuItem.Name = "FilterToolStripMenuItem"
+        Me.FilterToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.FilterToolStripMenuItem.Text = "Close"
+        '
+        'RemoveFilterToolStripMenuItem
+        '
+        Me.RemoveFilterToolStripMenuItem.Name = "RemoveFilterToolStripMenuItem"
+        Me.RemoveFilterToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.RemoveFilterToolStripMenuItem.Text = "Minimize"
+        '
+        'MaxmizeToolStripMenuItem
+        '
+        Me.MaxmizeToolStripMenuItem.Name = "MaxmizeToolStripMenuItem"
+        Me.MaxmizeToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.MaxmizeToolStripMenuItem.Text = "Maxmize"
+        '
+        'ToolStripTextBox1
+        '
+        Me.ToolStripTextBox1.Font = New System.Drawing.Font("Segoe UI", 9.0!)
+        Me.ToolStripTextBox1.Name = "ToolStripTextBox1"
+        Me.ToolStripTextBox1.Size = New System.Drawing.Size(100, 23)
+        '
+        'AddToolStripMenuItem
+        '
+        Me.AddToolStripMenuItem.Name = "AddToolStripMenuItem"
+        Me.AddToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.AddToolStripMenuItem.Text = "Add"
+        '
+        'WebBrowser1
+        '
+        Me.WebBrowser1.ContextMenuStrip = Me.ContextMenuStrip1
+        Me.WebBrowser1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.WebBrowser1.IsWebBrowserContextMenuEnabled = False
+        Me.WebBrowser1.Location = New System.Drawing.Point(516, 0)
+        Me.WebBrowser1.Margin = New System.Windows.Forms.Padding(0)
+        Me.WebBrowser1.MinimumSize = New System.Drawing.Size(20, 20)
+        Me.WebBrowser1.Name = "WebBrowser1"
+        Me.WebBrowser1.ScrollBarsEnabled = False
+        Me.WebBrowser1.Size = New System.Drawing.Size(284, 202)
+        Me.WebBrowser1.TabIndex = 1
+        Me.WebBrowser1.Url = New System.Uri("", System.UriKind.Relative)
+        '
+        'FlowLayoutPanel1
+        '
+        Me.FlowLayoutPanel1.Controls.Add(Me.WebBrowser1)
+        Me.FlowLayoutPanel1.Controls.Add(Me.WebBrowser2)
+        Me.FlowLayoutPanel1.Controls.Add(Me.WebBrowser3)
+        Me.FlowLayoutPanel1.Controls.Add(Me.WebBrowser4)
+        Me.FlowLayoutPanel1.Dock = System.Windows.Forms.DockStyle.Fill
+        Me.FlowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft
+        Me.FlowLayoutPanel1.Location = New System.Drawing.Point(0, 0)
+        Me.FlowLayoutPanel1.Name = "FlowLayoutPanel1"
+        Me.FlowLayoutPanel1.Size = New System.Drawing.Size(800, 450)
+        Me.FlowLayoutPanel1.TabIndex = 3
+        '
+        'WebBrowser3
+        '
+        Me.WebBrowser3.ContextMenuStrip = Me.ContextMenuStrip1
+        Me.WebBrowser3.IsWebBrowserContextMenuEnabled = False
+        Me.WebBrowser3.Location = New System.Drawing.Point(516, 202)
+        Me.WebBrowser3.Margin = New System.Windows.Forms.Padding(0)
+        Me.WebBrowser3.MinimumSize = New System.Drawing.Size(20, 20)
+        Me.WebBrowser3.Name = "WebBrowser3"
+        Me.WebBrowser3.ScrollBarsEnabled = False
+        Me.WebBrowser3.Size = New System.Drawing.Size(284, 202)
+        Me.WebBrowser3.TabIndex = 3
+        Me.WebBrowser3.Url = New System.Uri("", System.UriKind.Relative)
+        '
+        'WebBrowser4
+        '
+        Me.WebBrowser4.ContextMenuStrip = Me.ContextMenuStrip1
+        Me.WebBrowser4.IsWebBrowserContextMenuEnabled = False
+        Me.WebBrowser4.Location = New System.Drawing.Point(232, 202)
+        Me.WebBrowser4.Margin = New System.Windows.Forms.Padding(0)
+        Me.WebBrowser4.MinimumSize = New System.Drawing.Size(20, 20)
+        Me.WebBrowser4.Name = "WebBrowser4"
+        Me.WebBrowser4.ScrollBarsEnabled = False
+        Me.WebBrowser4.Size = New System.Drawing.Size(284, 202)
+        Me.WebBrowser4.TabIndex = 4
+        Me.WebBrowser4.Url = New System.Uri("", System.UriKind.Relative)
+        '
+        'ToolStripMenuItem1
+        '
+        Me.ToolStripMenuItem1.Name = "ToolStripMenuItem1"
+        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(180, 22)
+        Me.ToolStripMenuItem1.Text = "Refresh"
+        '
+        'ToolStripMenuItem2
+        '
+        Me.ToolStripMenuItem2.Name = "ToolStripMenuItem2"
+        Me.ToolStripMenuItem2.Size = New System.Drawing.Size(180, 22)
+        Me.ToolStripMenuItem2.Text = "Remove"
+        '
+        'Form1
+        '
+        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
+        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
+        Me.ClientSize = New System.Drawing.Size(800, 450)
+        Me.ControlBox = False
+        Me.Controls.Add(Me.FlowLayoutPanel1)
+        Me.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
+        Me.Name = "Form1"
+        Me.ContextMenuStrip1.ResumeLayout(False)
+        Me.ContextMenuStrip1.PerformLayout()
+        Me.FlowLayoutPanel1.ResumeLayout(False)
+        Me.ResumeLayout(False)
+
+    End Sub
+
+    Friend WithEvents WebBrowser2 As WebBrowser
+    Friend WithEvents ContextMenuStrip1 As ContextMenuStrip
+    Friend WithEvents FilterToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents RemoveFilterToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents MaxmizeToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents FlowLayoutPanel1 As FlowLayoutPanel
+    Friend WithEvents WebBrowser1 As WebBrowser
+    Friend WithEvents WebBrowser3 As WebBrowser
+    Friend WithEvents WebBrowser4 As WebBrowser
+    Friend WithEvents AddToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ToolStripTextBox1 As ToolStripTextBox
+    Friend WithEvents ToolStripMenuItem1 As ToolStripMenuItem
+    Friend WithEvents ToolStripMenuItem2 As ToolStripMenuItem
+End Class

@@ -1,0 +1,36 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="My" GeneratedClassName="MySettings" UseMySettingsClassName="true">
+  <Profiles />
+  <Settings>
+    <Setting Name="StmpH" Type="System.String" Scope="User">
+      <Value Profile="(Default)">mail.jubar.me</Value>
+    </Setting>
+    <Setting Name="StmpP" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Hemonad105046!</Value>
+    </Setting>
+    <Setting Name="ExUNm" Type="System.String" Scope="User">
+      <Value Profile="(Default)">egyptpost\acb</Value>
+    </Setting>
+    <Setting Name="FEmail" Type="System.String" Scope="User">
+      <Value Profile="(Default)">artiix@jubar.me</Value>
+    </Setting>
+    <Setting Name="StmpR" Type="System.String" Scope="User">
+      <Value Profile="(Default)">587</Value>
+    </Setting>
+    <Setting Name="PopR" Type="System.String" Scope="User">
+      <Value Profile="(Default)">110</Value>
+    </Setting>
+    <Setting Name="StmpU" Type="System.String" Scope="User">
+      <Value Profile="(Default)">artiix@jubar.me</Value>
+    </Setting>
+    <Setting Name="ExPass" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Hemonad105046</Value>
+    </Setting>
+    <Setting Name="ExEmail" Type="System.String" Scope="User">
+      <Value Profile="(Default)">mrs@egyptpost.org</Value>
+    </Setting>
+    <Setting Name="test" Type="System.String" Scope="User">
+      <Value Profile="(Default)">test</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

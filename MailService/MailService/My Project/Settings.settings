@@ -1,0 +1,21 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="My" GeneratedClassName="MySettings" UseMySettingsClassName="true">
+  <Profiles />
+  <Settings>
+    <Setting Name="StmpH" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Mail.jubar.me</Value>
+    </Setting>
+    <Setting Name="StmpR" Type="System.String" Scope="User">
+      <Value Profile="(Default)">587</Value>
+    </Setting>
+    <Setting Name="StmpU" Type="System.String" Scope="User">
+      <Value Profile="(Default)">ashraf@jubar.me</Value>
+    </Setting>
+    <Setting Name="StmpP" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Hemonad105046!</Value>
+    </Setting>
+    <Setting Name="FEmail" Type="System.String" Scope="User">
+      <Value Profile="(Default)">ashraf@jubar.me</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
