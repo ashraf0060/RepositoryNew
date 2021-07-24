@@ -320,7 +320,7 @@ Partial Class MainWindow
         'AutoMail
         '
         Me.AutoMail.Enabled = True
-        Me.AutoMail.Interval = 5000
+        Me.AutoMail.Interval = 500000
         '
         'MainWindow
         '

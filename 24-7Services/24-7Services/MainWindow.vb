@@ -12,6 +12,8 @@ Public Class MainWindow
     Dim EsclTsk As New Thread(AddressOf EscSub)
     Dim sss As Integer = 0
     Dim MailTbl As New DataTable
+    Public Mail_ As New Stru.StruMail
+    Dim ExrtErr As String
 
     Private Sub MainWindow_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         CombHour.Text = Now.Hour
@@ -153,31 +155,40 @@ SendMail_:
         Dim fff As DateTime = Format(ServrTime(), "HH:mm:ss")
         WdysTable.Rows.Clear()
         If GetTbl("select HDate, HDay, HDayW, HDy from CDHolDay where HDate = (Select CONVERT(nvarchar, GetDate(),111) as Now_)", WdysTable) = Nothing Then
-            'If Format(ServrTime(), "HH:mm:ss") > #1/1/0001 04:00:00 PM# OrElse Format(ServrTime(), "HH:mm:ss") < #1/1/0001 08:00:00 AM# OrElse WdysTable.Rows(0).Item("HDy") = 0 Then
-            'TimerEsc.Stop()
-            'DataGridView1.DataSource = ""
-            'EscAtoTable.Rows.Clear()
-            'If GetTbl("SELECT TkID, TkClNm, TkDtStart, TkRecieveDt, TkClsStatus, SrcNm, TkEscTyp, LstUpdtTime, TkupTxt, dbo.Int_user.UsrRealNm AS LstUpUsr, ProdKNm, PrdNm, CompNm, TkupEvtId, TkFolw, TkupSendEsc, TkupSQL FROM dbo.TicketsAll INNER JOIN dbo.TkEvent ON TkSQL = TkupTkSql INNER JOIN dbo.TicLstEv ON TkupSQL = dbo.TicLstEv.LstSqlEv INNER JOIN dbo.CDEvent ON TkupEvtId = dbo.CDEvent.EvId INNER JOIN dbo.Int_user ON TkupUser = dbo.Int_user.UsrId
-            'WHERE (TkupEvtId = 902) OR (TkupEvtId = 903)", EscAtoTable) = Nothing Then
-            '    If EscAtoTable.Rows.Count > 0 Then
-            '        Invoke(Sub() DataGridView1.DataSource = EscAtoTable)
-            '        For ggg As Integer = 0 To DataGridView1.Columns.Count - 1
-            '            Invoke(Sub() DataGridView1.Columns(ggg).Width = 50)
-            '        Next
-            '        Invoke(Sub() DataGridView1.Columns(7).Width = 130)
-            '    End If
-            'End If
-            'Span_ = TimeSpan.Parse("00:01:00")
-            'nxt = " On " & Now.Add(TimeSpan.Parse("00:01:00"))
-            'Invoke(Sub() TimerEsc.Start())
-            'Else
-            Dim EsclTsk As New Thread(AddressOf EscSub)
-            EsclTsk.IsBackground = True
-            TimerEsc.Stop()
-            TimerSecnods.Stop()
-            EsclTsk.Start()
-            'End If
+            If WdysTable.Rows(0).Item("HDy") = 1 Then
+                If Format(ServrTime(), "HH:mm:ss") < #1/1/0001 04:00:00 PM# OrElse Format(ServrTime(), "HH:mm:ss") > #1/1/0001 09:00:00 AM# Then
+                    TimerEsc.Stop()
+                    ''    DataGridView1.DataSource = ""
+                    ''    EscAtoTable.Rows.Clear()
+                    ''    If GetTbl("SELECT TkID, TkClNm, TkDtStart, TkRecieveDt, TkClsStatus, SrcNm, TkEscTyp, LstUpdtTime, TkupTxt, dbo.Int_user.UsrRealNm AS LstUpUsr, ProdKNm, PrdNm, CompNm, TkupEvtId, TkFolw, TkupSendEsc, TkupSQL FROM dbo.TicketsAll INNER JOIN dbo.TkEvent ON TkSQL = TkupTkSql INNER JOIN dbo.TicLstEv ON TkupSQL = dbo.TicLstEv.LstSqlEv INNER JOIN dbo.CDEvent ON TkupEvtId = dbo.CDEvent.EvId INNER JOIN dbo.Int_user ON TkupUser = dbo.Int_user.UsrId
+                    ''WHERE (TkupEvtId = 902) OR (TkupEvtId = 903)", EscAtoTable) = Nothing Then
+                    ''        If EscAtoTable.Rows.Count > 0 Then
+                    ''            Invoke(Sub() DataGridView1.DataSource = EscAtoTable)
+                    ''            For ggg As Integer = 0 To DataGridView1.Columns.Count - 1
+                    ''                Invoke(Sub() DataGridView1.Columns(ggg).Width = 50)
+                    ''            Next
+                    ''            Invoke(Sub() DataGridView1.Columns(7).Width = 130)
+                    ''        End If
+                    ''    End If
+
+                    Dim EsclTsk As New Thread(AddressOf EscSub)
+                    EsclTsk.IsBackground = True
+                    TimerEsc.Stop()
+                    TimerSecnods.Stop()
+                    EsclTsk.Start()
+                Else
+                    Span_ = TimeSpan.Parse("00:01:00")
+                    nxt = " On " & Now.Add(TimeSpan.Parse("00:01:00"))
+                    Invoke(Sub() TimerEsc.Start())
+                End If
+            Else
+
+            End If
+
         End If
+
+
+
 
     End Sub
     Private Sub EscSub()
@@ -396,13 +407,15 @@ Done_:
         TimerSecnods.Stop()
         NTFlTsk.Start()
     End Sub
+    Private BdyStrt As String
+    Private BdyEnd As String
     Private Sub AutoMail_Tick(sender As Object, e As EventArgs) Handles AutoMail.Tick
 #Region "Body"
-        Dim BdyStrt As String = "<p dir=" & Chr(34) & "RTL" & Chr(34) & " style='margin-top:0cm;margin-right:36.0pt;margin-bottom:8.0pt;margin-left:0cm;line-height:107%;font-size:15px;font-family:" & Chr(34) & "Calibri" & Chr(34) & ",sans-serif;text-align:right;text-indent:-18.0pt;'><strong><span style='font-size:19px;line-height:107%;font-family:" & Chr(34) & "Times New Roman" & Chr(34) & ",serif;'>نظام البريد التلقائي لتطبيق&nbsp;</span></strong><strong><span dir=" & Chr(34) & "LTR" & Chr(34) & " style='font-size:24px;line-height:107%;font-family:" & Chr(34) & "Bahnschrift Condensed" & Chr(34) & ",sans-serif;color:#0070C0;'>VOCA Plus</span></strong></p>
+        BdyStrt = "<p dir=" & Chr(34) & "RTL" & Chr(34) & " style='margin-top:0cm;margin-right:36.0pt;margin-bottom:8.0pt;margin-left:0cm;line-height:107%;font-size:15px;font-family:" & Chr(34) & "Calibri" & Chr(34) & ",sans-serif;text-align:right;text-indent:-18.0pt;'><strong><span style='font-size:19px;line-height:107%;font-family:" & Chr(34) & "Times New Roman" & Chr(34) & ",serif;'>نظام البريد التلقائي لتطبيق&nbsp;</span></strong><strong><span dir=" & Chr(34) & "LTR" & Chr(34) & " style='font-size:24px;line-height:107%;font-family:" & Chr(34) & "Bahnschrift Condensed" & Chr(34) & ",sans-serif;color:#0070C0;'>VOCA Plus</span></strong></p>
 <p dir= " & Chr(34) & "RTL" & Chr(34) & " style='margin-top:0cm;margin-right:36.0pt;margin-bottom:8.0pt;margin-left:0cm;line-height:107%;font-size:15px;font-family:" & Chr(34) & "Calibri" & Chr(34) & ",sans-serif;text-align:right;text-indent:-18.0pt;'><strong><span dir=" & Chr(34) & "RTL" & Chr(34) & " style='font-size:19px;line-height:107%;font-family:" & Chr(34) & "Times New Roman" & Chr(34) & ",serif;'>&nbsp;</span></strong></p>
 <div style='margin-top:0cm;margin-right:0cm;margin-bottom:8.0pt;margin-left:0cm;line-height:107%;font-size:15px;font-family:" & Chr(34) & "Calibri" & Chr(34) & ",sans-serif;'>
     <ul style=" & Chr(34) & "font-size 20px;direction:ltr;text-align:Right;" & Chr(34) & "<span style='font-family: " & Chr(34) & "Times New Roman" & Chr(34) & ", serif; color: rgb(65, 168, 95);text-align:right;'><strong><span style=" & Chr(34) & "font-size: 20px;direction:ltr;text-align:Right;" & Chr(34) & ">"
-        Dim BdyEnd As String = " </span></strong></span>
+        BdyEnd = " </span></strong></span>
     </ul>
 </div>
 <p dir=" & Chr(34) & "RTL" & Chr(34) & " style='margin-top:0cm;margin-right:36.0pt;margin-bottom:.0001pt;margin-left:0cm;font-size:15px;font-family:" & Chr(34) & "Calibri" & Chr(34) & ",sans-serif;text-align:right;'><span style='font-size:19px;font-family:" & Chr(34) & "Times New Roman" & Chr(34) & ",serif;'>&nbsp;</span><span style=" & Chr(34) & "font-size:16px;font-family:&quot;Times New Roman&quot;,serif;color:black;" & Chr(34) & "></span><span style='font-size:16px;font-family:" & Chr(34) & "Times New Roman" & Chr(34) & ",serif;color:black;'>&nbsp;</span></p>
@@ -449,52 +462,89 @@ Done_:
 <p style='margin-top:0cm;margin-right:0cm;margin-bottom:0cm;margin-left:0cm;line-height:normal;font-size:15px;font-family:" & Chr(34) & "Calibri" & Chr(34) & ",sans-serif;'><span style=" & Chr(34) & "font-size:15px;color:black;" & Chr(34) & ">&nbsp;</span></p>
 <p dir=" & Chr(34) & "RTL" & Chr(34) & " style='margin-top:0cm;margin-right:0cm;margin-bottom:8.0pt;margin-left:0cm;line-height:107%;font-size:15px;font-family:" & Chr(34) & "Calibri" & Chr(34) & ",sans-serif;text-align:right;'><span dir=" & Chr(34) & "LTR" & Chr(34) & ">&nbsp;</span></p>"
 #End Region
+        Invoke(Sub() TxtErr.Text = Now & " :  Starting Auto Mail ..." & vbCrLf & TxtErr.Text)
+        Invoke(Sub() TxtErr.Refresh())
         Try
             If GetTbl("select * from AutoMail ", MailTbl) = Nothing Then
+                Invoke(Sub() TxtErr.Text = Now & " :  Trying to send " & MailTbl.Rows.Count & " Mails ..." & vbCrLf & TxtErr.Text)
+                Invoke(Sub() TxtErr.Refresh())
                 For YY = 0 To MailTbl.Rows.Count - 1
-                    ExpoTbl = New DataTable
-                    If GetTbl(MailTbl.Rows(YY).Item(1).ToString, ExpoTbl) = Nothing Then
-                        Exprt(MailTbl.Rows(YY).Item(4).ToString)
-                        Dim exchange As ExchangeService
-                        exchange = New ExchangeService(ExchangeVersion.Exchange2007_SP1)
-                        exchange.Credentials = New WebCredentials("egyptpost\voca-support", "ASD.asd123")
-                        exchange.Url() = New Uri("https://mail.egyptpost.org/ews/exchange.asmx")
-                        Dim message As New EmailMessage(exchange)
-                        For LL = 0 To Split(MailTbl.Rows(YY).Item(2).ToString, ";").Count - 1
-                            message.ToRecipients.Add(Trim(Split(MailTbl.Rows(0).Item(2).ToString, ";")(LL)))
-                        Next
-                        For LL = 0 To Split(MailTbl.Rows(YY).Item(3).ToString, ";").Count - 1
-                            message.CcRecipients.Add(Trim(Split(MailTbl.Rows(YY).Item(3).ToString, ";")(LL)))
-                        Next
-                        message.Subject = MailTbl.Rows(YY).Item(4).ToString & "_" & Format(Now, "yyyy-MM-dd")
-                        message.Body = BdyStrt & MailTbl.Rows(YY).Item(5).ToString & BdyEnd
-                        message.Attachments.AddFileAttachment(FileExported)
-                        message.Attachments(0).ContentId = MailTbl.Rows(YY).Item(4).ToString & "_" & Format(Now, "yyyy-MM-dd")
-                        message.Importance = 1
-                        message.SendAndSaveCopy()
-                        ExpoTbl.Dispose()
+                    Invoke(Sub() TxtErr.Text = Now & " :  Trying to send " & YY + 1 & " Of " & MailTbl.Rows.Count & " Mails ..." & vbCrLf & TxtErr.Text)
+                    Invoke(Sub() TxtErr.Refresh())
+                    Mail_.Slct_ = MailTbl.Rows(YY).Item(1).ToString
+                    Mail_.To_ = MailTbl.Rows(YY).Item(2).ToString
+                    Mail_.CC_ = MailTbl.Rows(YY).Item(3).ToString
+                    Mail_.BCc_ = ""
+                    Mail_.Sub_ = MailTbl.Rows(YY).Item(4).ToString
+                    Mail_.Body_ = BdyStrt & MailTbl.Rows(YY).Item(5).ToString & BdyEnd
+                    Invoke(Sub() TxtErr.Text = Now & " :  Exporting " & Mail_.Sub_ & vbCrLf & TxtErr.Text)
+                    Invoke(Sub() TxtErr.Refresh())
+                    If Exprt(MailTbl.Rows(YY).Item(4).ToString & "_" & Format(Now, "yyMMdd")) = Nothing Then
+                        Invoke(Sub() TxtErr.Text = Now & " :  Sending Mail to " & Mail_.To_ & " ..." & vbCrLf & TxtErr.Text)
+                        Invoke(Sub() TxtErr.Refresh())
+                        If SndMail() = Nothing Then
+                            Invoke(Sub() TxtErr.Text = Now & " :  Mail to " & Mail_.To_ & " has been sent ..." & vbCrLf & TxtErr.Text)
+                            Invoke(Sub() TxtErr.Refresh())
+                        Else
+                            Invoke(Sub() TxtErr.Text = Now & " :  Error : " & ExrtErr & Mail_.To_ & vbCrLf & TxtErr.Text)
+                            Invoke(Sub() TxtErr.Refresh())
+                        End If
+                    Else
+                        Invoke(Sub() TxtErr.Text = Now & " :  Error : " & ExrtErr & Mail_.Sub_ & vbCrLf & TxtErr.Text)
+                        Invoke(Sub() TxtErr.Refresh())
                     End If
                 Next
+            Else
+                Invoke(Sub() TxtErr.Text = Now & " :  Error : " & ExrtErr & Mail_.Sub_ & vbCrLf & TxtErr.Text)
+                Invoke(Sub() TxtErr.Refresh())
             End If
             AutoMail.Interval = 600000
         Catch exs As Exception
-            MsgBox(exs.Message)
+            Invoke(Sub() TxtErr.Text = Now & " :  Error : " & exs.Message & vbCrLf & TxtErr.Text)
+            Invoke(Sub() TxtErr.Refresh())
         End Try
-
     End Sub
-    Private Function Exprt(FileNm As String) As String
-        Dim ExrtErr As String = Nothing
-        FileExported = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) & "\" & FileNm & "_" & Format(Now, "yyyy-MM-dd") & ".xlsx"
+    Private Function SndMail() As String
+        ExrtErr = Nothing
         Try
-            Dim Workbook As XLWorkbook = New XLWorkbook()
+            Dim exchange As ExchangeService
+            exchange = New ExchangeService(ExchangeVersion.Exchange2007_SP1)
+            exchange.Credentials = New WebCredentials("egyptpost\voca-support", "ASD.asd123")
+            exchange.Url() = New Uri("https://mail.egyptpost.org/ews/exchange.asmx")
+            Dim message As New EmailMessage(exchange)
+            For LL = 0 To Split(Mail_.To_, ";").Count - 1
+                message.ToRecipients.Add(Trim(Split(Mail_.To_, ";")(LL)))
+            Next
+            For LL = 0 To Split(Mail_.CC_, ";").Count - 1
+                message.CcRecipients.Add(Trim(Split(Mail_.CC_, ";")(LL)))
+            Next
+            message.Subject = Mail_.Sub_
+            message.Body = Mail_.Body_
+            message.Attachments.AddFileAttachment(FileExported)
+            message.Attachments(0).ContentId = Mail_.Sub_ & "_" & Format(Now, "yyyy-MM-dd")
+            message.Importance = 1
+            message.SendAndSaveCopy()
+        Catch exs As Exception
+            ExrtErr = "X"
+        End Try
+        Return ExrtErr
+    End Function
+    Private Function Exprt(FileNm As String) As String
+        ExrtErr = Nothing
+        FileExported = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) & "\" & FileNm & "_" & Format(Now, "yyMMdd") & ".xlsx"
+        Try
+            Dim Workbook As New XLWorkbook
 
-            Workbook.Worksheets.Add(ExpoTbl, FileNm)
-            'ExpoTbl.Columns.Add("ss")
-            'Workbook.Worksheets.Add(ExpoTbl, FileNm & "1")
+            For JJ = 0 To Split(Mail_.Slct_, "$").Count - 1
+                ExpoTbl = New DataTable
+                If GetTbl(Split(Mail_.Slct_, "$")(JJ), ExpoTbl) = Nothing Then
+                    Workbook.Worksheets.Add(ExpoTbl, FileNm & JJ + 1)
+                End If
+            Next
             Workbook.SaveAs(FileExported)
+            ExpoTbl.Dispose()
         Catch ex As Exception
             ExrtErr = "X"
-            MsgBox(ex.Message)
         End Try
         Return ExrtErr
     End Function
