@@ -69,7 +69,7 @@ Module GlobalCode
         Catch ex As Exception
             MainWindow.TxtErr.Text = Now & " GetTbl ___" & SqlTbl.TableName & ex.Message & vbCrLf
             MainWindow.TxtErr.Refresh()
-            MsgBox(ex.Message)
+            'MsgBox(ex.Message)
         End Try
         Return Errmsg
     End Function
@@ -136,5 +136,4 @@ Module GlobalCode
         End Try
         Return Nw
     End Function
-
 End Module

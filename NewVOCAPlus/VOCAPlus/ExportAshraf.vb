@@ -453,7 +453,7 @@ PopulCompTree_:
         If D.ShowDialog() = DialogResult.OK Then
             LoadFrm("جاري استخراج البيانات ...", (screenWidth - LodngFrm.Width) / 2, (screenHeight - LodngFrm.Height) / 2)
             Try
-                ExpDTable.Rows.Add("")
+                'ExpDTable.Rows.Add("")
                 Dim Workbook As XLWorkbook = New XLWorkbook()
                 Workbook.Worksheets.Add(ExpDTable, "ComplaintsReport")
                 Workbook.SaveAs(D.FileName)

@@ -70,12 +70,11 @@ Partial Class MainWindow
         'PubVerLbl
         '
         Me.PubVerLbl.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.PubVerLbl.AutoSize = True
-        Me.PubVerLbl.Font = New System.Drawing.Font("Tahoma", 8.0!)
+        Me.PubVerLbl.Font = New System.Drawing.Font("Times New Roman", 12.0!)
         Me.PubVerLbl.ForeColor = System.Drawing.Color.Red
-        Me.PubVerLbl.Location = New System.Drawing.Point(1180, 696)
+        Me.PubVerLbl.Location = New System.Drawing.Point(373, 691)
         Me.PubVerLbl.Name = "PubVerLbl"
-        Me.PubVerLbl.Size = New System.Drawing.Size(44, 13)
+        Me.PubVerLbl.Size = New System.Drawing.Size(473, 22)
         Me.PubVerLbl.TabIndex = 48
         Me.PubVerLbl.Text = "Label19"
         '
@@ -319,8 +318,7 @@ Partial Class MainWindow
         '
         'AutoMail
         '
-        Me.AutoMail.Enabled = True
-        Me.AutoMail.Interval = 500000
+        Me.AutoMail.Interval = 60000
         '
         'MainWindow
         '
