@@ -9,9 +9,6 @@ Public Class Login
         Cmbo.Items.Add("Eg Server")
         Cmbo.Items.Add("My Labtop")
         Cmbo.Items.Add("Test Database")
-        Cmbo.Items.Add("Direct Server")
-        Cmbo.Items.Add("Direct Demo")
-        Cmbo.Text = "Eg Server"
         ' Check Ver.
         LblUsrIP.Text = "IP: " & OsIP()
         'AssVerLbl.Text = "Assembly Ver. : " & My.Application.Info.Version.ToString ' major.minor.build.revision
@@ -322,10 +319,6 @@ sec_UsrErr_:
             Cmbo.Text = "My Labtop"
         ElseIf ServerNm = "Test Database" Then
             Cmbo.Text = "Test Database"
-        ElseIf ServerNm = "Direct Server" Then
-            Cmbo.Text = "Direct Server"
-        ElseIf ServerNm = "Test Database" Then
-            Cmbo.Text = "Direct Demo"
         End If
         AddHandler Cmbo.SelectedIndexChanged, AddressOf Cmbo_SelectedIndexChanged
         MacTable.Rows.Clear()

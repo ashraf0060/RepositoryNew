@@ -23,7 +23,7 @@ Partial Class NewTicket
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim TreeNode1 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Rooting")
+        Dim TreeNode2 As System.Windows.Forms.TreeNode = New System.Windows.Forms.TreeNode("Rooting")
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(NewTicket))
         Me.TreeView1 = New System.Windows.Forms.TreeView()
         Me.ImgLst = New System.Windows.Forms.ImageList(Me.components)
@@ -250,13 +250,13 @@ Partial Class NewTicket
         Me.TreeView1.Font = New System.Drawing.Font("Times New Roman", 12.0!, System.Drawing.FontStyle.Bold)
         Me.TreeView1.ImageKey = "Add.ico"
         Me.TreeView1.ImageList = Me.ImgLst
-        Me.TreeView1.Location = New System.Drawing.Point(15, 51)
+        Me.TreeView1.Location = New System.Drawing.Point(3, 51)
         Me.TreeView1.Name = "TreeView1"
-        TreeNode1.BackColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(0, Byte), Integer))
-        TreeNode1.ForeColor = System.Drawing.Color.Red
-        TreeNode1.Name = "Rooting"
-        TreeNode1.Text = "Rooting"
-        Me.TreeView1.Nodes.AddRange(New System.Windows.Forms.TreeNode() {TreeNode1})
+        TreeNode2.BackColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(0, Byte), Integer))
+        TreeNode2.ForeColor = System.Drawing.Color.Red
+        TreeNode2.Name = "Rooting"
+        TreeNode2.Text = "Rooting"
+        Me.TreeView1.Nodes.AddRange(New System.Windows.Forms.TreeNode() {TreeNode2})
         Me.TreeView1.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.TreeView1.RightToLeftLayout = True
         Me.TreeView1.SelectedImageIndex = 0
@@ -300,7 +300,7 @@ Partial Class NewTicket
         Me.FlowLayoutPanel4.SetFlowBreak(Me.ComRefLbl, True)
         Me.ComRefLbl.Font = New System.Drawing.Font("Times New Roman", 14.0!, System.Drawing.FontStyle.Bold)
         Me.ComRefLbl.ForeColor = System.Drawing.Color.Red
-        Me.ComRefLbl.Location = New System.Drawing.Point(228, 0)
+        Me.ComRefLbl.Location = New System.Drawing.Point(175, 0)
         Me.ComRefLbl.Name = "ComRefLbl"
         Me.ComRefLbl.Size = New System.Drawing.Size(630, 33)
         Me.ComRefLbl.TabIndex = 0
@@ -309,7 +309,7 @@ Partial Class NewTicket
         '
         Me.Comp.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.FlowLayoutPanel4.SetFlowBreak(Me.Comp, True)
-        Me.Comp.Location = New System.Drawing.Point(60, 274)
+        Me.Comp.Location = New System.Drawing.Point(7, 274)
         Me.Comp.Margin = New System.Windows.Forms.Padding(3, 7, 30, 3)
         Me.Comp.Name = "Comp"
         Me.Comp.ReadOnly = True
@@ -323,7 +323,7 @@ Partial Class NewTicket
         '
         Me.Prdct.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.FlowLayoutPanel4.SetFlowBreak(Me.Prdct, True)
-        Me.Prdct.Location = New System.Drawing.Point(59, 200)
+        Me.Prdct.Location = New System.Drawing.Point(6, 200)
         Me.Prdct.Margin = New System.Windows.Forms.Padding(3, 3, 31, 3)
         Me.Prdct.Name = "Prdct"
         Me.Prdct.ReadOnly = True
@@ -359,7 +359,7 @@ Partial Class NewTicket
         Me.Label17.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label17.Font = New System.Drawing.Font("Times New Roman", 14.0!)
         Me.Label17.ForeColor = System.Drawing.Color.Black
-        Me.Label17.Location = New System.Drawing.Point(740, 338)
+        Me.Label17.Location = New System.Drawing.Point(687, 338)
         Me.Label17.Name = "Label17"
         Me.Label17.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.Label17.Size = New System.Drawing.Size(118, 27)
@@ -372,7 +372,7 @@ Partial Class NewTicket
         Me.DetailsTxtBx.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.DetailsTxtBx.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper
         Me.FlowLayoutPanel4.SetFlowBreak(Me.DetailsTxtBx, True)
-        Me.DetailsTxtBx.Location = New System.Drawing.Point(60, 341)
+        Me.DetailsTxtBx.Location = New System.Drawing.Point(7, 341)
         Me.DetailsTxtBx.Margin = New System.Windows.Forms.Padding(3, 3, 31, 3)
         Me.DetailsTxtBx.Multiline = True
         Me.DetailsTxtBx.Name = "DetailsTxtBx"
@@ -396,7 +396,7 @@ Partial Class NewTicket
         Me.FlowLayoutPanel4.SetFlowBreak(Me.SrcCmbBx, True)
         Me.SrcCmbBx.FormattingEnabled = True
         Me.SrcCmbBx.ItemHeight = 21
-        Me.SrcCmbBx.Location = New System.Drawing.Point(59, 235)
+        Me.SrcCmbBx.Location = New System.Drawing.Point(6, 235)
         Me.SrcCmbBx.Name = "SrcCmbBx"
         Me.SrcCmbBx.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.SrcCmbBx.Size = New System.Drawing.Size(278, 29)
@@ -410,7 +410,7 @@ Partial Class NewTicket
         Me.Label16.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label16.Font = New System.Drawing.Font("Times New Roman", 14.0!)
         Me.Label16.ForeColor = System.Drawing.Color.Black
-        Me.Label16.Location = New System.Drawing.Point(371, 237)
+        Me.Label16.Location = New System.Drawing.Point(318, 237)
         Me.Label16.Margin = New System.Windows.Forms.Padding(3, 5, 380, 0)
         Me.Label16.Name = "Label16"
         Me.Label16.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -424,7 +424,7 @@ Partial Class NewTicket
         Me.Label15.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label15.Font = New System.Drawing.Font("Times New Roman", 12.0!)
         Me.Label15.ForeColor = System.Drawing.Color.Black
-        Me.Label15.Location = New System.Drawing.Point(371, 83)
+        Me.Label15.Location = New System.Drawing.Point(318, 83)
         Me.Label15.Margin = New System.Windows.Forms.Padding(3, 17, 3, 3)
         Me.Label15.Name = "Label15"
         Me.Label15.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -461,7 +461,7 @@ Partial Class NewTicket
         Me.FlowLayoutPanel4.SetFlowBreak(Me.AreaCmbBx, True)
         Me.AreaCmbBx.FormattingEnabled = True
         Me.AreaCmbBx.ItemHeight = 21
-        Me.AreaCmbBx.Location = New System.Drawing.Point(59, 130)
+        Me.AreaCmbBx.Location = New System.Drawing.Point(6, 130)
         Me.AreaCmbBx.Margin = New System.Windows.Forms.Padding(3, 15, 31, 3)
         Me.AreaCmbBx.Name = "AreaCmbBx"
         Me.AreaCmbBx.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -477,7 +477,7 @@ Partial Class NewTicket
         Me.Label7.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label7.Font = New System.Drawing.Font("Times New Roman", 14.0!)
         Me.Label7.ForeColor = System.Drawing.Color.Black
-        Me.Label7.Location = New System.Drawing.Point(371, 132)
+        Me.Label7.Location = New System.Drawing.Point(318, 132)
         Me.Label7.Margin = New System.Windows.Forms.Padding(3, 17, 3, 3)
         Me.Label7.Name = "Label7"
         Me.Label7.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -496,7 +496,7 @@ Partial Class NewTicket
         Me.FlowLayoutPanel4.SetFlowBreak(Me.OffCmbBx, True)
         Me.OffCmbBx.FormattingEnabled = True
         Me.OffCmbBx.ItemHeight = 21
-        Me.OffCmbBx.Location = New System.Drawing.Point(59, 165)
+        Me.OffCmbBx.Location = New System.Drawing.Point(6, 165)
         Me.OffCmbBx.Name = "OffCmbBx"
         Me.OffCmbBx.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.OffCmbBx.Size = New System.Drawing.Size(278, 29)
@@ -510,7 +510,7 @@ Partial Class NewTicket
         Me.Label6.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label6.Font = New System.Drawing.Font("Times New Roman", 14.0!)
         Me.Label6.ForeColor = System.Drawing.Color.Black
-        Me.Label6.Location = New System.Drawing.Point(371, 169)
+        Me.Label6.Location = New System.Drawing.Point(318, 169)
         Me.Label6.Margin = New System.Windows.Forms.Padding(3, 7, 3, 0)
         Me.Label6.Name = "Label6"
         Me.Label6.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -524,7 +524,7 @@ Partial Class NewTicket
         Me.Label5.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label5.Font = New System.Drawing.Font("Times New Roman", 14.0!)
         Me.Label5.ForeColor = System.Drawing.Color.Black
-        Me.Label5.Location = New System.Drawing.Point(371, 275)
+        Me.Label5.Location = New System.Drawing.Point(318, 275)
         Me.Label5.Margin = New System.Windows.Forms.Padding(3, 8, 3, 0)
         Me.Label5.Name = "Label5"
         Me.Label5.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -538,7 +538,7 @@ Partial Class NewTicket
         Me.Label4.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label4.Font = New System.Drawing.Font("Times New Roman", 14.0!)
         Me.Label4.ForeColor = System.Drawing.Color.Black
-        Me.Label4.Location = New System.Drawing.Point(371, 202)
+        Me.Label4.Location = New System.Drawing.Point(318, 202)
         Me.Label4.Margin = New System.Windows.Forms.Padding(3, 5, 3, 0)
         Me.Label4.Name = "Label4"
         Me.Label4.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -552,7 +552,7 @@ Partial Class NewTicket
         Me.Label3.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label3.Font = New System.Drawing.Font("Times New Roman", 14.0!)
         Me.Label3.ForeColor = System.Drawing.Color.Black
-        Me.Label3.Location = New System.Drawing.Point(740, 267)
+        Me.Label3.Location = New System.Drawing.Point(687, 267)
         Me.Label3.MinimumSize = New System.Drawing.Size(70, 15)
         Me.Label3.Name = "Label3"
         Me.Label3.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -566,7 +566,7 @@ Partial Class NewTicket
         Me.Label2.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label2.Font = New System.Drawing.Font("Times New Roman", 14.0!)
         Me.Label2.ForeColor = System.Drawing.Color.Black
-        Me.Label2.Location = New System.Drawing.Point(740, 197)
+        Me.Label2.Location = New System.Drawing.Point(687, 197)
         Me.Label2.MinimumSize = New System.Drawing.Size(70, 15)
         Me.Label2.Name = "Label2"
         Me.Label2.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -580,7 +580,7 @@ Partial Class NewTicket
         Me.Label1.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label1.Font = New System.Drawing.Font("Times New Roman", 14.0!)
         Me.Label1.ForeColor = System.Drawing.Color.Black
-        Me.Label1.Location = New System.Drawing.Point(740, 165)
+        Me.Label1.Location = New System.Drawing.Point(687, 165)
         Me.Label1.Margin = New System.Windows.Forms.Padding(3)
         Me.Label1.MinimumSize = New System.Drawing.Size(70, 15)
         Me.Label1.Name = "Label1"
@@ -594,7 +594,7 @@ Partial Class NewTicket
         '
         Me.MailTxtBx.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.FlowLayoutPanel4.SetFlowBreak(Me.MailTxtBx, True)
-        Me.MailTxtBx.Location = New System.Drawing.Point(59, 83)
+        Me.MailTxtBx.Location = New System.Drawing.Point(6, 83)
         Me.MailTxtBx.Margin = New System.Windows.Forms.Padding(3, 17, 31, 3)
         Me.MailTxtBx.Name = "MailTxtBx"
         Me.MailTxtBx.RightToLeft = System.Windows.Forms.RightToLeft.No
@@ -608,7 +608,7 @@ Partial Class NewTicket
         '
         Me.AddTxtBx.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.AddTxtBx.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper
-        Me.AddTxtBx.Location = New System.Drawing.Point(477, 270)
+        Me.AddTxtBx.Location = New System.Drawing.Point(424, 270)
         Me.AddTxtBx.Margin = New System.Windows.Forms.Padding(3, 3, 31, 3)
         Me.AddTxtBx.Multiline = True
         Me.AddTxtBx.Name = "AddTxtBx"
@@ -622,7 +622,7 @@ Partial Class NewTicket
         '
         Me.NameTxtBx.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.NameTxtBx.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper
-        Me.NameTxtBx.Location = New System.Drawing.Point(477, 200)
+        Me.NameTxtBx.Location = New System.Drawing.Point(424, 200)
         Me.NameTxtBx.Name = "NameTxtBx"
         Me.NameTxtBx.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.NameTxtBx.Size = New System.Drawing.Size(229, 29)
@@ -635,7 +635,7 @@ Partial Class NewTicket
         '
         Me.DateTxtBx.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.DateTxtBx.Enabled = False
-        Me.DateTxtBx.Location = New System.Drawing.Point(477, 165)
+        Me.DateTxtBx.Location = New System.Drawing.Point(424, 165)
         Me.DateTxtBx.Margin = New System.Windows.Forms.Padding(3, 3, 31, 3)
         Me.DateTxtBx.Name = "DateTxtBx"
         Me.DateTxtBx.ReadOnly = True
@@ -1776,7 +1776,7 @@ Partial Class NewTicket
         Me.Label20.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label20.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.0!)
         Me.Label20.ForeColor = System.Drawing.Color.Red
-        Me.Label20.Location = New System.Drawing.Point(712, 79)
+        Me.Label20.Location = New System.Drawing.Point(659, 79)
         Me.Label20.Margin = New System.Windows.Forms.Padding(3, 13, 3, 0)
         Me.Label20.Name = "Label20"
         Me.Label20.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -1790,7 +1790,7 @@ Partial Class NewTicket
         Me.Label21.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label21.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.0!)
         Me.Label21.ForeColor = System.Drawing.Color.Red
-        Me.Label21.Location = New System.Drawing.Point(712, 197)
+        Me.Label21.Location = New System.Drawing.Point(659, 197)
         Me.Label21.Name = "Label21"
         Me.Label21.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.Label21.Size = New System.Drawing.Size(22, 24)
@@ -1803,7 +1803,7 @@ Partial Class NewTicket
         Me.Label22.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label22.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.0!)
         Me.Label22.ForeColor = System.Drawing.Color.Red
-        Me.Label22.Location = New System.Drawing.Point(712, 128)
+        Me.Label22.Location = New System.Drawing.Point(659, 128)
         Me.Label22.Margin = New System.Windows.Forms.Padding(3, 13, 3, 0)
         Me.Label22.Name = "Label22"
         Me.Label22.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -1816,7 +1816,7 @@ Partial Class NewTicket
         Me.Label23.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label23.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.0!)
         Me.Label23.ForeColor = System.Drawing.Color.Red
-        Me.Label23.Location = New System.Drawing.Point(343, 165)
+        Me.Label23.Location = New System.Drawing.Point(290, 165)
         Me.Label23.Margin = New System.Windows.Forms.Padding(3, 3, 3, 0)
         Me.Label23.Name = "Label23"
         Me.Label23.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -1830,7 +1830,7 @@ Partial Class NewTicket
         Me.Label24.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label24.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.0!)
         Me.Label24.ForeColor = System.Drawing.Color.Red
-        Me.Label24.Location = New System.Drawing.Point(343, 237)
+        Me.Label24.Location = New System.Drawing.Point(290, 237)
         Me.Label24.Margin = New System.Windows.Forms.Padding(3, 5, 3, 0)
         Me.Label24.Name = "Label24"
         Me.Label24.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -2113,7 +2113,7 @@ Partial Class NewTicket
         Me.PostalGroup.Controls.Add(Me.Label10)
         Me.PostalGroup.Controls.Add(Me.Label14)
         Me.PostalGroup.Font = New System.Drawing.Font("Times New Roman", 12.0!)
-        Me.PostalGroup.Location = New System.Drawing.Point(412, 587)
+        Me.PostalGroup.Location = New System.Drawing.Point(359, 587)
         Me.PostalGroup.Name = "PostalGroup"
         Me.PostalGroup.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.PostalGroup.Size = New System.Drawing.Size(446, 124)
@@ -2136,7 +2136,7 @@ Partial Class NewTicket
         Me.FinancialGroup.Controls.Add(Me.TransDtPicker)
         Me.FinancialGroup.Controls.Add(Me.Label19)
         Me.FinancialGroup.Font = New System.Drawing.Font("Times New Roman", 12.0!)
-        Me.FinancialGroup.Location = New System.Drawing.Point(412, 457)
+        Me.FinancialGroup.Location = New System.Drawing.Point(359, 457)
         Me.FinancialGroup.Name = "FinancialGroup"
         Me.FinancialGroup.Size = New System.Drawing.Size(446, 124)
         Me.FinancialGroup.TabIndex = 2018
@@ -2147,7 +2147,7 @@ Partial Class NewTicket
         Me.RadPss.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.RadPss.Cursor = System.Windows.Forms.Cursors.Default
         Me.FlowLayoutPanel4.SetFlowBreak(Me.RadPss, True)
-        Me.RadPss.Location = New System.Drawing.Point(228, 33)
+        Me.RadPss.Location = New System.Drawing.Point(175, 33)
         Me.RadPss.Margin = New System.Windows.Forms.Padding(0)
         Me.RadPss.Name = "RadPss"
         Me.RadPss.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -2162,7 +2162,7 @@ Partial Class NewTicket
         Me.RadNID.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.RadNID.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
         Me.RadNID.Cursor = System.Windows.Forms.Cursors.Default
-        Me.RadNID.Location = New System.Drawing.Point(389, 33)
+        Me.RadNID.Location = New System.Drawing.Point(336, 33)
         Me.RadNID.Margin = New System.Windows.Forms.Padding(0)
         Me.RadNID.Name = "RadNID"
         Me.RadNID.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -2229,10 +2229,10 @@ Partial Class NewTicket
         Me.FlowLayoutPanel2.Controls.Add(Me.MyGroupBox3)
         Me.FlowLayoutPanel2.Controls.Add(Me.TreeView1)
         Me.FlowLayoutPanel2.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft
-        Me.FlowLayoutPanel2.Location = New System.Drawing.Point(1041, 0)
+        Me.FlowLayoutPanel2.Location = New System.Drawing.Point(1095, 0)
         Me.FlowLayoutPanel2.Margin = New System.Windows.Forms.Padding(0)
         Me.FlowLayoutPanel2.Name = "FlowLayoutPanel2"
-        Me.FlowLayoutPanel2.Size = New System.Drawing.Size(298, 622)
+        Me.FlowLayoutPanel2.Size = New System.Drawing.Size(244, 622)
         Me.FlowLayoutPanel2.TabIndex = 2029
         '
         'MyGroupBox3
@@ -2241,7 +2241,7 @@ Partial Class NewTicket
         Me.MyGroupBox3.Controls.Add(Me.RadioButton5)
         Me.MyGroupBox3.Dock = System.Windows.Forms.DockStyle.Top
         Me.FlowLayoutPanel2.SetFlowBreak(Me.MyGroupBox3, True)
-        Me.MyGroupBox3.Location = New System.Drawing.Point(112, 3)
+        Me.MyGroupBox3.Location = New System.Drawing.Point(100, 3)
         Me.MyGroupBox3.Margin = New System.Windows.Forms.Padding(3, 3, 10, 3)
         Me.MyGroupBox3.Name = "MyGroupBox3"
         Me.MyGroupBox3.Size = New System.Drawing.Size(176, 42)
@@ -2295,7 +2295,7 @@ Partial Class NewTicket
         Me.FlowLayoutPanel3.Controls.Add(Me.LblDublicate)
         Me.FlowLayoutPanel3.Controls.Add(Me.Label18)
         Me.FlowLayoutPanel3.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft
-        Me.FlowLayoutPanel3.Location = New System.Drawing.Point(849, 0)
+        Me.FlowLayoutPanel3.Location = New System.Drawing.Point(903, 0)
         Me.FlowLayoutPanel3.Margin = New System.Windows.Forms.Padding(0)
         Me.FlowLayoutPanel3.Name = "FlowLayoutPanel3"
         Me.FlowLayoutPanel3.Size = New System.Drawing.Size(192, 622)
@@ -2396,16 +2396,16 @@ Partial Class NewTicket
         Me.FlowLayoutPanel4.Controls.Add(Me.LblHelp)
         Me.FlowLayoutPanel4.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft
         Me.FlowLayoutPanel4.Font = New System.Drawing.Font("Times New Roman", 14.0!)
-        Me.FlowLayoutPanel4.Location = New System.Drawing.Point(461, 622)
+        Me.FlowLayoutPanel4.Location = New System.Drawing.Point(78, 0)
         Me.FlowLayoutPanel4.Margin = New System.Windows.Forms.Padding(0)
         Me.FlowLayoutPanel4.Name = "FlowLayoutPanel4"
-        Me.FlowLayoutPanel4.Size = New System.Drawing.Size(878, 645)
+        Me.FlowLayoutPanel4.Size = New System.Drawing.Size(825, 645)
         Me.FlowLayoutPanel4.TabIndex = 2031
         '
         'Label11
         '
         Me.Label11.ImeMode = System.Windows.Forms.ImeMode.NoControl
-        Me.Label11.Location = New System.Drawing.Point(740, 36)
+        Me.Label11.Location = New System.Drawing.Point(687, 36)
         Me.Label11.Margin = New System.Windows.Forms.Padding(3)
         Me.Label11.Name = "Label11"
         Me.Label11.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -2419,7 +2419,7 @@ Partial Class NewTicket
         Me.Label29.Font = New System.Drawing.Font("Microsoft Sans Serif", 14.0!)
         Me.Label29.ForeColor = System.Drawing.Color.Red
         Me.Label29.ImeMode = System.Windows.Forms.ImeMode.NoControl
-        Me.Label29.Location = New System.Drawing.Point(712, 33)
+        Me.Label29.Location = New System.Drawing.Point(659, 33)
         Me.Label29.Name = "Label29"
         Me.Label29.Size = New System.Drawing.Size(22, 24)
         Me.Label29.TabIndex = 2010
@@ -2427,7 +2427,7 @@ Partial Class NewTicket
         '
         'IDTxtBx
         '
-        Me.IDTxtBx.Location = New System.Drawing.Point(477, 33)
+        Me.IDTxtBx.Location = New System.Drawing.Point(424, 33)
         Me.IDTxtBx.Margin = New System.Windows.Forms.Padding(3, 0, 3, 0)
         Me.IDTxtBx.Mask = "AAAAAAAAAAAAA"
         Me.IDTxtBx.Name = "IDTxtBx"
@@ -2442,7 +2442,7 @@ Partial Class NewTicket
         Me.MyGroupBox2.Controls.Add(Me.PictureBox2)
         Me.MyGroupBox2.Controls.Add(Me.RadioButton8)
         Me.MyGroupBox2.Controls.Add(Me.RadioButton9)
-        Me.MyGroupBox2.Location = New System.Drawing.Point(740, 69)
+        Me.MyGroupBox2.Location = New System.Drawing.Point(687, 69)
         Me.MyGroupBox2.Name = "MyGroupBox2"
         Me.MyGroupBox2.Size = New System.Drawing.Size(118, 40)
         Me.MyGroupBox2.TabIndex = 2034
@@ -2450,7 +2450,7 @@ Partial Class NewTicket
         'Phon1TxtBx
         '
         Me.Phon1TxtBx.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Phon1TxtBx.Location = New System.Drawing.Point(477, 79)
+        Me.Phon1TxtBx.Location = New System.Drawing.Point(424, 79)
         Me.Phon1TxtBx.Margin = New System.Windows.Forms.Padding(3, 13, 3, 3)
         Me.Phon1TxtBx.Mask = "00000000000"
         Me.Phon1TxtBx.Name = "Phon1TxtBx"
@@ -2464,7 +2464,7 @@ Partial Class NewTicket
         Me.MyGroupBox1.Controls.Add(Me.PictureBox3)
         Me.MyGroupBox1.Controls.Add(Me.RadioButton11)
         Me.MyGroupBox1.Controls.Add(Me.RadioButton12)
-        Me.MyGroupBox1.Location = New System.Drawing.Point(740, 118)
+        Me.MyGroupBox1.Location = New System.Drawing.Point(687, 118)
         Me.MyGroupBox1.Name = "MyGroupBox1"
         Me.MyGroupBox1.Size = New System.Drawing.Size(118, 40)
         Me.MyGroupBox1.TabIndex = 2035
@@ -2472,7 +2472,7 @@ Partial Class NewTicket
         'Phon2TxtBx
         '
         Me.Phon2TxtBx.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Phon2TxtBx.Location = New System.Drawing.Point(477, 128)
+        Me.Phon2TxtBx.Location = New System.Drawing.Point(424, 128)
         Me.Phon2TxtBx.Margin = New System.Windows.Forms.Padding(3, 13, 3, 3)
         Me.Phon2TxtBx.Mask = "00000000000"
         Me.Phon2TxtBx.Name = "Phon2TxtBx"
@@ -2485,7 +2485,7 @@ Partial Class NewTicket
         Me.CombProdRef.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.CombProdRef.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.CombProdRef.FormattingEnabled = True
-        Me.CombProdRef.Location = New System.Drawing.Point(336, 596)
+        Me.CombProdRef.Location = New System.Drawing.Point(283, 596)
         Me.CombProdRef.Margin = New System.Windows.Forms.Padding(3, 12, 3, 3)
         Me.CombProdRef.Name = "CombProdRef"
         Me.CombProdRef.RightToLeft = System.Windows.Forms.RightToLeft.No
@@ -2500,7 +2500,7 @@ Partial Class NewTicket
         Me.FlowLayoutPanel5.Controls.Add(Me.Panel2)
         Me.FlowLayoutPanel5.Controls.Add(Me.Panel3)
         Me.FlowLayoutPanel4.SetFlowBreak(Me.FlowLayoutPanel5, True)
-        Me.FlowLayoutPanel5.Location = New System.Drawing.Point(159, 609)
+        Me.FlowLayoutPanel5.Location = New System.Drawing.Point(106, 609)
         Me.FlowLayoutPanel5.Margin = New System.Windows.Forms.Padding(0, 25, 0, 0)
         Me.FlowLayoutPanel5.Name = "FlowLayoutPanel5"
         Me.FlowLayoutPanel5.Size = New System.Drawing.Size(174, 144)
@@ -2559,7 +2559,7 @@ Partial Class NewTicket
         'LblHelp
         '
         Me.LblHelp.ForeColor = System.Drawing.Color.Green
-        Me.LblHelp.Location = New System.Drawing.Point(60, 753)
+        Me.LblHelp.Location = New System.Drawing.Point(7, 753)
         Me.LblHelp.Name = "LblHelp"
         Me.LblHelp.Size = New System.Drawing.Size(798, 52)
         Me.LblHelp.TabIndex = 2036

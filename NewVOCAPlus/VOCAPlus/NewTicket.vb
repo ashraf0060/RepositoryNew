@@ -47,9 +47,10 @@ Public Class NewTicket
             BtnSub(Me)
             'Me.Width = screenWidth - 200
             Me.Size = New Point(WelcomeScreen.Width, WelcomeScreen.Height - 110)
-            FlowLayoutPanel4.Size = New Point(FlowLayoutPanel4.Width, Me.Height - 100)
-            FlowLayoutPanel2.Size = New Point(WelcomeScreen.Width - (FlowLayoutPanel4.Width + FlowLayoutPanel3.Width + 30), Me.Height - 100)
-            TreeView1.Size = New Point(WelcomeScreen.Width - (FlowLayoutPanel4.Width + FlowLayoutPanel3.Width + 45), Me.Height - (130 + MyGroupBox3.Height + MyGroupBox3.Margin.Top + MyGroupBox3.Margin.Bottom))
+            FlowLayoutPanel4.Size = New Point((Me.Size.Width * 0.6), Me.Height - 100)
+            FlowLayoutPanel2.Size = New Point((Me.Size.Width * 0.2), Me.Height - 100)
+            FlowLayoutPanel3.Size = New Point((Me.Size.Width * 0.16), Me.Height - 100)
+            'TreeView1.Size = New Point(WelcomeScreen.Width - (FlowLayoutPanel4.Width + FlowLayoutPanel3.Width + 45), Me.Height - (130 + MyGroupBox3.Height + MyGroupBox3.Margin.Top + MyGroupBox3.Margin.Bottom))
             IDTxtBx.Focus()
         End If
     End Sub

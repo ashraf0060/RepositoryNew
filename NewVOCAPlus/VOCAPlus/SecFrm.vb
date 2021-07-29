@@ -18,9 +18,9 @@
     'End Property
     Private Sub SecFrm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Me.Size = New Point(WelcomeScreen.Width, WelcomeScreen.Height - 110)
-        SecTree.Size = New Point(SecTree.Width, Me.Height - 80)
-        UserTree.Size = New Point(SecTree.Width, Me.Height - 80)
-        UserTree.Size = New Point(WelcomeScreen.Width - 30 - (SecTree.Width + FlowLayoutPanel1.Width), Me.Height - 80)
+        SecTree.Size = New Point((WelcomeScreen.Width - FlowLayoutPanel1.Width) * 0.35, Me.Height - 80)
+        'UserTree.Size = New Point(SecTree.Width, Me.Height - 80)
+        UserTree.Size = New Point((WelcomeScreen.Width - FlowLayoutPanel1.Width) * 0.6, Me.Height - 80)
         BtnSub(Me)
         'Me.Size = New Point(screenWidth, screenHeight)
         WelcomeScreen.StatBrPnlAr.Text = "جاري تحميل البيانات ........................."

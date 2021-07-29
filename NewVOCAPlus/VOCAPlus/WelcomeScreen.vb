@@ -484,8 +484,6 @@ Public Class WelcomeScreen
         Invoke(Sub() LodngFrm.Close())
         Invoke(Sub() LodngFrm.Dispose())
         GettAttchUpdtesFils()
-
-
         'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
         Dim request As FtpWebRequest = WebRequest.Create("ftp://10.10.26.4/UserPic/" & Usr.PUsrID & " " & Usr.PUsrNm & ".jpg")
         request.Credentials = New NetworkCredential("administrator", "Hemonad105046")

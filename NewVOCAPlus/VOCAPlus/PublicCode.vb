@@ -10,6 +10,7 @@ Imports VOCAPlus.Strc
 Module PublicCode
     Public screenWidth As Integer = Screen.PrimaryScreen.Bounds.Width
     Public screenHeight As Integer = Screen.PrimaryScreen.Bounds.Height
+
     Public MLXX As String = ""
     Public Errmsg As String          ' Handel error message
     Public Esc As String = ""
@@ -144,12 +145,6 @@ Module PublicCode
         ElseIf tt = "Test Database" Then
             strConn = "Data Source=10.10.26.4;Initial Catalog=VOCAPlusDemo;Persist Security Info=True;User ID=vocaplus21;Password=@VocaPlus$21-4"
             ServerNm = "Test Database"
-        ElseIf tt = "Direct Server" Then
-            strConn = "Data Source=NEW-VOCA\SQLVOCAPLUS;Initial Catalog=VOCAPlus;Integrated Security=True"
-            ServerNm = "Direct Server"
-        ElseIf tt = "Direct Demo" Then
-            strConn = "Data Source=NEW-VOCA\SQLVOCAPLUS;Initial Catalog=VOCAPlusDemo;Integrated Security=True"
-            ServerNm = "Direct Server"
         End If
         If sqlCon.State = ConnectionState.Connecting Or sqlCon.State = ConnectionState.Open Then
             sqlCon.Close()
