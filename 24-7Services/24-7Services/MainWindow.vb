@@ -558,32 +558,35 @@ Done_:
             message.Importance = 1
             message.SendAndSaveCopy()
         Catch exs As Exception
-            ExrtErr = "X"
+            ExrtErr = exs.Message
         End Try
         Return ExrtErr
     End Function
     Private Function Exprt(FileNm As String) As String
         ExrtErr = Nothing
         FileExported = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) & "\" & FileNm & "_" & Format(Now, "yyMMdd") & ".xlsx"
-        Try
-            Dim Workbook As New XLWorkbook
 
-            For JJ = 0 To Split(Mail_.Slct_, "$").Count - 1
-                ExpoTbl = New DataTable
-                If GetTbl(Split(Mail_.Slct_, "$")(JJ), ExpoTbl) = Nothing Then
+        Dim Workbook As New XLWorkbook
+
+        For JJ = 0 To Split(Mail_.Slct_, "$").Count - 1
+            ExpoTbl = New DataTable
+            If GetTbl(Split(Mail_.Slct_, "$")(JJ), ExpoTbl) = Nothing Then
+                If ExpoTbl.Rows.Count > 0 Then
                     ExpoTbl.Rows.Add()
                     For UU = 0 To ExpoTbl.Columns.Count - 1
-                        If ExpoTbl.Columns(UU).DataType.Name.ToString <> "String" Then
+                        If ExpoTbl.Columns(UU).DataType.Name.ToString = "Int32" Then
                             ExpoTbl.Rows(ExpoTbl.Rows.Count - 1).Item(UU) = Convert.ToInt32(ExpoTbl.Compute("SUM(" & ExpoTbl.Columns(UU).ColumnName & ")", String.Empty))
                         End If
                     Next
                     Workbook.Worksheets.Add(ExpoTbl, FileNm & JJ + 1)
                 End If
-            Next
+            End If
+        Next
+        Try
             Workbook.SaveAs(FileExported)
             ExpoTbl.Dispose()
         Catch ex As Exception
-            ExrtErr = "X"
+            ExrtErr = ex.Message
         End Try
         Return ExrtErr
     End Function
