@@ -92,13 +92,26 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("@Ashrf105046$")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("")>  _
         Public Property MailUsrPass() As String
             Get
                 Return CType(Me("MailUsrPass"),String)
             End Get
             Set
                 Me("MailUsrPass") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=D:\Calender_\Calender_.mdf;In"& _ 
+            "tegrated Security=True")>  _
+        Public Property ConStr() As String
+            Get
+                Return CType(Me("ConStr"),String)
+            End Get
+            Set
+                Me("ConStr") = value
             End Set
         End Property
     End Class

@@ -123,6 +123,7 @@ SendMail_:
                 message.SendAndSaveCopy()
             Catch ex As Exception
                 sss += 1
+                Invoke(Sub() TxtErr.Text = Now & " Error : " & ex.Message & vbCrLf & TxtErr.Text)
                 GoTo SendMail_
             End Try
 

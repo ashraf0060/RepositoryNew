@@ -12,7 +12,10 @@
       <Value Profile="(Default)">a.farag@egyptpost.org</Value>
     </Setting>
     <Setting Name="MailUsrPass" Type="System.String" Scope="User">
-      <Value Profile="(Default)">@Ashrf105046$</Value>
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="ConStr" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=D:\Calender_\Calender_.mdf;Integrated Security=True</Value>
     </Setting>
   </Settings>
 </SettingsFile>

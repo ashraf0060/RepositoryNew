@@ -32,7 +32,7 @@ Public Class Main
             DataGridView1.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
             DataGridView1.ColumnHeadersDefaultCellStyle.WrapMode = DataGridViewTriState.True
             DataGridView1.AutoResizeColumnHeadersHeight()
-            DataGridView1.AutoResizeColumns()
+            'DataGridView1.AutoResizeColumns()
             DataGridView1.DefaultCellStyle.WrapMode = DataGridViewTriState.True
         Catch ex As Exception
             LodngFrm.Close()

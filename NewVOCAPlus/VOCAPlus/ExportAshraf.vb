@@ -46,7 +46,7 @@ PopulUserTree_:
                        UserTree.Nodes.Clear()
                        tempTable.Rows.Clear()
                        tempTable.Columns.Clear()
-                       GetTbl("SELECT IntUserCatLvCD.CatLvId, IntUserCatLvCD.CatLvNm FROM IntUserCatLvCD WHERE (((IntUserCatLvCD.CatLvNm)='مشرف خطوط خلفيه') OR (((IntUserCatLvCD.CatLvNm)='موظف خطوط خلفيه')) OR (((IntUserCatLvCD.CatLvNm)='خطوط خلفيه مركز الاتصال')))  ORDER BY CatLvNm", tempTable, "0000&H")
+                       GetTbl("SELECT IntUserCatLvCD.CatLvId, IntUserCatLvCD.CatLvNm FROM IntUserCatLvCD WHERE ((IntUserCatLvCD.CatLvNm)='مشرف خطوط خلفيه') OR ((IntUserCatLvCD.CatLvNm)='موظف خطوط خلفيه') OR ((IntUserCatLvCD.CatLvNm)='خطوط خلفيه مركز الاتصال') OR ((IntUserCatLvCD.CatLvNm)='إدارة الإخطارات') ORDER BY CatLvNm", tempTable, "0000&H")
                        For Cnt_ = 0 To tempTable.Rows.Count - 1
                            UserTree.Nodes.Add(tempTable.Rows(Cnt_).Item(0).ToString, tempTable.Rows(Cnt_).Item(1).ToString, 1, 3)
                        Next

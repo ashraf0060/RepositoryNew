@@ -1,9 +1,11 @@
 ﻿Imports System.Data.SqlClient
+Imports System.IO
 
 Public Class Settings_
     Private Sub Settings_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         TxtMailNm.Text = My.Settings.MailUsrNm
         TxtMailPassword.Text = My.Settings.MailUsrPass
+        txtConStr.Text = My.Settings.ConStr
     End Sub
 
     Private Sub TxtMailPassword_TextChanged(sender As Object, e As EventArgs) Handles TxtMailPassword.TextChanged
@@ -71,6 +73,18 @@ Public Class Settings_
                     Tran.Rollback()
                 End Try
             End If
+        End If
+    End Sub
+
+    Private Sub TextBox1_MouseClick(sender As Object, e As MouseEventArgs) Handles txtConStr.MouseClick
+        Dim fd As FolderBrowserDialog = New FolderBrowserDialog()
+        fd.SelectedPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop)
+        If fd.ShowDialog() = DialogResult.OK Then
+            txtConStr.Text = fd.SelectedPath & "\"
+            ConSTR = "Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=" & fd.SelectedPath & "\Calender_.mdf;Integrated Security=True"
+            txtConStr.Text = ConSTR
+            My.Settings.ConStr = ConSTR
+            My.Settings.Save()
         End If
     End Sub
 End Class

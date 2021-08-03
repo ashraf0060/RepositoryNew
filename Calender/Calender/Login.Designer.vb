@@ -163,7 +163,7 @@ Partial Class Login
         Me.LblUsrIP.BackColor = System.Drawing.Color.Transparent
         Me.LblUsrIP.Font = New System.Drawing.Font("Times New Roman", 9.0!)
         Me.LblUsrIP.ForeColor = System.Drawing.Color.Red
-        Me.LblUsrIP.Location = New System.Drawing.Point(345, 260)
+        Me.LblUsrIP.Location = New System.Drawing.Point(345, 214)
         Me.LblUsrIP.Name = "LblUsrIP"
         Me.LblUsrIP.Size = New System.Drawing.Size(235, 20)
         Me.LblUsrIP.TabIndex = 68
@@ -188,7 +188,7 @@ Partial Class Login
         Me.PubVerLbl.BackColor = System.Drawing.Color.Transparent
         Me.PubVerLbl.Font = New System.Drawing.Font("Times New Roman", 9.0!)
         Me.PubVerLbl.ForeColor = System.Drawing.Color.Red
-        Me.PubVerLbl.Location = New System.Drawing.Point(348, 277)
+        Me.PubVerLbl.Location = New System.Drawing.Point(348, 231)
         Me.PubVerLbl.Name = "PubVerLbl"
         Me.PubVerLbl.Size = New System.Drawing.Size(232, 24)
         Me.PubVerLbl.TabIndex = 74
@@ -261,9 +261,9 @@ Partial Class Login
         Me.Button3.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.Button3.Font = New System.Drawing.Font("Times New Roman", 12.0!, System.Drawing.FontStyle.Bold)
         Me.Button3.ForeColor = System.Drawing.Color.Black
-        Me.Button3.Location = New System.Drawing.Point(2, 3)
+        Me.Button3.Location = New System.Drawing.Point(7, 7)
         Me.Button3.Name = "Button3"
-        Me.Button3.Size = New System.Drawing.Size(38, 36)
+        Me.Button3.Size = New System.Drawing.Size(34, 36)
         Me.Button3.TabIndex = 3
         Me.ToolTip1.SetToolTip(Me.Button3, "إعادة ضبطالرقم السري")
         Me.Button3.UseCompatibleTextRendering = True
@@ -320,10 +320,11 @@ Partial Class Login
         '
         Me.Panel5.BackColor = System.Drawing.Color.Transparent
         Me.Panel5.Controls.Add(Me.Button3)
-        Me.Panel5.Location = New System.Drawing.Point(401, 21)
+        Me.Panel5.Location = New System.Drawing.Point(397, 16)
         Me.Panel5.Name = "Panel5"
-        Me.Panel5.Size = New System.Drawing.Size(43, 42)
+        Me.Panel5.Size = New System.Drawing.Size(47, 50)
         Me.Panel5.TabIndex = 82
+        Me.Panel5.Visible = False
         '
         'Login
         '

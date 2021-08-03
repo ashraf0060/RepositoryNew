@@ -1,4 +1,5 @@
 ﻿Imports System.Data.SqlClient
+Imports System.Net.NetworkInformation
 Imports ClosedXML.Excel
 Imports Microsoft.Exchange.WebServices.Data
 
@@ -14,7 +15,7 @@ Module Module1
     Dim bolyy As Boolean = False
     Public StrFileName As String = "X"
     Public OfflineCon As New SqlConnection()
-    Public ConSTR As New String("Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=D:\Calender_\Calender_.mdf;Integrated Security=True")
+    Public ConSTR As New String(My.Settings.ConStr)
     Public Errmsg As String = ""
     Public MainTbl As New DataTable
     Public sqlComm As New SqlCommand                    'SQL Command
@@ -26,6 +27,10 @@ Module Module1
 #Disable Warning BC40000 ' Type or member is obsolete
         OsIP = System.Net.Dns.GetHostByName("").AddressList(0).ToString()
 #Enable Warning BC40000 ' Type or member is obsolete
+    End Function
+    Function getMacAddress() As String      'Returns the Mac address 
+        Dim nics() As NetworkInterface = NetworkInterface.GetAllNetworkInterfaces()
+        Return nics(0).GetPhysicalAddress.ToString
     End Function
     Public Function CalDate(StDt As Date, ByRef EnDt As Date, ErrHndl As String) As Integer    ' Returns the number of CalDate between StDt and EnDt Using the table CDHolDay
         Dim WdyCount As Integer = 0

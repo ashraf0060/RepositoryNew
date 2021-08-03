@@ -32,7 +32,6 @@ Partial Class Main
         'DataGridView1
         '
         Me.DataGridView1.BackgroundColor = System.Drawing.Color.White
-        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
         DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control
         DataGridViewCellStyle1.Font = New System.Drawing.Font("Tahoma", 8.0!)
         DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText
@@ -44,7 +43,7 @@ Partial Class Main
         Me.DataGridView1.Dock = System.Windows.Forms.DockStyle.Bottom
         Me.DataGridView1.Location = New System.Drawing.Point(0, 76)
         Me.DataGridView1.Name = "DataGridView1"
-        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        Me.DataGridView1.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Control
         DataGridViewCellStyle2.Font = New System.Drawing.Font("Tahoma", 8.0!)
         DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.WindowText
@@ -74,8 +73,7 @@ Partial Class Main
         Me.Controls.Add(Me.Button1)
         Me.Controls.Add(Me.DataGridView1)
         Me.Name = "Main"
-        Me.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.RightToLeftLayout = True
+        Me.RightToLeft = System.Windows.Forms.RightToLeft.No
         Me.ShowInTaskbar = False
         Me.Text = "Main"
         Me.WindowState = System.Windows.Forms.FormWindowState.Maximized

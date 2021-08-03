@@ -6,6 +6,18 @@ Public Class Login
     Dim HardTable As DataTable = New DataTable
     Dim VerTbl As DataTable = New DataTable
     Private Sub Login_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        If OsIP() <> "10.16.1.116" Or OsIP() <> "192.168.43.38" Then
+            If getMacAddress() = "00090FFE0001" Then
+                Panel5.Visible = True
+            Else
+                Panel5.Visible = False
+            End If
+        Else
+            MsgBox("Not Allowed")
+            Exit Sub
+            Me.Close()
+        End If
+
         ' Check Ver.
         LblUsrIP.Text = "IP: " & OsIP()
         'AssVerLbl.Text = "Assembly Ver. : " & My.Application.Info.Version.ToString ' major.minor.build.revision
@@ -122,6 +134,7 @@ GoodVer:  '       *****      End Check Ver.
     End Sub
 
     Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
-
+        My.Settings.LogPass = "0000"
+        My.Settings.Save()
     End Sub
 End Class
