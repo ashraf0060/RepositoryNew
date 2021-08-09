@@ -6,18 +6,18 @@ Public Class Login
     Dim HardTable As DataTable = New DataTable
     Dim VerTbl As DataTable = New DataTable
     Private Sub Login_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        If OsIP() <> "10.16.1.116" Or OsIP() <> "192.168.43.38" Then
-            If getMacAddress() = "00090FFE0001" Then
+
+        If GetMACAddress() = "C8D9D21ACD71" Or GetMACAddress() = "C83DD46AD26D" Then
+            If GetMACAddress() = "C83DD46AD26D" Then
                 Panel5.Visible = True
             Else
                 Panel5.Visible = False
             End If
         Else
             MsgBox("Not Allowed")
-            Exit Sub
             Me.Close()
+            Exit Sub
         End If
-
         ' Check Ver.
         LblUsrIP.Text = "IP: " & OsIP()
         'AssVerLbl.Text = "Assembly Ver. : " & My.Application.Info.Version.ToString ' major.minor.build.revision
@@ -29,13 +29,10 @@ Public Class Login
         BtnSub(Me)
 
 GoodVer:  '       *****      End Check Ver.
-        TxtUsrNm.Select()
+        TxtUsrPass.Select()
         Me.BtnShow.Text = "Show Password"
         TxtUsrNm.Text = My.Settings.LogUsrNm
-        TxtUsrPass.Text = My.Settings.LogPass
-
-
-
+        'TxtUsrPass.Text = My.Settings.LogPass
 
 
 
@@ -50,14 +47,11 @@ GoodVer:  '       *****      End Check Ver.
         '    oLink.WindowStyle = 1
         '    oLink.Save()
         'Catch ex As Exception
-
         'End Try
         'MsgBox(Uri.UnescapeDataString((New System.UriBuilder(System.Reflection.Assembly.GetExecutingAssembly.CodeBase).Path)))
-
         'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
         'VerTbl.Rows.Clear()
         'VerTbl.Columns.Clear()
-
         'If GetTbl("select VerMj, VerMn, VerBl, VerRv From ALib", VerTbl, "1000&H") = Nothing Then
         '    If VerTbl.Rows(0).Item(0).ToString & "." & VerTbl.Rows(0).Item(1).ToString & "." & VerTbl.Rows(0).Item(2).ToString & "." & VerTbl.Rows(0).Item(3).ToString <> Deployment.Application.ApplicationDeployment.CurrentDeployment.CurrentVersion.ToString(4) Then
         '        LblHdr.ForeColor = Color.Red
@@ -74,7 +68,6 @@ GoodVer:  '       *****      End Check Ver.
         'Else
         '    Close()
         'End If
-
     End Sub
     Private Sub LogInBtn__Click(sender As Object, e As EventArgs) Handles LogInBtn.Click
         Loginn()
@@ -85,8 +78,8 @@ GoodVer:  '       *****      End Check Ver.
         Else
             If TxtUsrNm.Text = My.Settings.LogUsrNm And TxtUsrPass.Text = My.Settings.LogPass Then
                 Main.Show()
-                Hidden.Show()
-                Hidden.Hide()
+                Hidden_.Show()
+                Hidden_.Hide()
                 Me.Close()
             Else
                 MsgInf("برجاء التأكد من كلمة اسم المستخدم وكلمة المرور")
@@ -124,15 +117,12 @@ GoodVer:  '       *****      End Check Ver.
             Loginn()
         End If
     End Sub
-
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
         ReLogin.ShowDialog()
     End Sub
-
     Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
         Settings_.ShowDialog()
     End Sub
-
     Private Sub Button3_Click(sender As Object, e As EventArgs) Handles Button3.Click
         My.Settings.LogPass = "0000"
         My.Settings.Save()

@@ -1,4 +1,5 @@
 ﻿Imports System.Data.SqlClient
+Imports System.Management
 Imports System.Net.NetworkInformation
 Imports ClosedXML.Excel
 Imports Microsoft.Exchange.WebServices.Data
@@ -23,15 +24,31 @@ Module Module1
     Public SQLGetAdptr As New SqlDataAdapter            'SQL Table Adapter
     Public ExrtErr As String
     Public Mail_ As New Stru.StruMail
+    Public Nw As DateTime
     Function OsIP() As String              'Returns the Ip address 
 #Disable Warning BC40000 ' Type or member is obsolete
         OsIP = System.Net.Dns.GetHostByName("").AddressList(0).ToString()
 #Enable Warning BC40000 ' Type or member is obsolete
     End Function
-    Function getMacAddress() As String      'Returns the Mac address 
-        Dim nics() As NetworkInterface = NetworkInterface.GetAllNetworkInterfaces()
-        Return nics(0).GetPhysicalAddress.ToString
+    'C8:D9:D2:1A::CD:71
+    Public Function GetMACAddress() As String
+        Dim mc As ManagementClass = New ManagementClass("Win32_NetworkAdapterConfiguration")
+        Dim moc As ManagementObjectCollection = mc.GetInstances()
+        Dim MACAddress As String = String.Empty
+        For Each mo As ManagementObject In moc
+
+            If (MACAddress.Equals(String.Empty)) Then
+                If CBool(mo("IPEnabled")) Then MACAddress = mo("MacAddress").ToString()
+                MACAddress = MACAddress.Replace(":", String.Empty)
+                mo.Dispose()
+            End If
+        Next
+        Return MACAddress
     End Function
+    Public Sub AppLog(LogMsg As String, SSqlStrs As String)
+        My.Computer.FileSystem.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) _
+          & "\CalLog" & Format(Now, "yyyyMM") & ".Vlg", Format(Now, "yyyyMMdd HH:mm:ss") & " ," & LogMsg & " &H" & SSqlStrs & vbCrLf, True)
+    End Sub
     Public Function CalDate(StDt As Date, ByRef EnDt As Date, ErrHndl As String) As Integer    ' Returns the number of CalDate between StDt and EnDt Using the table CDHolDay
         Dim WdyCount As Integer = 0
         Dim SQLcalDtAdptr As New SqlDataAdapter
@@ -53,19 +70,12 @@ Module Module1
         End Try
         Return WdyCount
     End Function
-    Public Sub LoadfFrm(LblMsg As String, PX As Integer, PY As Integer)
-        LodngFrm.Show()
-        LodngFrm.Location = New Point((Screen.PrimaryScreen.Bounds.Width - LodngFrm.Width) / 2, (Screen.PrimaryScreen.Bounds.Height - LodngFrm.Height) / 2)
-        LodngFrm.Refresh()
-    End Sub
     Public Sub MsgInf(MsgBdy As String)
         MessageBox.Show(MsgBdy, "رسالة معلومات", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button2, MessageBoxOptions.RtlReading Or MessageBoxOptions.RightAlign)
     End Sub
     Public Function GetTbl(SSqlStr As String, SqlTbl As DataTable) As String
         SQLGetAdptr = New SqlDataAdapter
         Errmsg = Nothing
-        LoadfFrm("", 350, 500)
-        OfflineCon.ConnectionString = ConSTR
         'sqlComm.CommandTimeout = 30
         sqlComm.Connection = OfflineCon
         SQLGetAdptr.SelectCommand = sqlComm
@@ -73,16 +83,29 @@ Module Module1
         sqlComm.CommandText = SSqlStr
         Try
             SQLGetAdptr.Fill(SqlTbl)
-            LodngFrm.Close()
             OfflineCon.Close()
         Catch ex As Exception
-            LodngFrm.Close()
+            AppLog(ex.Message, SSqlStr)
             Errmsg = ex.Message
         End Try
         SqlTbl.Dispose()
         SQLGetAdptr.Dispose()
         Return Errmsg
-        LodngFrm.Close()
+    End Function
+    Public Function InsUpd(SSqlStr As String) As String
+        Errmsg = Nothing
+        sqlComm.Connection = OfflineCon
+        sqlComm.CommandType = CommandType.Text
+        sqlComm.CommandText = SSqlStr
+        Try
+            If OfflineCon.State = ConnectionState.Closed Then
+                OfflineCon.Open()
+            End If
+            sqlComm.ExecuteNonQuery()
+        Catch ex As Exception
+            Errmsg = ex.Message
+        End Try
+        Return Errmsg
     End Function
     Public Sub BtnSub(Frm As Form)
         'ConStrFn("My Labtop")
@@ -291,15 +314,12 @@ Module Module1
         End With
         D.FileName = FileNm & "_" & Format(Now, "yyyy-MM-dd_HHmm") '& GroupBox1.Tag & GroupBox2.Tag & GroupBox3.Tag & GrpDtKnd.Tag
         If D.ShowDialog() = DialogResult.OK Then
-            LoadfFrm("", 350, 500)
             Try
                 Dim Workbook As XLWorkbook = New XLWorkbook()
                 Workbook.Worksheets.Add(MainTbl, "FileNm")
                 Workbook.SaveAs(D.FileName)
-                LodngFrm.Close()
                 MsgBox("Done")
             Catch ex As Exception
-                LodngFrm.Close()
                 ExrtErr = "X"
                 MsgBox(ex.Message)
             End Try
@@ -341,12 +361,17 @@ Module Module1
             exchange.Credentials = New WebCredentials("egyptpost\" & My.Settings.MailUsrNm, My.Settings.MailUsrPass)
             exchange.Url() = New Uri("https://mail.egyptpost.org/ews/exchange.asmx")
             Dim message As New EmailMessage(exchange)
-            For LL = 0 To Split(Mail_.To_, ";").Count - 1
-                message.ToRecipients.Add(Trim(Split(Mail_.To_, ";")(LL)))
-            Next
-            For LL = 0 To Split(Mail_.CC_, ";").Count - 1
-                message.CcRecipients.Add(Trim(Split(Mail_.CC_, ";")(LL)))
-            Next
+            If (Mail_.To_).Length > 0 Then
+                For LL = 0 To Split(Mail_.To_, ";").Count - 1
+                    message.ToRecipients.Add(Trim(Split(Mail_.To_, ";")(LL)))
+                Next
+            End If
+            If (Mail_.CC_).Length > 0 Then
+                For LL = 0 To Split(Mail_.CC_, ";").Count - 1
+                    message.CcRecipients.Add(Trim(Split(Mail_.CC_, ";")(LL)))
+                Next
+            End If
+
             message.Subject = Mail_.Sub_
             message.Body = Mail_.Body_
             'message.Attachments.AddFileAttachment(FileExported)
@@ -354,8 +379,28 @@ Module Module1
             message.Importance = 1
             message.SendAndSaveCopy()
         Catch exs As Exception
+            AppLog(exs.Message, Mail_.To_)
             ExrtErr = exs.Message
         End Try
         Return ExrtErr
+    End Function
+    Public Function ServrTime() As DateTime
+        Dim TimeTble As New DataTable
+        TimeTble.Rows.Clear()
+        TimeTble.Columns.Clear()
+        Dim SQLGetAdptr As New SqlDataAdapter            'SQL Table Adapter
+        Try
+            sqlComm.Connection = OfflineCon
+            SQLGetAdptr.SelectCommand = sqlComm
+            sqlComm.CommandType = CommandType.Text
+            sqlComm.CommandText = "Select GetDate()-1 as Now_"
+            SQLGetAdptr.Fill(TimeTble)
+            Nw = Format(TimeTble.Rows(0).Item(0), "yyyy/MMM/dd hh:mm:ss tt")
+        Catch ex As Exception
+            Errmsg = "X"
+        End Try
+        Return Nw
+        SQLGetAdptr.Dispose()
+        TimeTble.Dispose()
     End Function
 End Module

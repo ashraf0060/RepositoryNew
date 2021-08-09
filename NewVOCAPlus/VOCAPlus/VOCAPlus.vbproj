@@ -140,6 +140,7 @@
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Management" />
     <Reference Include="System.Web.Services" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Forms.DataVisualization" />
@@ -226,10 +227,22 @@
     <Compile Include="HeldDlvryRprt.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="TikDetails.Designer.vb">
+      <DependentUpon>TikDetails.vb</DependentUpon>
+    </Compile>
+    <Compile Include="TikDetails.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="TikSearchNew.Designer.vb">
       <DependentUpon>TikSearchNew.vb</DependentUpon>
     </Compile>
     <Compile Include="TikSearchNew.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TikUpdate.Designer.vb">
+      <DependentUpon>TikUpdate.vb</DependentUpon>
+    </Compile>
+    <Compile Include="TikUpdate.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="UsrCreat.Designer.vb">
@@ -593,8 +606,14 @@
     <EmbeddedResource Include="HeldDlvryRprt.resx">
       <DependentUpon>HeldDlvryRprt.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="TikDetails.resx">
+      <DependentUpon>TikDetails.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="TikSearchNew.resx">
       <DependentUpon>TikSearchNew.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TikUpdate.resx">
+      <DependentUpon>TikUpdate.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UsrCreat.resx">
       <DependentUpon>UsrCreat.vb</DependentUpon>

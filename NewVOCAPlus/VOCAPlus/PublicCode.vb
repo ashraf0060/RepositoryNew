@@ -1,5 +1,5 @@
-﻿Imports System.Data.OleDb
-Imports System.IO
+﻿Imports System.IO
+Imports System.Management
 Imports System.Net
 Imports System.Net.Mail
 Imports System.Net.NetworkInformation
@@ -11,7 +11,7 @@ Module PublicCode
     Public screenWidth As Integer = Screen.PrimaryScreen.Bounds.Width
     Public screenHeight As Integer = Screen.PrimaryScreen.Bounds.Height
 
-    Public MLXX As String = ""
+    Public MLXX As String = ""       ' Mail Password From Lib Table
     Public Errmsg As String          ' Handel error message
     Public Esc As String = ""
     Public EscCnt As Integer = 0
@@ -52,7 +52,7 @@ Module PublicCode
     Public ConTbl As New DataTable
     Public LogOfflinTbl As New DataTable
     Public CompfflinTbl As New DataTable
-    'Public TickTable As DataTable = New DataTable
+
     Public PreciFlag As Boolean = False                 'Load princible tables
     Public PrciTblCnt As Integer = 0                    'Counter for Thread
     Public ExpDTable As New DataTable                   'Export data Function to use its count every time i use this function
@@ -63,7 +63,7 @@ Module PublicCode
     Public DataExprRtrn As Strc.ExprXlsx                     'Return Counters Structure of Export Function
     Public GridCuntRtrn As Strc.TickInfo                     'Return Counters Structure of Gridview Function
     Public StruGrdTk As Strc.TickFld                     'Return Fields Structure of Tickets Gridview Function
-    Public Msg As String                                'ASHRAF-PC\ASHRAFSQL
+    Public Msg As String
     Public LblSecLvl_ As String = "" 'FOR SEC fORM
     'Public Const strConn As String = "Data Source=sql5041.site4now.net;Initial Catalog=DB_A49C49_vocaplus;Persist Security Info=True;User ID=DB_A49C49_vocaplus_admin;Password=Hemonad105046"
     'Public Const strConn As String = "Server=tcp:egyptpostazure.database.windows.net,1433;Initial Catalog=vocaplus;Persist Security Info=False;User ID=sw;Password=Hemonad105046;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
@@ -129,10 +129,12 @@ Module PublicCode
     Public CtlCnt As Integer = 0
     Dim CTTTRL As Control
     Dim BacCtrl As Control
-    Dim TbCtrl As New TabControl
     Dim Slctd As Boolean = False
-    Dim CnrlReFill As Boolean = False
     Dim bolyy As Boolean = False
+    Dim CompList As New List(Of String) 'list of tickets to get tickets updates
+    Public CompIds As String ' tickets to get tickets updates
+    Public UpdtCurrTbl As DataTable
+    Public ElapsedTimeSpan As String
     Public Function ConStrFn(tt As String) As String
         '@VocaPlus$21-2
 
@@ -160,6 +162,20 @@ Module PublicCode
     Function getMacAddress() As String      'Returns the Mac address 
         Dim nics() As NetworkInterface = NetworkInterface.GetAllNetworkInterfaces()
         Return nics(0).GetPhysicalAddress.ToString
+    End Function
+    Public Function GetMACAddressNew() As String
+        Dim mc As ManagementClass = New ManagementClass("Win32_NetworkAdapterConfiguration")
+        Dim moc As ManagementObjectCollection = mc.GetInstances()
+        Dim MACAddress As String = String.Empty
+        For Each mo As ManagementObject In moc
+
+            If (MACAddress.Equals(String.Empty)) Then
+                If CBool(mo("IPEnabled")) Then MACAddress = mo("MacAddress").ToString()
+                MACAddress = MACAddress.Replace(":", String.Empty)
+                mo.Dispose()
+            End If
+        Next
+        Return MACAddress
     End Function
     Public Function SEmail(ETo As String, Optional ECc As String = "", Optional EBc As String = "", Optional Esub As String = "", Optional EMsg As String = "", Optional ETch As String = "X", Optional EPri As String = "N") As Integer
         '   Email Function Ver. 4.0
@@ -442,6 +458,8 @@ End_:
         MessageBox.Show(MsgBdy, "رسالة خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button2, MessageBoxOptions.RtlReading Or MessageBoxOptions.RightAlign)
     End Sub
     Public Function GetTbl(SSqlStr As String, SqlTbl As DataTable, ErrHndl As String) As String
+        Dim StW As New Stopwatch
+        StW.Start()
         Errmsg = Nothing
         Dim SQLGetAdptr As New SqlDataAdapter            'SQL Table Adapter
         'sqlComm.CommandTimeout = 90
@@ -459,6 +477,9 @@ End_:
                     End If
                 End If
             End If
+            StW.Stop()
+            Dim TimSpn As TimeSpan = (StW.Elapsed)
+            ElapsedTimeSpan = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", TimSpn.Hours, TimSpn.Minutes, TimSpn.Seconds, TimSpn.Milliseconds / 10)
         Catch ex As Exception
             Dim frmCollection = Application.OpenForms
             If frmCollection.OfType(Of WelcomeScreen).Any Then
@@ -527,7 +548,118 @@ End_:
         End Try
         Return Errmsg
     End Function
-    Public Sub SubGrdTikFill(GrdTick As DataGridView, Tbl As DataTable)
+    Public Sub CompGrdTikFill(GrdTick As DataGridView, Tbl As DataTable) ' New Sub
+        GrdTick.DataSource = Tbl
+        CompList = New List(Of String)
+        For HH = 0 To Tbl.Columns.Count - 1
+            If Tbl.Columns(HH).ColumnName = "TkDtStart" Then
+                GrdTick.Columns(HH).HeaderText = "تاريخ الشكوى"
+            ElseIf Tbl.Columns(HH).ColumnName = "TkID" Then
+                GrdTick.Columns(HH).HeaderText = "رقم الشكوى"
+            ElseIf Tbl.Columns(HH).ColumnName = "SrcNm" Then
+                GrdTick.Columns(HH).HeaderText = "مصدر الشكوى"
+            ElseIf Tbl.Columns(HH).ColumnName = "TkClNm" Then
+                GrdTick.Columns(HH).HeaderText = "اسم العميل"
+            ElseIf Tbl.Columns(HH).ColumnName = "TkClPh" Then
+                GrdTick.Columns(HH).HeaderText = "تليفون العميل"
+            ElseIf Tbl.Columns(HH).ColumnName = "TkClPh1" Then
+                GrdTick.Columns(HH).HeaderText = "تليفون العميل2"
+            ElseIf Tbl.Columns(HH).ColumnName = "PrdNm" Then
+                GrdTick.Columns(HH).HeaderText = "اسم المنتج"
+            ElseIf Tbl.Columns(HH).ColumnName = "CompNm" Then
+                GrdTick.Columns(HH).HeaderText = "نوع الشكوى"
+            ElseIf Tbl.Columns(HH).ColumnName = "UsrRealNm" Then
+                GrdTick.Columns(HH).HeaderText = "متابع الشكوى"
+            Else
+                GrdTick.Columns(HH).HeaderText = "unknown"
+                GrdTick.Columns(HH).Visible = False
+            End If
+        Next
+        For GG = 0 To GrdTick.Rows.Count - 1
+            CompList.Add("TkupTkSql = " & GrdTick.Rows(GG).Cells(0).Value)
+        Next
+        CompIds = String.Join(" OR ", CompList)
+    End Sub
+    Public Sub UpdateFormt(GridUpd As DataGridView, Optional StrTick As String = "")     'UpGrgFrmt(GridUpdt, GridTicket)
+        For Cnt_ = 0 To GridUpd.Rows.Count - 1
+            If GridUpd.Rows(Cnt_).Cells("EvSusp").Value = True Then                             'Event Sys True
+                GridUpd.Rows(Cnt_).Cells("TkupReDt").Value = ""                                    'Read Date
+                GridUpd.Rows(Cnt_).DefaultCellStyle.BackColor = My.Settings.ClrSys
+            ElseIf StrTick <> "" Then
+                If GridUpd.Rows(Cnt_).Cells("TkupUser").Value = StrTick Then                        'Event UserId
+                    GridUpd.Rows(Cnt_).DefaultCellStyle.BackColor = My.Settings.ClrUsr
+                ElseIf GridUpd.Rows(Cnt_).Cells("TkupUser").Value <> StrTick Then                        'Event UserId
+                    If GridUpd.Rows(Cnt_).Cells("UCatLvl").Value >= 3 And GridUpd.Rows(Cnt_).Cells("UCatLvl").Value <= 5 Then
+                        GridUpd.Rows(Cnt_).DefaultCellStyle.BackColor = My.Settings.ClrSamCat
+                    ElseIf GridUpd.Rows(Cnt_).Cells("UCatLvl").Value = 12 Then
+                        GridUpd.Rows(Cnt_).DefaultCellStyle.BackColor = My.Settings.ClrOperation
+                    Else
+                        GridUpd.Rows(Cnt_).DefaultCellStyle.BackColor = My.Settings.ClrNotUsr
+                    End If
+                End If
+            End If
+
+            If Year(GridUpd.Rows(Cnt_).Cells("TkupReDt").Value) < 2000 Then
+                GridUpd.Rows(Cnt_).Cells("TkupReDt").Value = ""                                    'Read Date
+            End If
+            If GridUpd.Rows(Cnt_).Cells("TkupUnread").Value = False Then                              'Read Status
+                GridUpd.Rows(Cnt_).DefaultCellStyle.Font = New Font("Times New Roman", 12, FontStyle.Bold)
+            Else
+                GridUpd.Rows(Cnt_).DefaultCellStyle.Font = New Font("Times New Roman", 12, FontStyle.Regular)
+            End If
+
+        Next
+        'TkupSTime, TkupTxt, UsrRealNm,TkupReDt, TkupUser,TkupSQL,TkupTkSql,TkupEvtId, EvSusp, UCatLvl,TkupUnread
+        GridUpd.Columns("TkupSTime").HeaderText = "تاريخ التحديث"
+        GridUpd.Columns("TkupTxt").HeaderText = "نص التحديث"
+        GridUpd.Columns("UsrRealNm").HeaderText = "محرر التحديث"
+        GridUpd.Columns("TkupReDt").HeaderText = "قراءة التحديث"
+        GridUpd.Columns("TkupUser").Visible = False
+        GridUpd.Columns("TkupSQL").Visible = False
+        GridUpd.Columns("TkupTkSql").Visible = False
+        GridUpd.Columns("TkupEvtId").Visible = False
+        GridUpd.Columns("EvSusp").Visible = False
+        GridUpd.Columns("UCatLvl").Visible = False
+        GridUpd.Columns("TkupUnread").Visible = False
+        GridUpd.AutoResizeColumns()
+        GridUpd.Columns("TkupTxt").Width = GridUpd.Width - (GridUpd.Columns("TkupSTime").Width + GridUpd.Columns("UsrRealNm").Width + GridUpd.Columns("TkupReDt").Width + 50)
+        GridUpd.Columns("TkupTxt").DefaultCellStyle.WrapMode = DataGridViewTriState.True
+        GridUpd.AutoResizeRows()
+        GridUpd.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+        GridUpd.ColumnHeadersDefaultCellStyle.WrapMode = DataGridViewTriState.False
+    End Sub
+    Public Function TikKindCnt(TblTicket As DataTable, TblUpdt As DataTable) As TickInfo ' Function to Adjust Ticket Gridview
+        GridCuntRtrn.TickCount = 0
+        GridCuntRtrn.CompCount = 0
+        GridCuntRtrn.NoFlwCount = 0
+        GridCuntRtrn.UnReadCount = 0
+        GridCuntRtrn.ClsCount = 0
+        For Rws = 0 To TblTicket.Rows.Count - 1
+            GridCuntRtrn.TickCount += 1                                          'Grid record count
+            If TblTicket.Rows(Rws).Item("TkKind") = True Then                    'if ticket kind is complaint
+                GridCuntRtrn.CompCount += 1
+            End If    'if Close Status is True                      if Ticket Kind is Complaint
+            If TblTicket.Rows(Rws).Item("TkClsStatus") = True And TblTicket.Rows(Rws).Item("TkKind") = True Then
+                GridCuntRtrn.ClsCount += 1
+            End If
+            If TblTicket.Rows(Rws).Item("TkFolw") = False Then                   'if No Follow Status is True
+                GridCuntRtrn.NoFlwCount += 1
+            End If
+
+            TblUpdt.DefaultView.RowFilter = "[TkupTkSql]" & " = " & TblTicket.Rows(Rws).Item("TkSQL")
+            TblTicket.Rows(Rws).Item("تاريخ آخر تحديث") = TblUpdt.DefaultView(0).Item("TkupSTime")
+            TblTicket.Rows(Rws).Item("نص آخر تحديث") = TblUpdt.DefaultView(0).Item("TkupTxt")
+            TblTicket.Rows(Rws).Item("محرر آخر تحديث") = TblUpdt.DefaultView(0).Item("UsrRealNm")
+            TblTicket.Rows(Rws).Item("LastUpdateID") = TblUpdt.DefaultView(0).Item("TkupEvtId")
+
+            If TblTicket.Rows(Rws).Item("TkFolw") = False Then                   'if Read Status is false
+                GridCuntRtrn.UnReadCount += 1
+            End If
+        Next
+
+        Return GridCuntRtrn 'Return Counters Structure
+    End Function
+    Public Sub SubGrdTikFill(GrdTick As DataGridView, Tbl As DataTable) 'To Delete Because The new one is "CompGrdTikFill"
         GrdTick.DataSource = Tbl
         If GrdTick.Columns(0).HeaderText <> "م" Then GrdTick.Columns.Insert(0, New DataGridViewTextBoxColumn())
         GrdTick.Columns(0).HeaderText = "م"
@@ -815,6 +947,10 @@ End_:
         'ConStrFn("My Labtop")
         'sqlCon.ConnectionString = strConn
         Form_ = Frm
+        If Frm.Name <> "Login" Then
+            Frm.Location = New Point(0, 52)
+        End If
+
         Slctd = False
 #Region "Default ContextMenuStrip"
         DefCmStrip = New ContextMenuStrip
@@ -1942,6 +2078,7 @@ End_:
                     Else
                         richtxtbx.SelectionBackColor = Color.Red
                         richtxtbx.SelectionColor = Color.Yellow
+                        richtxtbx.SelectionFont = New Font("Times New Roman", 14, FontStyle.Bold)
                     End If
 
                 End If

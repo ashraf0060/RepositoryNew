@@ -27,7 +27,7 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ProductName>Smart Calender</ProductName>
     <PublisherName>Ashraf Farag</PublisherName>
-    <ApplicationRevision>4</ApplicationRevision>
+    <ApplicationRevision>13</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -110,6 +110,7 @@
     <Reference Include="System.IO.Packaging, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.IO.Packaging.4.0.0\lib\net46\System.IO.Packaging.dll</HintPath>
     </Reference>
+    <Reference Include="System.Management" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Core" />
@@ -132,12 +133,6 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="LodngFrm.Designer.vb">
-      <DependentUpon>LodngFrm.vb</DependentUpon>
-    </Compile>
-    <Compile Include="LodngFrm.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="Login.Designer.vb">
       <DependentUpon>Login.vb</DependentUpon>
     </Compile>
@@ -158,10 +153,10 @@
       <DependentUpon>Application.myapp</DependentUpon>
       <DesignTime>True</DesignTime>
     </Compile>
-    <Compile Include="Hidden.Designer.vb">
-      <DependentUpon>Hidden.vb</DependentUpon>
+    <Compile Include="Hidden_.Designer.vb">
+      <DependentUpon>Hidden_.vb</DependentUpon>
     </Compile>
-    <Compile Include="Hidden.vb">
+    <Compile Include="Hidden_.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="My Project\Resources.Designer.vb">
@@ -189,11 +184,8 @@
     <Compile Include="Stru.vb" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Hidden.resx">
-      <DependentUpon>Hidden.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="LodngFrm.resx">
-      <DependentUpon>LodngFrm.vb</DependentUpon>
+    <EmbeddedResource Include="Hidden_.resx">
+      <DependentUpon>Hidden_.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Login.resx">
       <DependentUpon>Login.vb</DependentUpon>

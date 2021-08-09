@@ -6,13 +6,25 @@ Public Class Settings_
         TxtMailNm.Text = My.Settings.MailUsrNm
         TxtMailPassword.Text = My.Settings.MailUsrPass
         txtConStr.Text = My.Settings.ConStr
+        NtfSrt.Text = My.Settings.Hour_Frm
+        NtfEnd.Text = My.Settings.Hour_To
+        NtfEvry.Text = My.Settings.NtfEvry
+        DateTimePicker1.Value = My.Settings.MailTime
+
+        AddHandler TxtMailPassword.TextChanged, AddressOf TxtMailPassword_TextChanged
+        AddHandler TxtMailNm.TextChanged, AddressOf TxtMailNm_TextChanged
+        AddHandler txtConStr.MouseClick, AddressOf TextBox1_MouseClick
+        AddHandler NtfSrt.TextChanged, AddressOf NtfSrt_TextChanged
+        AddHandler NtfEnd.TextChanged, AddressOf NtfEnd_TextChanged
+        AddHandler NtfEvry.TextChanged, AddressOf NtfEvry_TextChanged
+        AddHandler DateTimePicker1.ValueChanged, AddressOf DateTimePicker1_ValueChanged
     End Sub
 
-    Private Sub TxtMailPassword_TextChanged(sender As Object, e As EventArgs) Handles TxtMailPassword.TextChanged
+    Private Sub TxtMailPassword_TextChanged(sender As Object, e As EventArgs)
         My.Settings.MailUsrPass = TxtMailPassword.Text
         My.Settings.Save()
     End Sub
-    Private Sub TxtMailNm_TextChanged(sender As Object, e As EventArgs) Handles TxtMailNm.TextChanged
+    Private Sub TxtMailNm_TextChanged(sender As Object, e As EventArgs)
         My.Settings.MailUsrNm = TxtMailNm.Text
         My.Settings.Save()
     End Sub
@@ -75,8 +87,7 @@ Public Class Settings_
             End If
         End If
     End Sub
-
-    Private Sub TextBox1_MouseClick(sender As Object, e As MouseEventArgs) Handles txtConStr.MouseClick
+    Private Sub TextBox1_MouseClick(sender As Object, e As MouseEventArgs)
         Dim fd As FolderBrowserDialog = New FolderBrowserDialog()
         fd.SelectedPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop)
         If fd.ShowDialog() = DialogResult.OK Then
@@ -86,5 +97,29 @@ Public Class Settings_
             My.Settings.ConStr = ConSTR
             My.Settings.Save()
         End If
+    End Sub
+
+    Private Sub NtfSrt_TextChanged(sender As Object, e As EventArgs)
+        My.Settings.Hour_Frm = NtfSrt.Text
+        My.Settings.Save()
+    End Sub
+
+    Private Sub NtfEnd_TextChanged(sender As Object, e As EventArgs)
+        My.Settings.Hour_To = NtfEnd.Text
+        My.Settings.Save()
+    End Sub
+
+    Private Sub NtfEvry_TextChanged(sender As Object, e As EventArgs)
+        My.Settings.NtfEvry = NtfEvry.Text
+        My.Settings.Save()
+    End Sub
+
+    Private Sub DateTimePicker1_ValueChanged(sender As Object, e As EventArgs)
+        My.Settings.MailTime = DateTimePicker1.Value
+        My.Settings.Save()
+    End Sub
+
+    Private Sub Button2_Click(sender As Object, e As EventArgs) Handles Button2.Click
+        MsgBox(My.Settings.MailTime)
     End Sub
 End Class

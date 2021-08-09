@@ -56,7 +56,7 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("Ashraf")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("admin")>  _
         Public Property LogUsrNm() As String
             Get
                 Return CType(Me("LogUsrNm"),String)
@@ -80,7 +80,7 @@ Namespace My
         
         <Global.System.Configuration.UserScopedSettingAttribute(),  _
          Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
-         Global.System.Configuration.DefaultSettingValueAttribute("a.farag@egyptpost.org")>  _
+         Global.System.Configuration.DefaultSettingValueAttribute("a.farag")>  _
         Public Property MailUsrNm() As String
             Get
                 Return CType(Me("MailUsrNm"),String)
@@ -112,6 +112,54 @@ Namespace My
             End Get
             Set
                 Me("ConStr") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("9")>  _
+        Public Property Hour_Frm() As Single
+            Get
+                Return CType(Me("Hour_Frm"),Single)
+            End Get
+            Set
+                Me("Hour_Frm") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("18")>  _
+        Public Property Hour_To() As Single
+            Get
+                Return CType(Me("Hour_To"),Single)
+            End Get
+            Set
+                Me("Hour_To") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("15")>  _
+        Public Property NtfEvry() As String
+            Get
+                Return CType(Me("NtfEvry"),String)
+            End Get
+            Set
+                Me("NtfEvry") = value
+            End Set
+        End Property
+        
+        <Global.System.Configuration.UserScopedSettingAttribute(),  _
+         Global.System.Diagnostics.DebuggerNonUserCodeAttribute(),  _
+         Global.System.Configuration.DefaultSettingValueAttribute("08/05/2021 10:55:00")>  _
+        Public Property MailTime() As Date
+            Get
+                Return CType(Me("MailTime"),Date)
+            End Get
+            Set
+                Me("MailTime") = value
             End Set
         End Property
     End Class

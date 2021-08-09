@@ -3,19 +3,31 @@
   <Profiles />
   <Settings>
     <Setting Name="LogUsrNm" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Ashraf</Value>
+      <Value Profile="(Default)">admin</Value>
     </Setting>
     <Setting Name="LogPass" Type="System.String" Scope="User">
       <Value Profile="(Default)">0000</Value>
     </Setting>
     <Setting Name="MailUsrNm" Type="System.String" Scope="User">
-      <Value Profile="(Default)">a.farag@egyptpost.org</Value>
+      <Value Profile="(Default)">a.farag</Value>
     </Setting>
     <Setting Name="MailUsrPass" Type="System.String" Scope="User">
       <Value Profile="(Default)" />
     </Setting>
     <Setting Name="ConStr" Type="System.String" Scope="User">
       <Value Profile="(Default)">Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=D:\Calender_\Calender_.mdf;Integrated Security=True</Value>
+    </Setting>
+    <Setting Name="Hour_Frm" Type="System.Single" Scope="User">
+      <Value Profile="(Default)">9</Value>
+    </Setting>
+    <Setting Name="Hour_To" Type="System.Single" Scope="User">
+      <Value Profile="(Default)">18</Value>
+    </Setting>
+    <Setting Name="NtfEvry" Type="System.String" Scope="User">
+      <Value Profile="(Default)">15</Value>
+    </Setting>
+    <Setting Name="MailTime" Type="System.DateTime" Scope="User">
+      <Value Profile="(Default)">08/05/2021 10:55:00</Value>
     </Setting>
   </Settings>
 </SettingsFile>

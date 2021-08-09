@@ -113,9 +113,6 @@
                 MsgErr(Errmsg)
             End If
         End If
-
-
-
         DrpNode.EnsureVisible()
         selectedTreeview.SelectedNode = DrpNode ' make the change here of the catagory and sub catagory
     End Sub

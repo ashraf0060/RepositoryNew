@@ -351,7 +351,7 @@ sec_UsrErr_:
         End If
     End Sub
     Private Sub LblUsrIP_Click(sender As Object, e As EventArgs) Handles LblUsrIP.Click
-        MsgBox(getMacAddress())
+        MsgBox(GetMACAddressNew())
     End Sub
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
 
