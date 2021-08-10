@@ -24,6 +24,10 @@ Partial Class TikUpdate
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Me.GridUpdt = New System.Windows.Forms.DataGridView()
+        Me.ContextMenuStrip2 = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.CopyToolStripitem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.UplodAtchToolStripitem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.DonlodAttchToolStripitem = New System.Windows.Forms.ToolStripMenuItem()
         Me.Label60 = New System.Windows.Forms.Label()
         Me.CmbEvent = New System.Windows.Forms.ComboBox()
         Me.TxtUpdt = New System.Windows.Forms.TextBox()
@@ -31,10 +35,6 @@ Partial Class TikUpdate
         Me.BtnBrws = New System.Windows.Forms.Button()
         Me.TxtBrws = New System.Windows.Forms.TextBox()
         Me.LblMsg = New System.Windows.Forms.Label()
-        Me.ContextMenuStrip2 = New System.Windows.Forms.ContextMenuStrip(Me.components)
-        Me.CopyToolStripitem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.UplodAtchToolStripitem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.DonlodAttchToolStripitem = New System.Windows.Forms.ToolStripMenuItem()
         Me.TimerEscOpen = New System.Windows.Forms.Timer(Me.components)
         CType(Me.GridUpdt, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.ContextMenuStrip2.SuspendLayout()
@@ -46,6 +46,7 @@ Partial Class TikUpdate
         Me.GridUpdt.AllowUserToDeleteRows = False
         Me.GridUpdt.BackgroundColor = System.Drawing.Color.White
         Me.GridUpdt.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.GridUpdt.ContextMenuStrip = Me.ContextMenuStrip2
         Me.GridUpdt.Dock = System.Windows.Forms.DockStyle.Top
         Me.GridUpdt.Location = New System.Drawing.Point(0, 0)
         Me.GridUpdt.MultiSelect = False
@@ -55,6 +56,49 @@ Partial Class TikUpdate
         Me.GridUpdt.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect
         Me.GridUpdt.Size = New System.Drawing.Size(1252, 455)
         Me.GridUpdt.TabIndex = 2057
+        '
+        'ContextMenuStrip2
+        '
+        Me.ContextMenuStrip2.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CopyToolStripitem, Me.UplodAtchToolStripitem, Me.DonlodAttchToolStripitem})
+        Me.ContextMenuStrip2.Name = "ContextMenuStrip1"
+        Me.ContextMenuStrip2.RenderMode = System.Windows.Forms.ToolStripRenderMode.System
+        Me.ContextMenuStrip2.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+        Me.ContextMenuStrip2.Size = New System.Drawing.Size(185, 70)
+        '
+        'CopyToolStripitem
+        '
+        Me.CopyToolStripitem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
+        Me.CopyToolStripitem.Image = Global.VOCAPlus.My.Resources.Resources.Copy
+        Me.CopyToolStripitem.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.CopyToolStripitem.Name = "CopyToolStripitem"
+        Me.CopyToolStripitem.RightToLeftAutoMirrorImage = True
+        Me.CopyToolStripitem.Size = New System.Drawing.Size(184, 22)
+        Me.CopyToolStripitem.Text = "Copy Selected Cell"
+        '
+        'UplodAtchToolStripitem
+        '
+        Me.UplodAtchToolStripitem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
+        Me.UplodAtchToolStripitem.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom
+        Me.UplodAtchToolStripitem.Image = Global.VOCAPlus.My.Resources.Resources.upload_1
+        Me.UplodAtchToolStripitem.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
+        Me.UplodAtchToolStripitem.Name = "UplodAtchToolStripitem"
+        Me.UplodAtchToolStripitem.RightToLeftAutoMirrorImage = True
+        Me.UplodAtchToolStripitem.Size = New System.Drawing.Size(184, 22)
+        Me.UplodAtchToolStripitem.Text = "Upload Attachement"
+        Me.UplodAtchToolStripitem.TextAlign = System.Drawing.ContentAlignment.MiddleRight
+        '
+        'DonlodAttchToolStripitem
+        '
+        Me.DonlodAttchToolStripitem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
+        Me.DonlodAttchToolStripitem.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom
+        Me.DonlodAttchToolStripitem.Image = Global.VOCAPlus.My.Resources.Resources.Download
+        Me.DonlodAttchToolStripitem.ImageAlign = System.Drawing.ContentAlignment.TopLeft
+        Me.DonlodAttchToolStripitem.Name = "DonlodAttchToolStripitem"
+        Me.DonlodAttchToolStripitem.RightToLeft = System.Windows.Forms.RightToLeft.No
+        Me.DonlodAttchToolStripitem.RightToLeftAutoMirrorImage = True
+        Me.DonlodAttchToolStripitem.Size = New System.Drawing.Size(184, 22)
+        Me.DonlodAttchToolStripitem.Text = "Download attached"
+        Me.DonlodAttchToolStripitem.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'Label60
         '
@@ -126,10 +170,10 @@ Partial Class TikUpdate
         '
         Me.TxtBrws.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TxtBrws.Font = New System.Drawing.Font("Times New Roman", 12.0!)
-        Me.TxtBrws.Location = New System.Drawing.Point(21, 462)
+        Me.TxtBrws.Location = New System.Drawing.Point(0, 462)
         Me.TxtBrws.Name = "TxtBrws"
         Me.TxtBrws.ReadOnly = True
-        Me.TxtBrws.Size = New System.Drawing.Size(254, 26)
+        Me.TxtBrws.Size = New System.Drawing.Size(275, 26)
         Me.TxtBrws.TabIndex = 2159
         '
         'LblMsg
@@ -141,49 +185,6 @@ Partial Class TikUpdate
         Me.LblMsg.Size = New System.Drawing.Size(1252, 33)
         Me.LblMsg.TabIndex = 2160
         Me.LblMsg.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
-        'ContextMenuStrip2
-        '
-        Me.ContextMenuStrip2.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CopyToolStripitem, Me.UplodAtchToolStripitem, Me.DonlodAttchToolStripitem})
-        Me.ContextMenuStrip2.Name = "ContextMenuStrip1"
-        Me.ContextMenuStrip2.RenderMode = System.Windows.Forms.ToolStripRenderMode.System
-        Me.ContextMenuStrip2.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.ContextMenuStrip2.Size = New System.Drawing.Size(185, 70)
-        '
-        'CopyToolStripitem
-        '
-        Me.CopyToolStripitem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.CopyToolStripitem.Image = Global.VOCAPlus.My.Resources.Resources.Copy
-        Me.CopyToolStripitem.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.CopyToolStripitem.Name = "CopyToolStripitem"
-        Me.CopyToolStripitem.RightToLeftAutoMirrorImage = True
-        Me.CopyToolStripitem.Size = New System.Drawing.Size(184, 22)
-        Me.CopyToolStripitem.Text = "Copy Selected Cell"
-        '
-        'UplodAtchToolStripitem
-        '
-        Me.UplodAtchToolStripitem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.UplodAtchToolStripitem.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom
-        Me.UplodAtchToolStripitem.Image = Global.VOCAPlus.My.Resources.Resources.upload_1
-        Me.UplodAtchToolStripitem.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.UplodAtchToolStripitem.Name = "UplodAtchToolStripitem"
-        Me.UplodAtchToolStripitem.RightToLeftAutoMirrorImage = True
-        Me.UplodAtchToolStripitem.Size = New System.Drawing.Size(184, 22)
-        Me.UplodAtchToolStripitem.Text = "Upload Attachement"
-        Me.UplodAtchToolStripitem.TextAlign = System.Drawing.ContentAlignment.MiddleRight
-        '
-        'DonlodAttchToolStripitem
-        '
-        Me.DonlodAttchToolStripitem.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right
-        Me.DonlodAttchToolStripitem.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom
-        Me.DonlodAttchToolStripitem.Image = Global.VOCAPlus.My.Resources.Resources.Download
-        Me.DonlodAttchToolStripitem.ImageAlign = System.Drawing.ContentAlignment.TopLeft
-        Me.DonlodAttchToolStripitem.Name = "DonlodAttchToolStripitem"
-        Me.DonlodAttchToolStripitem.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.DonlodAttchToolStripitem.RightToLeftAutoMirrorImage = True
-        Me.DonlodAttchToolStripitem.Size = New System.Drawing.Size(184, 22)
-        Me.DonlodAttchToolStripitem.Text = "Download attached"
-        Me.DonlodAttchToolStripitem.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
         'TimerEscOpen
         '

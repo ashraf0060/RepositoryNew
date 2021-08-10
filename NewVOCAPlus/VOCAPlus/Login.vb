@@ -22,20 +22,20 @@ Public Class Login
         BtnSub(Me)
 
         Dim PrTblTsk As New Thread(AddressOf HrdWre)
-            PrTblTsk.IsBackground = True
-            PrTblTsk.Start()
+        PrTblTsk.IsBackground = True
+        PrTblTsk.Start()
 
 GoodVer:  '       *****      End Check Ver.
-            TxtUsrNm.Select()
-            MskLbl.Text = LCase(Environment.UserName)
-            Me.BtnShow.Text = "Show Password"
-            For Cnt_ = 0 To (InputLanguage.InstalledInputLanguages.Count - 1)
-                If InputLanguage.InstalledInputLanguages(Cnt_).Culture.TwoLetterISOLanguageName = ("ar") Then
-                    ArabicInput = InputLanguage.InstalledInputLanguages(Cnt_)
-                ElseIf InputLanguage.InstalledInputLanguages(Cnt_).Culture.TwoLetterISOLanguageName = ("en") Or InputLanguage.InstalledInputLanguages(Cnt_).Culture.TwoLetterISOLanguageName = ("ع") Then
-                    EnglishInput = InputLanguage.InstalledInputLanguages(Cnt_)
-                End If
-            Next Cnt_
+        TxtUsrNm.Select()
+        MskLbl.Text = LCase(Environment.UserName)
+        Me.BtnShow.Text = "Show Password"
+        For Cnt_ = 0 To (InputLanguage.InstalledInputLanguages.Count - 1)
+            If InputLanguage.InstalledInputLanguages(Cnt_).Culture.TwoLetterISOLanguageName = ("ar") Then
+                ArabicInput = InputLanguage.InstalledInputLanguages(Cnt_)
+            ElseIf InputLanguage.InstalledInputLanguages(Cnt_).Culture.TwoLetterISOLanguageName = ("en") Or InputLanguage.InstalledInputLanguages(Cnt_).Culture.TwoLetterISOLanguageName = ("ع") Then
+                EnglishInput = InputLanguage.InstalledInputLanguages(Cnt_)
+            End If
+        Next Cnt_
 
 
 
@@ -172,7 +172,7 @@ Sec2:
 
         'Admin Login For Every user Related to Mac address
         For Cnt_ = 0 To MacTable.Rows.Count - 1
-            If MacTable.Rows(Cnt_).Item(0).ToString = getMacAddress() + OsIP() Then
+            If MacTable.Rows(Cnt_).Item(0).ToString = GetMACAddressNew() Then
                 If MacTable.Rows(Cnt_).Item(1) = True Then
                     TxtUsrPass.Text = PassDecoding(Usr.PUsrPWrd, Usr.PUsrSltKy)
                     Exit For
@@ -322,7 +322,7 @@ sec_UsrErr_:
         End If
         AddHandler Cmbo.SelectedIndexChanged, AddressOf Cmbo_SelectedIndexChanged
         MacTable.Rows.Clear()
-        If GetTbl("select Mac, Admin from AMac where Mac ='" & getMacAddress() + OsIP() & "'", MacTable, "8888&H") = Nothing Then
+        If GetTbl("select Mac, Admin from AMac where Mac ='" & GetMACAddressNew() & "'", MacTable, "8888&H") = Nothing Then
             If MacTable.Rows.Count > 0 Then
                 Cmbo.Visible = True
             End If

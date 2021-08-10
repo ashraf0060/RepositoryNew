@@ -622,13 +622,13 @@ End_:
         GridUpd.Columns("UCatLvl").Visible = False
         GridUpd.Columns("TkupUnread").Visible = False
         GridUpd.AutoResizeColumns()
-        GridUpd.Columns("TkupTxt").Width = GridUpd.Width - (GridUpd.Columns("TkupSTime").Width + GridUpd.Columns("UsrRealNm").Width + GridUpd.Columns("TkupReDt").Width + 50)
+        GridUpd.Columns("TkupTxt").Width = GridUpd.Width - (GridUpd.Columns("TkupSTime").Width + GridUpd.Columns("UsrRealNm").Width + GridUpd.Columns("TkupReDt").Width + GridUpd.Columns("File").Width + 50)
         GridUpd.Columns("TkupTxt").DefaultCellStyle.WrapMode = DataGridViewTriState.True
         GridUpd.AutoResizeRows()
         GridUpd.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
         GridUpd.ColumnHeadersDefaultCellStyle.WrapMode = DataGridViewTriState.False
     End Sub
-    Public Function TikKindCnt(TblTicket As DataTable, TblUpdt As DataTable) As TickInfo ' Function to Adjust Ticket Gridview
+    Public Function TikFormat(TblTicket As DataTable, TblUpdt As DataTable) As TickInfo ' Function to Adjust Ticket Gridview
         GridCuntRtrn.TickCount = 0
         GridCuntRtrn.CompCount = 0
         GridCuntRtrn.NoFlwCount = 0
@@ -1433,7 +1433,7 @@ End_:
         'Dim hit As DataGridView.HitTestInfo = GridTicket.HitTest()
         Dim sms = sender.GetCurrentParent().SourceControl
         If sms.SelectedCells.Count > 0 Then
-            TikIDRep_ = sms.CurrentRow.Cells(1).Value
+            TikIDRep_ = sms.CurrentRow.Cells(0).Value
             TikFrmRep.ShowDialog()
         Else
             MsgInf("برجاء اختيار الشكوى المراد عرضها أولاً")

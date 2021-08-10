@@ -24,17 +24,6 @@ Partial Class TikSearchNew
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-        Me.BtnBckComp = New System.Windows.Forms.Button()
-        Me.BtnBrws = New System.Windows.Forms.Button()
-        Me.BtnEsc = New System.Windows.Forms.Button()
-        Me.FlowUpdt = New System.Windows.Forms.FlowLayoutPanel()
-        Me.GridUpdt = New System.Windows.Forms.DataGridView()
-        Me.Label60 = New System.Windows.Forms.Label()
-        Me.CmbEvent = New System.Windows.Forms.ComboBox()
-        Me.TxtUpdt = New System.Windows.Forms.TextBox()
-        Me.TxtBrws = New System.Windows.Forms.TextBox()
-        Me.BtnSubmt = New System.Windows.Forms.Button()
-        Me.Button1 = New System.Windows.Forms.Button()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.RadioButton3 = New System.Windows.Forms.RadioButton()
         Me.RadioButton1 = New System.Windows.Forms.RadioButton()
@@ -51,12 +40,9 @@ Partial Class TikSearchNew
         Me.LblMsg = New System.Windows.Forms.Label()
         Me.LblWdays2 = New System.Windows.Forms.Label()
         Me.CloseBtn = New System.Windows.Forms.Button()
-        Me.TimerEscOpen = New System.Windows.Forms.Timer(Me.components)
         Me.TimerVisInvs = New System.Windows.Forms.Timer(Me.components)
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Label32 = New System.Windows.Forms.Label()
-        Me.FlowUpdt.SuspendLayout()
-        CType(Me.GridUpdt, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.GroupBox1.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
         CType(Me.GridTicket, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -65,154 +51,6 @@ Partial Class TikSearchNew
         'ToolTip1
         '
         Me.ToolTip1.IsBalloon = True
-        '
-        'BtnBckComp
-        '
-        Me.BtnBckComp.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.BtnBckComp.BackColor = System.Drawing.Color.Transparent
-        Me.BtnBckComp.BackgroundImage = Global.VOCAPlus.My.Resources.Resources.Back
-        Me.BtnBckComp.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.BtnBckComp.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.FlowUpdt.SetFlowBreak(Me.BtnBckComp, True)
-        Me.BtnBckComp.Location = New System.Drawing.Point(198, 165)
-        Me.BtnBckComp.Name = "BtnBckComp"
-        Me.BtnBckComp.Size = New System.Drawing.Size(63, 59)
-        Me.BtnBckComp.TabIndex = 2053
-        Me.ToolTip1.SetToolTip(Me.BtnBckComp, "العودة لتفاصيل الشكوى")
-        Me.BtnBckComp.UseVisualStyleBackColor = False
-        '
-        'BtnBrws
-        '
-        Me.BtnBrws.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.BtnBrws.BackgroundImage = Global.VOCAPlus.My.Resources.Resources.browse_button_png_th
-        Me.BtnBrws.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.BtnBrws.FlatAppearance.BorderColor = System.Drawing.Color.White
-        Me.BtnBrws.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.BtnBrws.Location = New System.Drawing.Point(201, 396)
-        Me.BtnBrws.Name = "BtnBrws"
-        Me.BtnBrws.Size = New System.Drawing.Size(60, 27)
-        Me.BtnBrws.TabIndex = 2158
-        Me.ToolTip1.SetToolTip(Me.BtnBrws, "Browse")
-        Me.BtnBrws.UseVisualStyleBackColor = True
-        '
-        'BtnEsc
-        '
-        Me.BtnEsc.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.BtnEsc.BackColor = System.Drawing.Color.Transparent
-        Me.BtnEsc.BackgroundImage = Global.VOCAPlus.My.Resources.Resources.escalate1
-        Me.BtnEsc.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.BtnEsc.FlatAppearance.BorderColor = System.Drawing.Color.White
-        Me.BtnEsc.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.BtnEsc.Location = New System.Drawing.Point(92, 461)
-        Me.BtnEsc.Name = "BtnEsc"
-        Me.BtnEsc.Size = New System.Drawing.Size(71, 71)
-        Me.BtnEsc.TabIndex = 2060
-        Me.ToolTip1.SetToolTip(Me.BtnEsc, "متابعه")
-        Me.BtnEsc.UseVisualStyleBackColor = False
-        Me.BtnEsc.Visible = False
-        '
-        'FlowUpdt
-        '
-        Me.FlowUpdt.Controls.Add(Me.GridUpdt)
-        Me.FlowUpdt.Controls.Add(Me.BtnBckComp)
-        Me.FlowUpdt.Controls.Add(Me.Label60)
-        Me.FlowUpdt.Controls.Add(Me.CmbEvent)
-        Me.FlowUpdt.Controls.Add(Me.TxtUpdt)
-        Me.FlowUpdt.Controls.Add(Me.BtnBrws)
-        Me.FlowUpdt.Controls.Add(Me.TxtBrws)
-        Me.FlowUpdt.Controls.Add(Me.BtnSubmt)
-        Me.FlowUpdt.Controls.Add(Me.BtnEsc)
-        Me.FlowUpdt.Controls.Add(Me.Button1)
-        Me.FlowUpdt.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft
-        Me.FlowUpdt.Location = New System.Drawing.Point(223, 255)
-        Me.FlowUpdt.Name = "FlowUpdt"
-        Me.FlowUpdt.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.FlowUpdt.Size = New System.Drawing.Size(264, 126)
-        Me.FlowUpdt.TabIndex = 2162
-        Me.FlowUpdt.Visible = False
-        '
-        'GridUpdt
-        '
-        Me.GridUpdt.AllowUserToAddRows = False
-        Me.GridUpdt.AllowUserToDeleteRows = False
-        Me.GridUpdt.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.GridUpdt.BackgroundColor = System.Drawing.Color.White
-        Me.GridUpdt.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.GridUpdt.Location = New System.Drawing.Point(47, 3)
-        Me.GridUpdt.MultiSelect = False
-        Me.GridUpdt.Name = "GridUpdt"
-        Me.GridUpdt.ReadOnly = True
-        Me.GridUpdt.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.GridUpdt.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect
-        Me.GridUpdt.Size = New System.Drawing.Size(214, 156)
-        Me.GridUpdt.TabIndex = 2057
-        '
-        'Label60
-        '
-        Me.Label60.Font = New System.Drawing.Font("Times New Roman", 14.0!)
-        Me.Label60.Location = New System.Drawing.Point(164, 227)
-        Me.Label60.Name = "Label60"
-        Me.Label60.Size = New System.Drawing.Size(97, 23)
-        Me.Label60.TabIndex = 2055
-        Me.Label60.Text = "إضافة تحديث:"
-        '
-        'CmbEvent
-        '
-        Me.CmbEvent.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.CmbEvent.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.CmbEvent.Font = New System.Drawing.Font("Times New Roman", 12.0!)
-        Me.CmbEvent.FormattingEnabled = True
-        Me.CmbEvent.Location = New System.Drawing.Point(97, 253)
-        Me.CmbEvent.Name = "CmbEvent"
-        Me.CmbEvent.Size = New System.Drawing.Size(164, 27)
-        Me.CmbEvent.TabIndex = 2056
-        '
-        'TxtUpdt
-        '
-        Me.TxtUpdt.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.TxtUpdt.Font = New System.Drawing.Font("Times New Roman", 12.0!)
-        Me.TxtUpdt.Location = New System.Drawing.Point(-453, 286)
-        Me.TxtUpdt.Multiline = True
-        Me.TxtUpdt.Name = "TxtUpdt"
-        Me.TxtUpdt.ReadOnly = True
-        Me.TxtUpdt.Size = New System.Drawing.Size(714, 104)
-        Me.TxtUpdt.TabIndex = 2054
-        '
-        'TxtBrws
-        '
-        Me.TxtBrws.Font = New System.Drawing.Font("Times New Roman", 12.0!)
-        Me.TxtBrws.Location = New System.Drawing.Point(7, 429)
-        Me.TxtBrws.Name = "TxtBrws"
-        Me.TxtBrws.ReadOnly = True
-        Me.TxtBrws.Size = New System.Drawing.Size(254, 26)
-        Me.TxtBrws.TabIndex = 2159
-        '
-        'BtnSubmt
-        '
-        Me.BtnSubmt.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.BtnSubmt.BackgroundImage = Global.VOCAPlus.My.Resources.Resources.recgreen
-        Me.BtnSubmt.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.BtnSubmt.FlatAppearance.BorderColor = System.Drawing.Color.White
-        Me.BtnSubmt.FlatAppearance.MouseDownBackColor = System.Drawing.Color.FromArgb(CType(CType(128, Byte), Integer), CType(CType(255, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.BtnSubmt.FlatAppearance.MouseOverBackColor = System.Drawing.Color.White
-        Me.BtnSubmt.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.BtnSubmt.Font = New System.Drawing.Font("Times New Roman", 14.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.BtnSubmt.Location = New System.Drawing.Point(169, 461)
-        Me.BtnSubmt.Name = "BtnSubmt"
-        Me.BtnSubmt.Size = New System.Drawing.Size(92, 40)
-        Me.BtnSubmt.TabIndex = 2059
-        Me.BtnSubmt.Text = "تسجيل"
-        Me.BtnSubmt.UseVisualStyleBackColor = True
-        '
-        'Button1
-        '
-        Me.Button1.Location = New System.Drawing.Point(11, 461)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(75, 23)
-        Me.Button1.TabIndex = 2063
-        Me.Button1.Text = "Button1"
-        Me.Button1.UseVisualStyleBackColor = True
-        Me.Button1.Visible = False
         '
         'GroupBox1
         '
@@ -428,10 +266,6 @@ Partial Class TikSearchNew
         Me.CloseBtn.TabIndex = 2024
         Me.CloseBtn.UseVisualStyleBackColor = True
         '
-        'TimerEscOpen
-        '
-        Me.TimerEscOpen.Interval = 1000
-        '
         'TimerVisInvs
         '
         Me.TimerVisInvs.Interval = 500
@@ -471,7 +305,6 @@ Partial Class TikSearchNew
         Me.Controls.Add(Me.GroupBox1)
         Me.Controls.Add(Me.SerchTxt)
         Me.Controls.Add(Me.LblWdays2)
-        Me.Controls.Add(Me.FlowUpdt)
         Me.Controls.Add(Me.GroupBox2)
         Me.Controls.Add(Me.CloseBtn)
         Me.Controls.Add(Me.BtnSerch)
@@ -485,9 +318,6 @@ Partial Class TikSearchNew
         Me.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "بحث الشكاوى والاستفسارات"
-        Me.FlowUpdt.ResumeLayout(False)
-        Me.FlowUpdt.PerformLayout()
-        CType(Me.GridUpdt, System.ComponentModel.ISupportInitialize).EndInit()
         Me.GroupBox1.ResumeLayout(False)
         Me.GroupBox2.ResumeLayout(False)
         CType(Me.GridTicket, System.ComponentModel.ISupportInitialize).EndInit()
@@ -511,19 +341,7 @@ Partial Class TikSearchNew
     Friend WithEvents LblMsg As Label
     Friend WithEvents BtnSerch As Button
     Friend WithEvents CloseBtn As Button
-    Friend WithEvents TimerEscOpen As Timer
     Friend WithEvents TimerVisInvs As Timer
-    Friend WithEvents FlowUpdt As FlowLayoutPanel
-    Friend WithEvents GridUpdt As DataGridView
-    Friend WithEvents BtnBckComp As Button
-    Friend WithEvents Label60 As Label
-    Friend WithEvents CmbEvent As ComboBox
-    Friend WithEvents TxtUpdt As TextBox
-    Friend WithEvents BtnBrws As Button
-    Friend WithEvents TxtBrws As TextBox
-    Friend WithEvents BtnSubmt As Button
-    Friend WithEvents BtnEsc As Button
-    Friend WithEvents Button1 As Button
     Friend WithEvents LblWdays2 As Label
     Friend WithEvents Label2 As Label
     Friend WithEvents Label32 As Label

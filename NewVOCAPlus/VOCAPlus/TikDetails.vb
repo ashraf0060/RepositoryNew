@@ -58,7 +58,7 @@
             GroupBox4.Visible = False
         End If
         LblWDays.Text = StruGrdTk.Help_
-        SelctSerchTxt(TxtDetails, "تعديل")
+        SelctSerchTxt(TxtDetails, "تعديل : بواسطة")
     End Sub
 
     Private Sub BtnAddEdt_Click(sender As Object, e As EventArgs) Handles BtnAddEdt.Click

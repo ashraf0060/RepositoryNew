@@ -15,8 +15,6 @@ Public Class TikSearchNew
     Private exchange As ExchangeService
     Dim Span_ As New TimeSpan
     Dim nxt As String
-
-
     Private Const CP_NOCLOSE_BUTTON As Integer = &H200      ' Disable close button
     Protected Overloads Overrides ReadOnly Property CreateParams() As CreateParams
         Get
@@ -79,7 +77,6 @@ Public Class TikSearchNew
 #Region "First Tab"
     Private Sub BtnSerch_Click(sender As Object, e As EventArgs) Handles BtnSerch.Click
         Filtr()
-        TimerEscOpen.Stop()
     End Sub
     Private Sub FilterComb_SelectedIndexChanged(sender As Object, e As EventArgs) Handles FilterComb.SelectedIndexChanged
         If FilterComb.Text = "الرقم القومي" Then
@@ -187,7 +184,8 @@ Public Class TikSearchNew
 
                         GridTicket.Columns("LastUpdateID").Visible = False
 
-                        TikKindCnt(TickSrchTable, UpdtCurrTbl)
+                        TikFormat(TickSrchTable, UpdtCurrTbl)
+
                         LblMsg.Text = ("نتيجة البحث : إجمالي عدد " & GridCuntRtrn.TickCount & " -- عدد الشكاوى : " & GridCuntRtrn.CompCount & " -- عدد الاستفسارات : " & GridCuntRtrn.TickCount - GridCuntRtrn.CompCount & " -- شكاوى مغلقة : " & GridCuntRtrn.ClsCount & " -- شكاوى مفتوحة : " & GridCuntRtrn.CompCount - GridCuntRtrn.ClsCount & " -- لم يتم المتابعة : " & GridCuntRtrn.NoFlwCount)
                         LblMsg.ForeColor = Color.Green
                         GridTicket.ClearSelection()
@@ -265,147 +263,20 @@ Public Class TikSearchNew
 #End Region
 
 #Region "Updates Partition"
-
-    Private Sub InsUpdtSub(StrWhere As Integer, Knd As ComboBox, Txt As TextBox, LblNm As Label)
-        If Knd.SelectedIndex > -1 Then
-            If Txt.TextLength > 0 Then
-                If PublicCode.InsUpd("insert into TkEvent (TkupTkSql, TkupTxt, TkupEvtId, TkupUserIP, TkupUser) VALUES ('" & StrWhere & "','" & Txt.Text & "','" & Knd.SelectedValue & "','" & OsIP() & "','" & Usr.PUsrID & "')", "1018&H") = Nothing Then
-                    LblNm.Text = ("تم إضافة التحديث بنجاح")
-                    LblNm.ForeColor = Color.Green
-                    Knd.SelectedIndex = -1
-                    Txt.Text = ""
-                    Txt.ReadOnly = True
-                End If
-            Else
-                LblNm.Text = ("برجاء كتابة نص التحديث")
-                LblNm.ForeColor = Color.Red
-                Beep()
-            End If
-        Else
-            LblNm.Text = ("برجاء اختيار نوع التحديث")
-            LblNm.ForeColor = Color.Red
-            Beep()
-        End If
-    End Sub
     Private Sub GetUpdtEvnt_()
         UpdtCurrTbl = New DataTable
         '                                 0        1         2         3         4        5        6         7         8         9
         If PublicCode.GetTbl("SELECT TkupSTime, TkupTxt, UsrRealNm,TkupReDt, TkupUser,TkupSQL,TkupTkSql,TkupEvtId, EvSusp, UCatLvl,TkupUnread FROM TkEvent INNER JOIN Int_user ON TkupUser = UsrId INNER JOIN CDEvent ON TkupEvtId = EvId INNER JOIN IntUserCat ON Int_user.UsrCat = IntUserCat.UCatId Where ( " & CompIds & ") ORDER BY TkupTkSql,TkupSQL DESC", UpdtCurrTbl, "1019&H") = Nothing Then
+            UpdtCurrTbl.Columns.Add("File")        ' Add files Columns 
         Else
             MsgErr(My.Resources.ConnErr & vbCrLf & My.Resources.TryAgain)
         End If
     End Sub
 #End Region
-#Region "FTP Get & Upload & Download Sub"
-
-#End Region
-    Private Sub TabControl1_SelectedIndexChanged(sender As Object, e As EventArgs)
-        'If TabControl1.TabPages.Contains(TabPage2) = True Then
-        'LblMsg.Text = ""
-        'If TabControl1.SelectedTab.Name = "TabPage1" Then
-        '    If SerchTxt.Text = "برجاء ادخال كلمات البحث" Then
-        '        SerchTxt.ForeColor = Color.FromArgb(224, 224, 224)
-        '    End If
-        '    TimerEscOpen.Stop()
-        'ElseIf TabControl1.SelectedTab.Name = "TabPage2" Then
-        '    TimerVisInvs.Start()
-
-        '    If Usr.PUsrUCatLvl < 3 And Usr.PUsrUCatLvl > 5 Then
-        '        If StruGrdTk.LstUpEvId = 902 Or StruGrdTk.LstUpEvId = 903 Or StruGrdTk.LstUpEvId = 904 Then
-        '            TimerEscOpen.Start()
-        '        Else
-        '            TimerEscOpen.Stop()
-        '        End If
-        '    End If
-
-        'ElseIf TabControl1.SelectedTab.Name = "TabPage3" Then
-        '    GetUpdtEvent(StruGrdTk.Sql)
-        '    GridUpdt.DataSource = UpdtCurrTbl
-        '    Dim FolwID As String = ""
-        '    If DBNull.Value.Equals(StruGrdTk.UserId) Then FolwID = "" Else FolwID = StruGrdTk.UserId
-        '    If UpdtCurrTbl.Columns.Count = 10 Then
-        '        UpdtCurrTbl.Columns.Add("File")        ' Add files Columns If Not Added
-        '    End If
-        '    UpGrgFrmt(GridUpdt, FolwID)
-        '    LblWdays2.Text = "تم تسجيل الشكوى منذ :" & CalDate(StruGrdTk.DtStrt, Nw, "0000&H") & " يوم عمل"
-        '    GettAttchUpdtesFils()
-        '    CompareDataTables(FTPTable, UpdtCurrTbl)  ' Compare Attached Table With Updtes Table On SQL Column and File Name
-        '    If GridUpdt.SelectedRows.Count = 0 Then
-        '        ContextMenuStrip2.Enabled = False
-        '    End If
-        '    If StruGrdTk.Tick = 0 Then
-        '        CmbEvent.Enabled = False
-        '        BtnSubmt.Enabled = False
-        '        TxtUpdt.Text = ""
-        '        TxtUpdt.ReadOnly = True
-        '        LblMsg.Text = "لا يمكن عمل تحديث على الاستفسار"
-        '    Else
-        '        CmbEvent.Enabled = True
-        '        BtnSubmt.Enabled = True
-        '        If TxtUpdt.TextLength = 0 Then
-        '            TxtUpdt.ReadOnly = True
-        '        End If
-        '        LblMsg.Text = ""
-        '    End If
-
-        '    Dim AcbDataTable As New DataTable
-        '    Dim WdysTable As New DataTable
-
-        '    If Usr.PUsrUCatLvl < 3 Or Usr.PUsrUCatLvl > 5 Then
-        '        If StruGrdTk.LstUpEvId = 902 Or StruGrdTk.LstUpEvId = 903 Or StruGrdTk.LstUpEvId = 904 Then
-        '            TimerEscOpen.Start()
-        '        Else
-        '            CmbEvent.Enabled = True
-        '            BtnSubmt.Enabled = True
-        '            TxtUpdt.Text = ""
-        '            TxtUpdt.ReadOnly = True
-        '            TxtUpdt.TextAlign = HorizontalAlignment.Left
-        '            TimerEscOpen.Stop()
-        '        End If
-        '    End If
-        '    CmbEvent.SelectedIndex = -1
-        '    TimerVisInvs.Start()
-        'End If
-    End Sub
-    Private Sub TimerEscOpen_Tick(sender As Object, e As EventArgs) Handles TimerEscOpen.Tick
-        If EscTable.Rows.Count = 0 Then
-            EscTable.Rows.Clear()
-            GetTbl("select EscID, EscCC, EscDur from EscProcess where escID = " & StruGrdTk.LstUpEvId - 901, EscTable, "0000&H")
-        End If
-        Dim Minutws As DateTime = ServrTime()
-        Dim Minuts As Double = ServrTime().Subtract(StruGrdTk.LstUpDt).TotalMinutes
-        Dim MinutsDef As Integer = EscTable.Rows(0).Item("EscDur") - Minuts
-
-        If StruGrdTk.LstUpEvId = 902 Or StruGrdTk.LstUpEvId = 903 Or StruGrdTk.LstUpEvId = 904 Then
-            If Minuts < EscTable.Rows(0).Item("EscDur") Then
-                LblMsg.Text = ("تم عمل متابعه 1 وسيتم الرد عليها خلال " & EscTable.Rows(0).Item("EscDur") & " متبقى " & MinutsDef & " دقيقة")
-                LblMsg.Refresh()
-                CmbEvent.Enabled = False
-                BtnSubmt.Enabled = False
-                TxtUpdt.Text = "لا يمكن عمل تحديث أثناء فترة المتابعه، ويتم السماح بإضافة تعديل إما بإنتهاء فترة المتابعه أو عمل تحديث من الخطوط الخلفية"
-                TxtUpdt.Font = New Font("Times New Roman", 16, FontStyle.Regular)
-                TxtUpdt.TextAlign = HorizontalAlignment.Center
-                TxtUpdt.ReadOnly = True
-                Exit Sub
-            End If
-        Else
-            CmbEvent.Enabled = True
-            BtnSubmt.Enabled = True
-            TxtUpdt.Text = ""
-            TxtUpdt.Font = New Font("Times New Roman", 14, FontStyle.Regular)
-            TxtUpdt.TextAlign = HorizontalAlignment.Left
-            TxtUpdt.ReadOnly = False
-        End If
-    End Sub
-    Private Sub TikSearch_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
-        TimerEscOpen.Stop()
-        TimerVisInvs.Stop()
-    End Sub
 #Region "Tool Strip GridUpdate"
     Private Sub SerchTxt_KeyPress(sender As Object, e As KeyPressEventArgs) Handles SerchTxt.KeyPress
         If Asc(e.KeyChar) = Keys.Enter Then
             Filtr()
-            TimerEscOpen.Stop()
         End If
     End Sub
 #End Region
