@@ -5,9 +5,12 @@ Public Class TikUpdate
     Dim Ext As String
     Dim FileName As String
     Dim EscTable As New DataTable
+    Dim UpGetSql As New DataTable
+    Dim UpSQlMax_ As Integer = 0
     Private Sub TikUpdate_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         BtnSub(Me)
         Me.Size = New Point(screenWidth, screenHeight - 120)
+        GridUpdt.Size = New Point(Me.Size.Width, Me.Size.Height - 185)
         If StruGrdTk.Tick = 0 Then
             CmbEvent.Enabled = False
             BtnSubmt.Enabled = False
@@ -76,18 +79,19 @@ Public Class TikUpdate
                     LblMsg.ForeColor = Color.Green
                     StruGrdTk.LstUpDt = Now
                     StruGrdTk.LstUpTxt = TxtUpdt.Text
+                    StruGrdTk.LstUpUsrNm = Usr.PUsrRlNm
                     StruGrdTk.LstUpEvId = CmbEvent.SelectedValue
                     If StruGrdTk.LstUpSys = True Then StruGrdTk.LstUpSys = False
-                    StruGrdTk.LstUpUsrNm = Usr.PUsrID
                     '                       TkupSTime,              TkupTxt,     UsrRealNm,TkupReDt, TkupUser,TkupSQL,TkupTkSql,TkupEvtId, EvSusp, UCatLvl,TkupUnread
-                    Dim UpGetSql As New DataTable
-                    Dim UpSQlMax_ As Integer = 0
-                    If GetTbl("select max(TkEvent.TkupSQL) maxUpdate from TkEvent where TkEvent.TkupUser = " & Usr.PUsrID & " and TkEvent.TkupTkSql = " & StruGrdTk.Sql, UpGetSql, "0000&H") = Nothing Then
-                        UpSQlMax_ = UpGetSql.Rows(0).Item(0)
-                    End If
+
+                    GetUpdtEvnt_()
+                    UpSQlMax_ = UpGetSql.Rows(0).Item("TkupSQL")
+
                     UpdtCurrTbl.Rows.Add(StruGrdTk.LstUpDt, StruGrdTk.LstUpTxt, Usr.PUsrRlNm, Now, Usr.PUsrID, UpSQlMax_, StruGrdTk.Sql, CmbEvent.SelectedValue, 0, Usr.PUsrUCatLvl, 0)
                     UpdtCurrTbl.DefaultView.Sort = "TkupSTime Desc"
                     GridUpdt.Rows(0).Cells("TkupReDt").Value = ""
+
+                    GridUpdt.DataSource = UpGetSql
 
                     Dim FolwID As String = ""
                     If DBNull.Value.Equals(StruGrdTk.UserId) Then FolwID = "" Else FolwID = StruGrdTk.UserId
@@ -127,6 +131,15 @@ Public Class TikUpdate
             LblMsg.ForeColor = Color.Red
         End If
     End Sub
+    Private Sub GetUpdtEvnt_()
+        UpGetSql = New DataTable
+        '                                 0        1         2         3         4        5        6         7         8         9
+        If PublicCode.GetTbl("SELECT TkupSTime, TkupTxt, UsrRealNm,TkupReDt, TkupUser,TkupSQL,TkupTkSql,TkupEvtId, EvSusp, UCatLvl,TkupUnread FROM TkEvent INNER JOIN Int_user ON TkupUser = UsrId INNER JOIN CDEvent ON TkupEvtId = EvId INNER JOIN IntUserCat ON Int_user.UsrCat = IntUserCat.UCatId Where ( TkupTkSql = " & StruGrdTk.Sql & ") ORDER BY TkupTkSql,TkupSQL DESC", UpGetSql, "1019&H") = Nothing Then
+            UpGetSql.Columns.Add("File")        ' Add files Columns 
+        Else
+            MsgErr(My.Resources.ConnErr & vbCrLf & My.Resources.TryAgain)
+        End If
+    End Sub
     Private Sub CompareDataTables(ByVal dt1 As DataTable, ByVal dt2 As DataTable, GridUpdate As DataGridView)
         Dim Results =
             (From table1 In dt1
@@ -153,7 +166,7 @@ Public Class TikUpdate
         LblMsg.Refresh()
         'Create Req
         If CheckIfFtpFileExists("ftp://10.10.26.4/CompUpdates/") = False Then
-            Dim mReq As FtpWebRequest = DirectCast(WebRequest.Create("ftp://10.10.26.4/CompUpdates/" & GridUpdt.CurrentRow.Cells("TkupSQL").Value & "." & Ext), FtpWebRequest)
+            Dim mReq As FtpWebRequest = DirectCast(WebRequest.Create("ftp://10.10.26.4/CompUpdates/" & UpSQlMax_ & "." & Ext), FtpWebRequest)
             'Upddate property
             mReq.Credentials = New NetworkCredential("administrator", "Hemonad105046")
             mReq.Method = WebRequestMethods.Ftp.UploadFile
@@ -174,8 +187,8 @@ Public Class TikUpdate
                 TxtBrws.Text = ""
                 Dim NewRow As DataRow = FTPTable.NewRow()
                 Dim fi As New FileInfo(fd.FileName)
-                NewRow("ID") = GridUpdt.CurrentRow.Cells("TkupSQL").Value
-                NewRow("Name") = GridUpdt.CurrentRow.Cells("TkupSQL").Value & "." & Ext
+                NewRow("ID") = UpSQlMax_
+                NewRow("Name") = UpSQlMax_ & "." & Ext
                 NewRow("Date Modified") = Nw
                 NewRow("Type") = Ext
                 NewRow("Size") = (fi.Length / 1024).ToString("N0") & " KB"
@@ -212,17 +225,17 @@ Public Class TikUpdate
         Return exist
     End Function
     Private Sub Dowload()
-        If Split(GridUpdt.CurrentRow.Cells(11).Tag, ".").Count > 1 Then
+        If Split(GridUpdt.CurrentRow.Cells("File").Tag, ".").Count > 1 Then
             LblMsg.Text = "جاري التنزيل ........"
             LblMsg.Refresh()
             LblMsg.ForeColor = Color.Green
-            Dim request As FtpWebRequest = WebRequest.Create("ftp://10.10.26.4/CompUpdates/" & GridUpdt.CurrentRow.Cells(11).Tag)
+            Dim request As FtpWebRequest = WebRequest.Create("ftp://10.10.26.4/CompUpdates/" & GridUpdt.CurrentRow.Cells("File").Tag)
             request.Credentials = New NetworkCredential("administrator", "Hemonad105046")
             request.Method = WebRequestMethods.Ftp.DownloadFile
             request.Timeout = 20000
             Try
                 Dim ftpStream As Stream = request.GetResponse().GetResponseStream(),
-fileStream As Stream = File.Create(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) & "\" & StruGrdTk.TkId & "_" & GridUpdt.CurrentRow.Cells(11).Tag)
+fileStream As Stream = File.Create(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) & "\" & StruGrdTk.TkId & "_" & GridUpdt.CurrentRow.Cells("File").Tag)
 
                 Dim buffer As Byte() = New Byte(10240 - 1) {}
                 Dim read As Integer
@@ -242,7 +255,7 @@ fileStream As Stream = File.Create(Environment.GetFolderPath(Environment.Special
                 Dim Rslt As DialogResult
                 Rslt = MessageBox.Show("تم التنزيل بنجاح إلى " & "MyDocuments" & vbCrLf & "هل تريد فتح الملف", "رسالة معلومات", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2, MessageBoxOptions.RtlReading Or MessageBoxOptions.RightAlign)
                 If Rslt = DialogResult.Yes Then
-                    Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) & "\" & StruGrdTk.TkId & "_" & GridUpdt.CurrentRow.Cells(11).Tag)
+                    Process.Start(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) & "\" & StruGrdTk.TkId & "_" & GridUpdt.CurrentRow.Cells("File").Tag)
                 End If
             Catch ex As Exception
                 request.Abort()
@@ -366,14 +379,6 @@ fileStream As Stream = File.Create(Environment.GetFolderPath(Environment.Special
             TxtUpdt.Font = New Font("Times New Roman", 14, FontStyle.Regular)
             TxtUpdt.TextAlign = HorizontalAlignment.Left
             TxtUpdt.ReadOnly = False
-        End If
-    End Sub
-    Private Sub GetUpdtEvnt_()
-        UpdtCurrTbl.Rows.Clear()
-        '                                 0        1         2         3         4        5        6         7         8         9
-        If PublicCode.GetTbl("SELECT TkupSQL, TkupSTime, TkupTxt, TkupEvtId, UsrRealNm, TkupUser, EvSusp, UCatLvl FROM TkEvent INNER JOIN Int_user ON TkupUser = UsrId INNER JOIN CDEvent ON TkupEvtId = EvId INNER JOIN IntUserCat ON Int_user.UsrCat = IntUserCat.UCatId Where ( " & CompIds & ") ORDER BY TkupSQL DESC", UpdtCurrTbl, "1019&H") = Nothing Then
-        Else
-            MsgErr(My.Resources.ConnErr & vbCrLf & My.Resources.TryAgain)
         End If
     End Sub
     Private Sub TikUpdate_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing

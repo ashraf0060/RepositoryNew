@@ -38,9 +38,8 @@ Partial Class TikSearchNew
         Me.BtnSerch = New System.Windows.Forms.Button()
         Me.GridTicket = New System.Windows.Forms.DataGridView()
         Me.LblMsg = New System.Windows.Forms.Label()
-        Me.LblWdays2 = New System.Windows.Forms.Label()
         Me.CloseBtn = New System.Windows.Forms.Button()
-        Me.TimerVisInvs = New System.Windows.Forms.Timer(Me.components)
+        Me.TimerkepUpdtd = New System.Windows.Forms.Timer(Me.components)
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Label32 = New System.Windows.Forms.Label()
         Me.GroupBox1.SuspendLayout()
@@ -239,16 +238,6 @@ Partial Class TikSearchNew
         Me.LblMsg.TabIndex = 2058
         Me.LblMsg.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
-        'LblWdays2
-        '
-        Me.LblWdays2.Font = New System.Drawing.Font("Times New Roman", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.LblWdays2.ForeColor = System.Drawing.Color.DarkGreen
-        Me.LblWdays2.Location = New System.Drawing.Point(597, 278)
-        Me.LblWdays2.Name = "LblWdays2"
-        Me.LblWdays2.Size = New System.Drawing.Size(334, 70)
-        Me.LblWdays2.TabIndex = 2164
-        Me.LblWdays2.Text = "Label3"
-        '
         'CloseBtn
         '
         Me.CloseBtn.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
@@ -266,9 +255,9 @@ Partial Class TikSearchNew
         Me.CloseBtn.TabIndex = 2024
         Me.CloseBtn.UseVisualStyleBackColor = True
         '
-        'TimerVisInvs
+        'TimerkepUpdtd
         '
-        Me.TimerVisInvs.Interval = 500
+        Me.TimerkepUpdtd.Interval = 1000
         '
         'Label2
         '
@@ -304,7 +293,6 @@ Partial Class TikSearchNew
         Me.Controls.Add(Me.GridTicket)
         Me.Controls.Add(Me.GroupBox1)
         Me.Controls.Add(Me.SerchTxt)
-        Me.Controls.Add(Me.LblWdays2)
         Me.Controls.Add(Me.GroupBox2)
         Me.Controls.Add(Me.CloseBtn)
         Me.Controls.Add(Me.BtnSerch)
@@ -341,8 +329,7 @@ Partial Class TikSearchNew
     Friend WithEvents LblMsg As Label
     Friend WithEvents BtnSerch As Button
     Friend WithEvents CloseBtn As Button
-    Friend WithEvents TimerVisInvs As Timer
-    Friend WithEvents LblWdays2 As Label
+    Friend WithEvents TimerkepUpdtd As Timer
     Friend WithEvents Label2 As Label
     Friend WithEvents Label32 As Label
 End Class

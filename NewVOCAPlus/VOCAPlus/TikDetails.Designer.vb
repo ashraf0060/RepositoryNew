@@ -70,14 +70,14 @@ Partial Class TikDetails
         Me.TxtAmount = New System.Windows.Forms.TextBox()
         Me.TxtGP = New System.Windows.Forms.TextBox()
         Me.FlowLayoutPanel2 = New System.Windows.Forms.FlowLayoutPanel()
+        Me.BtnUpd = New System.Windows.Forms.Button()
         Me.BtnClos = New System.Windows.Forms.Button()
         Me.TcktImg = New System.Windows.Forms.PictureBox()
         Me.TxtDetailsAdd = New System.Windows.Forms.TextBox()
         Me.BtnAddEdt = New System.Windows.Forms.Button()
+        Me.LblWDays = New System.Windows.Forms.Label()
         Me.TimerVisInvs = New System.Windows.Forms.Timer(Me.components)
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-        Me.LblWDays = New System.Windows.Forms.Label()
-        Me.BtnUpd = New System.Windows.Forms.Button()
         Me.LblHelp = New System.Windows.Forms.Label()
         Me.FlowDetls.SuspendLayout()
         Me.FlowLayoutPanel1.SuspendLayout()
@@ -721,6 +721,23 @@ Partial Class TikDetails
         Me.FlowLayoutPanel2.Size = New System.Drawing.Size(555, 598)
         Me.FlowLayoutPanel2.TabIndex = 2116
         '
+        'BtnUpd
+        '
+        Me.BtnUpd.BackgroundImage = Global.VOCAPlus.My.Resources.Resources.rectan
+        Me.BtnUpd.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.BtnUpd.FlatAppearance.BorderColor = System.Drawing.Color.White
+        Me.BtnUpd.FlatAppearance.MouseOverBackColor = System.Drawing.Color.White
+        Me.BtnUpd.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.FlowLayoutPanel2.SetFlowBreak(Me.BtnUpd, True)
+        Me.BtnUpd.Font = New System.Drawing.Font("Times New Roman", 12.0!)
+        Me.BtnUpd.Location = New System.Drawing.Point(9, 10)
+        Me.BtnUpd.Margin = New System.Windows.Forms.Padding(3, 10, 450, 3)
+        Me.BtnUpd.Name = "BtnUpd"
+        Me.BtnUpd.Size = New System.Drawing.Size(96, 36)
+        Me.BtnUpd.TabIndex = 2082
+        Me.BtnUpd.Text = "التحديثات"
+        Me.BtnUpd.UseVisualStyleBackColor = True
+        '
         'BtnClos
         '
         Me.BtnClos.BackgroundImage = Global.VOCAPlus.My.Resources.Resources.CpClose
@@ -773,48 +790,32 @@ Partial Class TikDetails
         Me.BtnAddEdt.Text = "إضافة تعديل"
         Me.BtnAddEdt.UseVisualStyleBackColor = True
         '
+        'LblWDays
+        '
+        Me.LblWDays.Font = New System.Drawing.Font("Times New Roman", 12.0!, System.Drawing.FontStyle.Bold)
+        Me.LblWDays.ForeColor = System.Drawing.Color.Green
+        Me.LblWDays.Location = New System.Drawing.Point(43, 355)
+        Me.LblWDays.Margin = New System.Windows.Forms.Padding(3, 5, 3, 0)
+        Me.LblWDays.Name = "LblWDays"
+        Me.LblWDays.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+        Me.LblWDays.Size = New System.Drawing.Size(365, 30)
+        Me.LblWDays.TabIndex = 2165
+        Me.LblWDays.Text = "Label2"
+        Me.LblWDays.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
         'TimerVisInvs
         '
         Me.TimerVisInvs.Enabled = True
         Me.TimerVisInvs.Interval = 500
         '
-        'LblWDays
-        '
-        Me.FlowLayoutPanel2.SetFlowBreak(Me.LblWDays, True)
-        Me.LblWDays.Font = New System.Drawing.Font("Times New Roman", 12.0!, System.Drawing.FontStyle.Bold)
-        Me.LblWDays.ForeColor = System.Drawing.Color.Green
-        Me.LblWDays.Location = New System.Drawing.Point(107, 350)
-        Me.LblWDays.Name = "LblWDays"
-        Me.LblWDays.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.LblWDays.Size = New System.Drawing.Size(301, 23)
-        Me.LblWDays.TabIndex = 2165
-        Me.LblWDays.Text = "Label2"
-        '
-        'BtnUpd
-        '
-        Me.BtnUpd.BackgroundImage = Global.VOCAPlus.My.Resources.Resources.rectan
-        Me.BtnUpd.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.BtnUpd.FlatAppearance.BorderColor = System.Drawing.Color.White
-        Me.BtnUpd.FlatAppearance.MouseOverBackColor = System.Drawing.Color.White
-        Me.BtnUpd.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.FlowLayoutPanel2.SetFlowBreak(Me.BtnUpd, True)
-        Me.BtnUpd.Font = New System.Drawing.Font("Times New Roman", 12.0!)
-        Me.BtnUpd.Location = New System.Drawing.Point(9, 10)
-        Me.BtnUpd.Margin = New System.Windows.Forms.Padding(3, 10, 450, 3)
-        Me.BtnUpd.Name = "BtnUpd"
-        Me.BtnUpd.Size = New System.Drawing.Size(96, 36)
-        Me.BtnUpd.TabIndex = 2082
-        Me.BtnUpd.Text = "التحديثات"
-        Me.BtnUpd.UseVisualStyleBackColor = True
-        '
         'LblHelp
         '
         Me.LblHelp.Font = New System.Drawing.Font("Times New Roman", 12.0!)
-        Me.LblHelp.ForeColor = System.Drawing.Color.Green
-        Me.LblHelp.Location = New System.Drawing.Point(13, 396)
+        Me.LblHelp.Location = New System.Drawing.Point(9, 401)
+        Me.LblHelp.Margin = New System.Windows.Forms.Padding(3, 5, 3, 0)
         Me.LblHelp.Name = "LblHelp"
         Me.LblHelp.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.LblHelp.Size = New System.Drawing.Size(539, 189)
+        Me.LblHelp.Size = New System.Drawing.Size(543, 187)
         Me.LblHelp.TabIndex = 2166
         Me.LblHelp.Text = "Label2"
         '
@@ -895,7 +896,7 @@ Partial Class TikDetails
     Friend WithEvents TxtDetails As RichTextBox
     Friend WithEvents BtnClos As Button
     Friend WithEvents ToolTip1 As ToolTip
-    Friend WithEvents LblWDays As Label
     Friend WithEvents BtnUpd As Button
+    Friend WithEvents LblWDays As Label
     Friend WithEvents LblHelp As Label
 End Class

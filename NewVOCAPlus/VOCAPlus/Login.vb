@@ -37,10 +37,6 @@ GoodVer:  '       *****      End Check Ver.
             End If
         Next Cnt_
 
-
-
-
-
         'Dim oShell As Object
         'Dim oLink As Object
         ''you don’t need to import anything in the project reference to create the Shell Object
@@ -352,6 +348,7 @@ sec_UsrErr_:
     End Sub
     Private Sub LblUsrIP_Click(sender As Object, e As EventArgs) Handles LblUsrIP.Click
         MsgBox(GetMACAddressNew())
+        Clipboard.SetText(GetMACAddressNew())
     End Sub
     Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
 

@@ -8,6 +8,8 @@ Imports ClosedXML.Excel
 Imports Microsoft.Exchange.WebServices.Data
 Imports VOCAPlus.Strc
 Module PublicCode
+    Public MenuStrip_ As New MenuStrip
+    Public CntxmenStip As New ContextMenuStrip
     Public screenWidth As Integer = Screen.PrimaryScreen.Bounds.Width
     Public screenHeight As Integer = Screen.PrimaryScreen.Bounds.Height
 
@@ -610,6 +612,7 @@ End_:
 
         Next
         'TkupSTime, TkupTxt, UsrRealNm,TkupReDt, TkupUser,TkupSQL,TkupTkSql,TkupEvtId, EvSusp, UCatLvl,TkupUnread
+        GridUpd.Columns("TkupSTime").DefaultCellStyle.Format = "dd/MM/yyyy ddd HH:mm"
         GridUpd.Columns("TkupSTime").HeaderText = "تاريخ التحديث"
         GridUpd.Columns("TkupTxt").HeaderText = "نص التحديث"
         GridUpd.Columns("UsrRealNm").HeaderText = "محرر التحديث"
@@ -647,16 +650,22 @@ End_:
             End If
 
             TblUpdt.DefaultView.RowFilter = "[TkupTkSql]" & " = " & TblTicket.Rows(Rws).Item("TkSQL")
+
             TblTicket.Rows(Rws).Item("تاريخ آخر تحديث") = TblUpdt.DefaultView(0).Item("TkupSTime")
             TblTicket.Rows(Rws).Item("نص آخر تحديث") = TblUpdt.DefaultView(0).Item("TkupTxt")
             TblTicket.Rows(Rws).Item("محرر آخر تحديث") = TblUpdt.DefaultView(0).Item("UsrRealNm")
             TblTicket.Rows(Rws).Item("LastUpdateID") = TblUpdt.DefaultView(0).Item("TkupEvtId")
 
+
+            StruGrdTk.LstUpDt = TblUpdt.DefaultView(0).Item("TkupSTime")
+            StruGrdTk.LstUpTxt = TblUpdt.DefaultView(0).Item("TkupTxt")
+            StruGrdTk.LstUpEnNm = TblUpdt.DefaultView(0).Item("UsrRealNm")
+            StruGrdTk.LstUpEvId = TblUpdt.DefaultView(0).Item("TkupEvtId")
+
             If TblTicket.Rows(Rws).Item("TkFolw") = False Then                   'if Read Status is false
                 GridCuntRtrn.UnReadCount += 1
             End If
         Next
-
         Return GridCuntRtrn 'Return Counters Structure
     End Function
     Public Sub SubGrdTikFill(GrdTick As DataGridView, Tbl As DataTable) 'To Delete Because The new one is "CompGrdTikFill"
@@ -1950,50 +1959,50 @@ End_:
         SQLGetAdptr1.SelectCommand = SQLComX
         SQLComX.CommandType = CommandType.Text
         SQLComX.CommandText = "select [LogSer],[LogDt],[LogErrCD],[Logtype],[LogExMsg],[LogSQLStr],[LogRwCnt],[LogIP],[LogUsrID],[VErrFrm],[VErrSub],[VErrDetails],[VErrRmrk] from ALog LEFT OUTER JOIN AErrApdx on VErrId = LogErrCD order by LogSer"
-        'Try
-        LogOfflinTbl.Rows.Clear()
-        LogOfflinTbl.Columns.Clear()
-        SQLGetAdptr1.Fill(LogOfflinTbl)
-        Dim Max_ As New Integer
-        If LogOfflinTbl.Rows.Count > 0 Then
-            Colecrslt = LogOfflinTbl.Rows.Count
-            Max_ = LogOfflinTbl.Rows(LogOfflinTbl.Rows.Count - 1).Item(0)
-            If sqlCon.State = ConnectionState.Closed Then
-                sqlCon.Open()
+        Try
+            LogOfflinTbl.Rows.Clear()
+            LogOfflinTbl.Columns.Clear()
+            SQLGetAdptr1.Fill(LogOfflinTbl)
+            Dim Max_ As New Integer
+            If LogOfflinTbl.Rows.Count > 0 Then
+                Colecrslt = LogOfflinTbl.Rows.Count
+                Max_ = LogOfflinTbl.Rows(LogOfflinTbl.Rows.Count - 1).Item(0)
+                If sqlCon.State = ConnectionState.Closed Then
+                    sqlCon.Open()
+                End If
+                Transction = sqlCon.BeginTransaction()
+                Dim SQLBulkCopy As SqlBulkCopy = New SqlBulkCopy(sqlCon, SqlBulkCopyOptions.Default, Transction)
+                SQLBulkCopy.DestinationTableName = "ALog"
+                'Try
+                For PP = 0 To 8
+                    SQLBulkCopy.ColumnMappings.Add(LogOfflinTbl.Columns(PP).ColumnName, LogOfflinTbl.Columns(PP).ColumnName)
+                Next
+                SQLBulkCopy.WriteToServer(LogOfflinTbl)
+                Transction.Commit()
+                'Try
+                Dim SQLCom As New SqlCommand
+                SQLCom.Connection = OfflineCon
+                SQLCom.CommandType = CommandType.Text
+                SQLCom.CommandText = "Delete from ALog Where LogSer <=" & Max_
+                If OfflineCon.State = ConnectionState.Closed Then
+                    OfflineCon.Open()
+                End If
+                SQLCom.ExecuteNonQuery()
+                '    Catch ex As Exception
+                '        MsgBox(ex.Message.ToString)
+                '    End Try
+                'Catch ex As Exception
+                '    Transction.Rollback()
+                '    MsgBox(ex.Message.ToString)
+                'End Try
+            Else
+                AppLogTbl(1000000, 0, "", "There is No records To Collect", LogOfflinTbl.Rows.Count)
             End If
-            Transction = sqlCon.BeginTransaction()
-            Dim SQLBulkCopy As SqlBulkCopy = New SqlBulkCopy(sqlCon, SqlBulkCopyOptions.Default, Transction)
-            SQLBulkCopy.DestinationTableName = "ALog"
-            'Try
-            For PP = 0 To 8
-                SQLBulkCopy.ColumnMappings.Add(LogOfflinTbl.Columns(PP).ColumnName, LogOfflinTbl.Columns(PP).ColumnName)
-            Next
-            SQLBulkCopy.WriteToServer(LogOfflinTbl)
-            Transction.Commit()
-            'Try
-            Dim SQLCom As New SqlCommand
-            SQLCom.Connection = OfflineCon
-            SQLCom.CommandType = CommandType.Text
-            SQLCom.CommandText = "Delete from ALog Where LogSer <=" & Max_
-            If OfflineCon.State = ConnectionState.Closed Then
-                OfflineCon.Open()
-            End If
-            SQLCom.ExecuteNonQuery()
-            '    Catch ex As Exception
-            '        MsgBox(ex.Message.ToString)
-            '    End Try
-            'Catch ex As Exception
-            '    Transction.Rollback()
-            '    MsgBox(ex.Message.ToString)
-            'End Try
-        Else
-            AppLogTbl(1000000, 0, "", "There is No records To Collect", LogOfflinTbl.Rows.Count)
-        End If
-        AppLogTbl(1000000, 0, "", "Log has been collected from " & LogOfflinTbl.Rows(0).Item(0) & " To " & LogOfflinTbl.Rows(LogOfflinTbl.Rows.Count - 1).Item(0), LogOfflinTbl.Rows.Count)
-        'Catch ex As Exception
-        '    Colecrslt = -1
-        '    AppLogTbl(1000001, 1, ex.Message, SQLComX.CommandText)
-        'End Try
+            AppLogTbl(1000000, 0, "", "Log has been collected from " & LogOfflinTbl.Rows(0).Item(0) & " To " & LogOfflinTbl.Rows(LogOfflinTbl.Rows.Count - 1).Item(0), LogOfflinTbl.Rows.Count)
+        Catch ex As Exception
+            Colecrslt = -1
+            AppLogTbl(1000001, 1, ex.Message, SQLComX.CommandText)
+        End Try
         Return Colecrslt
     End Function
     Public Function CompOffLine() As Integer

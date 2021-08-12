@@ -15,6 +15,7 @@ Public Class TikSearchNew
     Private exchange As ExchangeService
     Dim Span_ As New TimeSpan
     Dim nxt As String
+    Dim CurrRw As Integer
     Private Const CP_NOCLOSE_BUTTON As Integer = &H200      ' Disable close button
     Protected Overloads Overrides ReadOnly Property CreateParams() As CreateParams
         Get
@@ -69,7 +70,6 @@ Public Class TikSearchNew
             PrdKComb.DisplayMember = "Item"
             PrdKComb.ValueMember = "ID"
 
-
             WelcomeScreen.StatBrPnlAr.Text = ""
 
         End If
@@ -91,6 +91,7 @@ Public Class TikSearchNew
             SerchTxt.MaxLength = 50
         End If
         TickSrchTable.Rows.Clear()
+        StruGrdTk.Sql = 0
         LblMsg.Text = ""
         SerchTxt.ForeColor = Color.Black
         SerchTxt.Focus()
@@ -105,6 +106,7 @@ Public Class TikSearchNew
             TickKindFltr = 2
         End If
         TickSrchTable.Rows.Clear()
+        StruGrdTk.Sql = 0
         LblMsg.Text = ""
     End Sub
     Private Sub RdioOpen_Click(sender As Object, e As EventArgs) Handles RdioOpen.Click, Rdiocls.Click, RdioAll.Click
@@ -116,20 +118,26 @@ Public Class TikSearchNew
             TicOpnFltr = 2
         End If
         TickSrchTable.Rows.Clear()
+        StruGrdTk.Sql = 0
         LblMsg.Text = ""
     End Sub
     Private Sub SerchTxt_TextChanged(sender As Object, e As EventArgs) Handles SerchTxt.TextChanged
         TickSrchTable.Rows.Clear()
+        StruGrdTk.Sql = 0
         LblMsg.Text = ""
     End Sub
     Private Sub PrdKComb_SelectedIndexChanged(sender As Object, e As EventArgs) Handles PrdKComb.SelectedIndexChanged
         TickSrchTable.Rows.Clear()
+        StruGrdTk.Sql = 0
         LblMsg.Text = ""
     End Sub
     Private Sub Filtr()
         Dim FltrStr As String = ""
         Dim primaryKey(0) As DataColumn
         TickSrchTable = New DataTable
+
+        StruGrdTk.Sql = 0
+
         If SerchTxt.Text <> "برجاء ادخال كلمات البحث" Then
             LblMsg.Text = "جاري تحميل البيانات ..........."
             LblMsg.ForeColor = Color.Green
@@ -189,18 +197,24 @@ Public Class TikSearchNew
                         LblMsg.Text = ("نتيجة البحث : إجمالي عدد " & GridCuntRtrn.TickCount & " -- عدد الشكاوى : " & GridCuntRtrn.CompCount & " -- عدد الاستفسارات : " & GridCuntRtrn.TickCount - GridCuntRtrn.CompCount & " -- شكاوى مغلقة : " & GridCuntRtrn.ClsCount & " -- شكاوى مفتوحة : " & GridCuntRtrn.CompCount - GridCuntRtrn.ClsCount & " -- لم يتم المتابعة : " & GridCuntRtrn.NoFlwCount)
                         LblMsg.ForeColor = Color.Green
                         GridTicket.ClearSelection()
+                        TimerkepUpdtd.Start()
                     Else
+                        TimerkepUpdtd.Stop()
                         LblMsg.Text = ("لا توجد نتيجة للبحث بـ" & FilterComb.Text)
                         LblMsg.ForeColor = Color.Red
                         Beep()
                     End If
                 Else
+                    TimerkepUpdtd.Stop()
                     LblMsg.Text = "لم ينجح البحث - يرجى المحاولة مرة أخرى"
                     LblMsg.ForeColor = Color.Red
                     Beep()
                 End If
+            Else
+                TimerkepUpdtd.Stop()
             End If
         Else
+            TimerkepUpdtd.Stop()
             LblMsg.Text = ("برجاء ادخال كلمات البحث")
             LblMsg.ForeColor = Color.Red
             Beep()
@@ -221,6 +235,7 @@ Public Class TikSearchNew
     Private Sub DataGridView1_DoubleClick(sender As Object, e As EventArgs) Handles GridTicket.DoubleClick
         If (GridTicket.SelectedCells.Count) > 0 Then
             If GridTicket.CurrentRow.Index <> -1 Then
+                CurrRw = GridTicket.CurrentRow.Index
                 StruGrdTk.Tick = GridTicket.CurrentRow.Cells("TkKind").Value
                 StruGrdTk.FlwStat = GridTicket.CurrentRow.Cells("TkClsStatus").Value
                 StruGrdTk.Sql = GridTicket.CurrentRow.Cells("TkSQL").Value
@@ -249,7 +264,10 @@ Public Class TikSearchNew
                 StruGrdTk.ProdK = GridTicket.CurrentRow.Cells("PrdKind").Value
                 TikDetails.Text = "شكوى رقم " & StruGrdTk.Sql
 
+
                 StruGrdTk.LstUpDt = GridTicket.CurrentRow.Cells("تاريخ آخر تحديث").Value
+                StruGrdTk.LstUpTxt = GridTicket.CurrentRow.Cells("نص آخر تحديث").Value
+                StruGrdTk.LstUpEnNm = GridTicket.CurrentRow.Cells("محرر آخر تحديث").Value
                 StruGrdTk.LstUpEvId = GridTicket.CurrentRow.Cells("LastUpdateID").Value
 
                 TikDetails.ShowDialog()
@@ -278,6 +296,23 @@ Public Class TikSearchNew
         If Asc(e.KeyChar) = Keys.Enter Then
             Filtr()
         End If
+    End Sub
+
+    Private Sub TimerkepUpdtd_Tick(sender As Object, e As EventArgs) Handles TimerkepUpdtd.Tick
+        If GridTicket.SelectedRows.Count >= 0 Then
+            If StruGrdTk.Sql > 0 Then
+                GridTicket.Rows(CurrRw).Cells("TkDetails").Value = StruGrdTk.Detls
+                GridTicket.Rows(CurrRw).Cells("تاريخ آخر تحديث").Value = StruGrdTk.LstUpDt
+                GridTicket.Rows(CurrRw).Cells("نص آخر تحديث").Value = StruGrdTk.LstUpTxt
+                GridTicket.Rows(CurrRw).Cells("محرر آخر تحديث").Value = StruGrdTk.LstUpUsrNm
+                GridTicket.Rows(CurrRw).Cells("LastUpdateID").Value = StruGrdTk.LstUpEvId
+                'TikFormat(TickSrchTable, UpdtCurrTbl)
+            End If
+        End If
+    End Sub
+
+    Private Sub GridTicket_RowEnter(sender As Object, e As DataGridViewCellEventArgs) Handles GridTicket.RowEnter
+        StruGrdTk.Sql = 0
     End Sub
 #End Region
 

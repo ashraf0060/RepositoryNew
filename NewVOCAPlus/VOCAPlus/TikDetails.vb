@@ -46,7 +46,7 @@
 
         TxtFolw.Text = StruGrdTk.UsrNm
 
-        LblHelp.Text = "تم تسجيل الشكوى منذ : " & CalDate(StruGrdTk.DtStrt, Nw, "0000&H") & " يوم عمل"
+        LblWDays.Text = "تم تسجيل الشكوى منذ : " & CalDate(StruGrdTk.DtStrt, Nw, "0000&H") & " يوم عمل"
         If StruGrdTk.ProdK = 1 Then
             GroupBox3.Visible = True
             GroupBox4.Visible = False
@@ -57,7 +57,7 @@
             GroupBox3.Visible = False
             GroupBox4.Visible = False
         End If
-        LblWDays.Text = StruGrdTk.Help_
+        LblHelp.Text = StruGrdTk.Help_
         SelctSerchTxt(TxtDetails, "تعديل : بواسطة")
     End Sub
 
@@ -65,6 +65,8 @@
         If Trim(TxtDetailsAdd.Text).Length > 0 Then
             If InsUpd("update Tickets set TkDetails = '" & TxtDetails.Text & vbCrLf & "تعديل : بواسطة  " & Usr.PUsrRlNm & " في " & ServrTime() & " من خلال IP : " & OsIP() & vbCrLf & TxtDetailsAdd.Text & "' where TkSQL = " & StruGrdTk.Sql, "000&H") = Nothing Then
                 TxtDetails.Text &= vbCrLf & "تعديل : بواسطة  " & Usr.PUsrRlNm & " في " & ServrTime() & " من خلال IP : " & OsIP() & vbCrLf & TxtDetailsAdd.Text
+                SelctSerchTxt(TxtDetails, "تعديل : بواسطة")
+                StruGrdTk.Detls = TxtDetails.Text
                 TxtDetailsAdd.Text = ""
             Else
                 MsgInf(My.Resources.ConnErr & vbCrLf & My.Resources.TryAgain)
@@ -80,11 +82,11 @@
     End Sub
 
     Private Sub TimerVisInvs_Tick(sender As Object, e As EventArgs) Handles TimerVisInvs.Tick
-        If LblHelp.Text.Length > 0 Then
-            If LblHelp.Visible = True Then
-                LblHelp.Visible = False
+        If LblWDays.Text.Length > 0 Then
+            If LblWDays.Visible = True Then
+                LblWDays.Visible = False
             Else
-                LblHelp.Visible = True
+                LblWDays.Visible = True
             End If
         End If
     End Sub
