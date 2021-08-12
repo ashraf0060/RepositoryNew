@@ -38,13 +38,14 @@ Partial Class Login
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
         Me.PubVerLbl = New System.Windows.Forms.Label()
         Me.LogInBtn = New System.Windows.Forms.Button()
-        Me.ComboBox1 = New System.Windows.Forms.ComboBox()
         Me.LblHdr = New System.Windows.Forms.Label()
         Me.LblLogin = New System.Windows.Forms.Label()
         Me.Cmbo = New System.Windows.Forms.ComboBox()
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.Panel2 = New System.Windows.Forms.Panel()
         Me.Button1 = New System.Windows.Forms.Button()
+        Me.ImageList1 = New System.Windows.Forms.ImageList(Me.components)
+        Me.TimerClose = New System.Windows.Forms.Timer(Me.components)
         CType(Me.StatusBarPanel1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel1.SuspendLayout()
@@ -55,6 +56,7 @@ Partial Class Login
         '
         Me.TxtUsrPass.BackColor = System.Drawing.Color.WhiteSmoke
         Me.TxtUsrPass.BorderStyle = System.Windows.Forms.BorderStyle.None
+        Me.TxtUsrPass.Enabled = False
         Me.TxtUsrPass.Font = New System.Drawing.Font("Times New Roman", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.TxtUsrPass.Location = New System.Drawing.Point(156, 146)
         Me.TxtUsrPass.Name = "TxtUsrPass"
@@ -172,7 +174,7 @@ Partial Class Login
         Me.LblUsrIP.BackColor = System.Drawing.Color.Transparent
         Me.LblUsrIP.Font = New System.Drawing.Font("Times New Roman", 9.0!)
         Me.LblUsrIP.ForeColor = System.Drawing.Color.Red
-        Me.LblUsrIP.Location = New System.Drawing.Point(345, 239)
+        Me.LblUsrIP.Location = New System.Drawing.Point(345, 261)
         Me.LblUsrIP.Name = "LblUsrIP"
         Me.LblUsrIP.Size = New System.Drawing.Size(235, 20)
         Me.LblUsrIP.TabIndex = 68
@@ -197,7 +199,7 @@ Partial Class Login
         Me.PubVerLbl.BackColor = System.Drawing.Color.Transparent
         Me.PubVerLbl.Font = New System.Drawing.Font("Times New Roman", 9.0!)
         Me.PubVerLbl.ForeColor = System.Drawing.Color.Red
-        Me.PubVerLbl.Location = New System.Drawing.Point(348, 256)
+        Me.PubVerLbl.Location = New System.Drawing.Point(348, 278)
         Me.PubVerLbl.Name = "PubVerLbl"
         Me.PubVerLbl.Size = New System.Drawing.Size(232, 24)
         Me.PubVerLbl.TabIndex = 74
@@ -211,6 +213,7 @@ Partial Class Login
         Me.LogInBtn.BackColor = System.Drawing.Color.Transparent
         Me.LogInBtn.BackgroundImage = Global.VOCAPlus.My.Resources.Resources.recgreen
         Me.LogInBtn.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
+        Me.LogInBtn.Enabled = False
         Me.LogInBtn.FlatAppearance.BorderSize = 0
         Me.LogInBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.LogInBtn.Font = New System.Drawing.Font("Times New Roman", 12.0!, System.Drawing.FontStyle.Bold)
@@ -223,16 +226,6 @@ Partial Class Login
         Me.ToolTip1.SetToolTip(Me.LogInBtn, "تسجيل الدخول")
         Me.LogInBtn.UseCompatibleTextRendering = True
         Me.LogInBtn.UseVisualStyleBackColor = False
-        '
-        'ComboBox1
-        '
-        Me.ComboBox1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
-        Me.ComboBox1.FormattingEnabled = True
-        Me.ComboBox1.Location = New System.Drawing.Point(407, 114)
-        Me.ComboBox1.Name = "ComboBox1"
-        Me.ComboBox1.Size = New System.Drawing.Size(121, 21)
-        Me.ComboBox1.TabIndex = 70
-        Me.ComboBox1.Visible = False
         '
         'LblHdr
         '
@@ -292,6 +285,25 @@ Partial Class Login
         Me.Button1.UseVisualStyleBackColor = True
         Me.Button1.Visible = False
         '
+        'ImageList1
+        '
+        Me.ImageList1.ImageStream = CType(resources.GetObject("ImageList1.ImageStream"), System.Windows.Forms.ImageListStreamer)
+        Me.ImageList1.TransparentColor = System.Drawing.Color.Transparent
+        Me.ImageList1.Images.SetKeyName(0, "CpAdd.png")
+        Me.ImageList1.Images.SetKeyName(1, "CpOpen.png")
+        Me.ImageList1.Images.SetKeyName(2, "Phone1.png")
+        Me.ImageList1.Images.SetKeyName(3, "Frstaid.png")
+        Me.ImageList1.Images.SetKeyName(4, "VocaIcon48.png")
+        Me.ImageList1.Images.SetKeyName(5, "FTP.ico")
+        Me.ImageList1.Images.SetKeyName(6, "upload-1.png")
+        Me.ImageList1.Images.SetKeyName(7, "Usrresm.png")
+        Me.ImageList1.Images.SetKeyName(8, "Export.png")
+        Me.ImageList1.Images.SetKeyName(9, "usersLogin.png")
+        '
+        'TimerClose
+        '
+        Me.TimerClose.Interval = 50
+        '
         'Login
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -307,7 +319,6 @@ Partial Class Login
         Me.Controls.Add(Me.Cmbo)
         Me.Controls.Add(Me.PubVerLbl)
         Me.Controls.Add(Me.LblHdr)
-        Me.Controls.Add(Me.ComboBox1)
         Me.Controls.Add(Me.PictureBox2)
         Me.Controls.Add(Me.LblUsrIP)
         Me.Controls.Add(Me.TxtUsrPass)
@@ -346,7 +357,6 @@ Partial Class Login
     Friend WithEvents LblUsrIP As Label
     Friend WithEvents PictureBox2 As PictureBox
     Friend WithEvents ToolTip1 As ToolTip
-    Friend WithEvents ComboBox1 As ComboBox
     Friend WithEvents LblHdr As Label
     Friend WithEvents PubVerLbl As Label
     Friend WithEvents LblLogin As Label
@@ -355,4 +365,6 @@ Partial Class Login
     Friend WithEvents Panel2 As Panel
     Friend WithEvents LogInBtn As Button
     Friend WithEvents Button1 As Button
+    Friend WithEvents ImageList1 As ImageList
+    Friend WithEvents TimerClose As Timer
 End Class

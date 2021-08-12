@@ -267,7 +267,7 @@ Public Class TikSearchNew
 
                 StruGrdTk.LstUpDt = GridTicket.CurrentRow.Cells("تاريخ آخر تحديث").Value
                 StruGrdTk.LstUpTxt = GridTicket.CurrentRow.Cells("نص آخر تحديث").Value
-                StruGrdTk.LstUpEnNm = GridTicket.CurrentRow.Cells("محرر آخر تحديث").Value
+                StruGrdTk.LstUpUsrNm = GridTicket.CurrentRow.Cells("محرر آخر تحديث").Value
                 StruGrdTk.LstUpEvId = GridTicket.CurrentRow.Cells("LastUpdateID").Value
 
                 TikDetails.ShowDialog()

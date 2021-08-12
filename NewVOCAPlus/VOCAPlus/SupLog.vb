@@ -64,9 +64,9 @@ Public Class SupLog
                     Else
                         SPLIT0 = 0
                     End If
-                    InsUpd("insert into ALog ([ALogSer], [ALogDate] ,[ALogErrCd] ,[ALogExMsg] ,[ALogSQLStr] ,[ALogIP],[ALogUserId]) values (" & TmpSer & ",'" & Tmpdate & "'," & SPLIT0 & ",'" & Replace(SPLIT1, "'", "$") & "','" & Replace(PassDecoding(SPLIT2, GenSaltKey), "'", "$") & "','" & OsIP() & "'," & Usr.PUsrID & ")", "0000&H")
-                    'InsUpd("set QUOTED_IDENTIFIER OFF;insert into ALog ([ALogSer], [ALogDate] ,[ALogErrCd] ,[ALogExMsg] ,[ALogSQLStr] ,[ALogIP],[ALogUserId]) values (" & TmpSer & ",'" & Tmpdate & "'," & SPLIT0 & ",'" & SPLIT1 & "','" & PassDecoding(SPLIT2, GenSaltKey) & "','" & OsIP() & "'," & Usr.PUsrID & ");set QUOTED_IDENTIFIER ON;", "0000&H")
-                    TblLog.Rows.Add(TmpSer, Tmpdate, Integer.Parse(SPLIT0), SPLIT1, PassDecoding(SPLIT2, GenSaltKey))
+                InsUpd("insert into ALog ([LogSer], [LogDt] ,[LogErrCd] ,[LogExMsg] ,[LogSQLStr] ,[LogIP],[LogUsrID]) values (" & TmpSer & ",'" & Tmpdate & "'," & SPLIT0 & ",'" & Replace(SPLIT1, "'", "$") & "','" & Replace(PassDecoding(SPLIT2, GenSaltKey), "'", "$") & "','" & OsIP() & "'," & Usr.PUsrID & ")", "0000&H")
+                'InsUpd("set QUOTED_IDENTIFIER OFF;insert into ALog ([ALogSer], [ALogDate] ,[ALogErrCd] ,[ALogExMsg] ,[ALogSQLStr] ,[ALogIP],[ALogUserId]) values (" & TmpSer & ",'" & Tmpdate & "'," & SPLIT0 & ",'" & SPLIT1 & "','" & PassDecoding(SPLIT2, GenSaltKey) & "','" & OsIP() & "'," & Usr.PUsrID & ");set QUOTED_IDENTIFIER ON;", "0000&H")
+                TblLog.Rows.Add(TmpSer, Tmpdate, Integer.Parse(SPLIT0), SPLIT1, PassDecoding(SPLIT2, GenSaltKey))
                 End If
             'End If
         Loop

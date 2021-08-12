@@ -8,8 +8,7 @@ Imports ClosedXML.Excel
 Imports Microsoft.Exchange.WebServices.Data
 Imports VOCAPlus.Strc
 Module PublicCode
-    Public MenuStrip_ As New MenuStrip
-    Public CntxmenStip As New ContextMenuStrip
+
     Public screenWidth As Integer = Screen.PrimaryScreen.Bounds.Width
     Public screenHeight As Integer = Screen.PrimaryScreen.Bounds.Height
 
@@ -73,9 +72,7 @@ Module PublicCode
     'Public strConnCssys As String = "Data Source=10.10.26.4;Initial Catalog=CSSYS;Persist Security Info=True;User ID=import;Password=ASD_asd123"
     'Public Const strConn As String = "Data Source=HOSPC\HOSPCSQLSRV;Initial Catalog=VOCAPlus;Persist Security Info=True;User ID=sa;Password=Hemonad105046"
     Public sqlCon As New SqlConnection(strConn) ' I Have assigned conn STR here and delete this row from all project
-    Public sqlCConCCSYS As New SqlConnection ' I Have assigned conn STR here and delete this row from all project
     Public ServerNm As String = "Egypt Post Server"
-    Public HndlMsg As String = ""
     Public Distin As String = ""
     Public StrFileName As String = "X"
     Public Nw As DateTime = ServrTime()
@@ -428,6 +425,7 @@ End_:
         Return Emails
     End Function
     Public Sub AppLog(ErrHndls As String, LogMsg As String, SSqlStrs As String)
+        On Error Resume Next
         My.Computer.FileSystem.WriteAllText(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) _
           & "\VOCALog" & Format(Now, "yyyyMM") & ".Vlg", Format(Now, "yyyyMMdd HH:mm:ss") & " ," & ErrHndls & LogMsg & " &H" & PassEncoding(SSqlStrs, GenSaltKey) & vbCrLf, True)
     End Sub
@@ -450,7 +448,7 @@ End_:
             ");"
             sqlComm1.ExecuteNonQuery()
         Catch ex As Exception
-            MsgBox(ex.Message)
+            AppLog("0000&H", ex.Message, sqlComm1.CommandText)
         End Try
     End Sub
     Public Sub MsgInf(MsgBdy As String)
@@ -470,6 +468,10 @@ End_:
         sqlComm.CommandType = CommandType.Text
         sqlComm.CommandText = SSqlStr
         Try
+            If sqlCon.State = ConnectionState.Closed Then
+                sqlCon.Open()
+            End If
+
             SQLGetAdptr.Fill(SqlTbl)
             AppLogTbl(Split(ErrHndl, "&H")(0), 0, "", SSqlStr, SqlTbl.Rows.Count)
             If PreciFlag = True Then
@@ -482,6 +484,7 @@ End_:
             StW.Stop()
             Dim TimSpn As TimeSpan = (StW.Elapsed)
             ElapsedTimeSpan = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", TimSpn.Hours, TimSpn.Minutes, TimSpn.Seconds, TimSpn.Milliseconds / 10)
+            sqlCon.Close()
         Catch ex As Exception
             Dim frmCollection = Application.OpenForms
             If frmCollection.OfType(Of WelcomeScreen).Any Then
@@ -492,7 +495,7 @@ End_:
             AppLogTbl(Split(ErrHndl, "&H")(0), 1, ex.Message, SSqlStr, SqlTbl.Rows.Count)
             Errmsg = ex.Message
         End Try
-        'SQLGetAdptr.Dispose()
+        SQLGetAdptr.Dispose()
         Return Errmsg
     End Function
     Public Function InsUpd(SSqlStr As String, ErrHndl As String) As String
@@ -1765,6 +1768,7 @@ End_:
         End If
     End Sub
     Public Sub GettAttchUpdtesFils()
+        LodngFrm.LblMsg.Text += vbCrLf & "جاري تحميل الصورة المرفقات .................."
         WelcomeScreen.StatBrPnlAr.Text = "جاري تحميل قائمة المرفقات .................."
         Dim lol As String
         Dim arr() As String
@@ -1875,14 +1879,14 @@ End_:
         TimeTble.Columns.Clear()
         Dim SQLGetAdptr As New SqlDataAdapter            'SQL Table Adapter
         Try
-            sqlComm.CommandTimeout = 90
+            'sqlComm.CommandTimeout = 90
             sqlComm.Connection = sqlCon
             SQLGetAdptr.SelectCommand = sqlComm
             sqlComm.CommandType = CommandType.Text
             sqlComm.CommandText = "Select GetDate() as Now_"
             SQLGetAdptr.Fill(TimeTble)
             Nw = Format(TimeTble.Rows(0).Item(0), "yyyy/MMM/dd hh:mm:ss tt")
-            WelcomeScreen.LblLstSeen.Text = Nw
+
         Catch ex As Exception
             Errmsg = "X"
             Dim frmCollection = Application.OpenForms

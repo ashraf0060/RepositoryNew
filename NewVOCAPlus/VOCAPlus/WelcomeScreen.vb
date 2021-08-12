@@ -47,10 +47,24 @@ Public Class WelcomeScreen
                 Me.BackgroundImageLayout = ImageLayout.Tile
                 Me.BackColor = Color.White
             End If
-            Dim SwichTabTable As DataTable = New DataTable
-            Dim SwichButTable As DataTable = New DataTable
-            Dim PrTblTsk As New Thread(AddressOf PreciTbl)
-            PrTblTsk.IsBackground = True
+
+            DbStat.BackgroundImage = My.Resources.DBOn
+            DbStat.Tag = "تم تحميل قواعد البيانات الأساسية بنجـــاح"
+            'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+            Dim Signout As New ToolStripMenuItem("Sign Out")  'YYYYYYYYYYY
+            Dim Exit_ As New ToolStripMenuItem("Exit")  'YYYYYYYYYYY
+            CntxtMnuStrp.Items.Add(Signout)  'YYYYYYYYYYY
+            CntxtMnuStrp.Items.Add(Exit_)  'YYYYYYYYYYY
+            AddHandler Signout.Click, AddressOf SnOutBt_Click  'YYYYYYYYYYY
+            AddHandler Exit_.Click, AddressOf ExtBt_Click  'YYYYYYYYYYY
+
+            LblLstSeen.Text = "Last Seen : " & Nw 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+            StatBrPnlEn.Text = "  Online  "
+            StatBrPnlEn.Icon = My.Resources.WSOn032
+
+
+
             LblClrSys.BackColor = My.Settings.ClrSys
             LblClrUsr.BackColor = My.Settings.ClrUsr
             LblClrSamCat.BackColor = My.Settings.ClrSamCat
@@ -75,86 +89,17 @@ Public Class WelcomeScreen
                 GrpCounters.Visible = False
                 ConterWidt = 0
             End If
-            Invoke(Sub()
-                       'FlowLayoutPanel1.Height = screenHeight - 150
-                       'FlowLayoutPanel1.Width = screenWidth - 20
-                       DbStat.Margin = New Padding(DbStat.Margin.Left, DbStat.Margin.Top, FlowLayoutPanel1.ClientRectangle.Width - (DbStat.Width + DbStat.Margin.Left), DbStat.Margin.Bottom)
+
+            'FlowLayoutPanel1.Height = screenHeight - 150
+            'FlowLayoutPanel1.Width = screenWidth - 20
+            DbStat.Margin = New Padding(DbStat.Margin.Left, DbStat.Margin.Top, FlowLayoutPanel1.ClientRectangle.Width - (DbStat.Width + DbStat.Margin.Left), DbStat.Margin.Bottom)
                        PictureBox1.Margin = New Padding(PictureBox1.Margin.Left, PictureBox1.Margin.Top, FlowLayoutPanel1.ClientRectangle.Width - (GroupBox1.Width + GroupBox1.Margin.Right + GroupBox1.Margin.Left + ConterWidt + PictureBox1.Width + PictureBox1.Margin.Left), PictureBox1.Margin.Bottom)
                        LblUsrRNm.Margin = New Padding(LblUsrRNm.Margin.Left, LblUsrRNm.Margin.Top, FlowLayoutPanel1.ClientRectangle.Width - (LblUsrRNm.Width + LblUsrRNm.Margin.Left), LblUsrRNm.Margin.Bottom)
                        LblSrvrNm.Margin = New Padding(LblSrvrNm.Margin.Left, LblSrvrNm.Margin.Top, FlowLayoutPanel1.ClientRectangle.Width - (LblSrvrNm.Width + LblUsrRNm.Margin.Left), LblSrvrNm.Margin.Bottom)
                        LblLstSeen.Margin = New Padding(LblLstSeen.Margin.Left, LblLstSeen.Margin.Top, FlowLayoutPanel1.ClientRectangle.Width - (LblLstSeen.Width + LblUsrRNm.Margin.Left), LblLstSeen.Margin.Bottom)
-                   End Sub)
-            FlowLayoutPanel1.Visible = True
-            If PublicCode.GetTbl("SELECT SwNm, SwSer, SwID, SwObjNew FROM ASwitchboard WHERE (SwType = N'Tab') AND (SwNm <> N'NA') ORDER BY SwID", SwichTabTable, "1002&H") = Nothing Then
-                For Cnt_ = 0 To SwichTabTable.Rows.Count - 1
-                    Dim NewTab As New ToolStripMenuItem(SwichTabTable.Rows(Cnt_).Item(0).ToString)
-                    Dim NewTabCx As New ToolStripMenuItem(SwichTabTable.Rows(Cnt_).Item(0).ToString)  'YYYYYYYYYYY
 
-                    If Mid(Usr.PUsrLvl, SwichTabTable.Rows(Cnt_).Item(2).ToString, 1) = "A" Or
-                        Mid(Usr.PUsrLvl, SwichTabTable.Rows(Cnt_).Item(2).ToString, 1) = "H" Then
-                        MenuSw.Items.Add(NewTab)
-                        CntxtMnuStrp.Items.Add(NewTabCx)                     'YYYYYYYYYYY
-                        SwichButTable.Rows.Clear()
-                        If PublicCode.GetTbl("SELECT SwNm, SwSer, SwID, SwObjNm, SwObjImg, SwObjNew FROM ASwitchboard WHERE (SwType <> N'Tab') AND (SwNm <> N'NA') AND (SwSer ='" & SwichTabTable.Rows(Cnt_).Item(1).ToString & "') ORDER BY SwID;", SwichButTable, "1002&H") = Nothing Then
-                            For Cnt_1 = 0 To SwichButTable.Rows.Count - 1
-                                Dim subItem As New ToolStripMenuItem(SwichButTable.Rows(Cnt_1).Item(0).ToString)
-                                Dim subItemCx As New ToolStripMenuItem(SwichButTable.Rows(Cnt_1).Item(0).ToString)  'YYYYYYYYYYY
-                                If Mid(Usr.PUsrLvl, SwichButTable.Rows(Cnt_1).Item(2).ToString, 1) = "A" Or
-                                   Mid(Usr.PUsrLvl, SwichButTable.Rows(Cnt_1).Item(2).ToString, 1) = "H" Then
-                                    NewTab.DropDownItems.Add(subItem)
-                                    NewTabCx.DropDownItems.Add(subItemCx)    'YYYYYYYYYYY
-                                    subItem.Tag = SwichButTable.Rows(Cnt_1).Item(3).ToString
-                                    If DBNull.Value.Equals(SwichButTable.Rows(Cnt_1).Item("SwObjImg")) = False Then
-                                        Dim Cnt_ = ImageList1.Images(SwichButTable.Rows(Cnt_1).Item("SwObjImg"))
-                                        Dim dd = My.Resources.ResourceManager.GetObject(SwichButTable.Rows(Cnt_1).Item("SwObjImg"))
-                                        subItem.Image = Cnt_
-                                    End If
-                                    subItemCx.Tag = SwichButTable.Rows(Cnt_1).Item(3).ToString  'YYYYYYYYYYY
-                                    AddHandler subItem.Click, AddressOf ClkEvntClick
-                                    AddHandler subItemCx.Click, AddressOf ClkEvntClick  '✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔
-                                End If
-                                If Mid(Usr.PUsrLvl, SwichButTable.Rows(Cnt_1).Item(2).ToString, 1) = "H" Then
-                                    subItem.AccessibleName = "True"
-                                    subItemCx.AccessibleName = "True"
-                                End If
-                            Next Cnt_1
-                        Else
-                            MsgErr(My.Resources.ConnErr & vbCrLf & My.Resources.TryAgain)
-                            Login.Show()
-                            Me.Close()
-                        End If
-                    End If
-                    If Mid(Usr.PUsrLvl, SwichTabTable.Rows(Cnt_).Item(2).ToString, 1) = "H" Then
-                        NewTab.AccessibleName = "True"
-                        NewTabCx.AccessibleName = "True"
-                        AddHandler NewTab.Click, AddressOf TabClick
-                        AddHandler NewTabCx.Click, AddressOf TabClick
-                    End If
-                    NewTab = Nothing
-                Next Cnt_
-                Dim Signout As New ToolStripMenuItem("Sign Out")  'YYYYYYYYYYY
-                Dim Exit_ As New ToolStripMenuItem("Exit")  'YYYYYYYYYYY
-                CntxtMnuStrp.Items.Add(Signout)  'YYYYYYYYYYY
-                CntxtMnuStrp.Items.Add(Exit_)  'YYYYYYYYYYY
-                AddHandler Signout.Click, AddressOf SnOutBt_Click  'YYYYYYYYYYY
-                AddHandler Exit_.Click, AddressOf ExtBt_Click  'YYYYYYYYYYY
-                AreaTable.Rows.Clear()
-                OfficeTable.Rows.Clear()
-                CompSurceTable.Rows.Clear()
-                CountryTable.Rows.Clear()
-                ProdKTable.Rows.Clear()
-                ProdCompTable.Rows.Clear()
-                UpdateKTable.Rows.Clear()
-                PrciTblCnt = 0
-                LblLstSeen.Text = "Last Seen : " & ServrTime() 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-                LoadFrm("جاري تحميل البيانات ...", (screenWidth - LodngFrm.Width) / 2, (screenHeight - LodngFrm.Height) / 2)
-                PrTblTsk.Start()
-                StatBrPnlEn.Text = "  Online  "
-                StatBrPnlEn.Icon = My.Resources.WSOn032
-            Else
-                Login.Show()
-                Me.Close()
-            End If
+            FlowLayoutPanel1.Visible = True
+
 
             PubVerLbl.Text = "IP: " & OsIP()
             If Usr.PUsrGndr = "Male" Then
@@ -171,46 +116,16 @@ Public Class WelcomeScreen
             Else
                 LblUsrIP.Text = "Publish Ver. : This isn't a Publish version"
             End If
-            tempTable.Rows.Clear()
-            tempTable.Columns.Clear()
-            GetTbl("Select Mlxx from Alib", tempTable, "0000&H")
-            MLXX = tempTable.Rows(0).Item(0).ToString
+
             TimerTikCoun.Start()
             TimrFlsh.Start()
-            TimerColctLog.Start()
-            SwichTabTable.Dispose()
-            SwichButTable.Dispose()
+            'TimerColctLog.Start()
+
             GC.Collect()
             StartServer()
         End If
     End Sub
-    Private Sub TabClick(sender As System.Object, e As System.EventArgs)
-        sender.AccessibleName = "False"
-        sender.backcolor = Color.White
-        sender.font = New Font("Times New Roman", 14, FontStyle.Regular)
-        InsUpd("update Int_user set UsrLevel = SUBSTRING(UsrLevel,1,(select SwID from ASwitchboard where SwNm = '" & sender.text & "')-1) + 'A' + SUBSTRING(UsrLevel,(select SwID from ASwitchboard where SwNm = '" & sender.text & "') + 1,100) where UsrId = " & Usr.PUsrID, "0000&H")
-    End Sub
-    Private Sub ClkEvntClick(sender As System.Object, e As System.EventArgs)
-        Dim formName As String = "VOCAPlus." & sender.tag
-        Dim form_ = CType(Activator.CreateInstance(Type.GetType(formName)), Form)
 
-        sender.AccessibleName = "False"
-        sender.backcolor = Color.White
-        sender.font = New Font("Times New Roman", 14, FontStyle.Regular)
-        InsUpd("update Int_user set UsrLevel = SUBSTRING(UsrLevel,1,(select SwID from ASwitchboard where SwObjNm = '" & sender.tag & "')-1) + 'A' + SUBSTRING(UsrLevel,(select SwID from ASwitchboard where SwObjNm = '" & sender.tag & "') + 1,100) where UsrId = " & Usr.PUsrID, "0000&H")
-
-        If Application.OpenForms.Count > 2 Then
-            MsgInf("لا يمكن فتح أكثر من شاشتين في نفس الوقت" & vbCrLf & "يرجى إغلاق أحد الشاشات المفتوحة وإعادة المحاولة")
-            Exit Sub
-        End If
-        For Each f As Form In My.Application.OpenForms
-            If f.Name = form_.Name Then
-                'MsgInf("شاشة " & form.Text & " مفتوحة بالفعل")
-                Exit Sub
-            End If
-        Next
-        form_.ShowDialog()
-    End Sub
     'Exit Button close Welcome Screen And Update Active Status in Int_User Table
     'Exit Button close Welcome Screen And open Login Form And Update Active Status in Int_User Table
     'Disable Close Button[X] In the Vb.Net
@@ -249,30 +164,30 @@ Public Class WelcomeScreen
 
 #Region "Send Log File If UsrLogSnd is True"
                 If TicTable.Rows(0).Item("UsrLogSnd") = True Then
-                    TimerColctLog.Interval = 5000
-                    '    tempTable.Rows.Clear()
-                    '    tempTable.Columns.Clear()
-                    '    GetTbl("Select Mlxx from Alib", tempTable, "0000&H")
-                    '    Dim exchange As ExchangeService
-                    '    exchange = New ExchangeService(ExchangeVersion.Exchange2007_SP1)
-                    '    exchange.Credentials = New WebCredentials("egyptpost\voca-support", tempTable.Rows(0).Item(0).ToString)
-                    '    exchange.Url() = New Uri("https://mail.egyptpost.org/ews/exchange.asmx")
-                    '    Dim message As New EmailMessage(exchange)
-                    '    message.ToRecipients.Add("voca-support@egyptpost.org")
-                    '    message.CcRecipients.Add("a.farag@egyptpost.org")
-                    '    message.Subject = "VOCA Log Of " & Usr.PUsrRlNm & "," & Usr.PUsrID & "," & OsIP()
-                    '    message.Body = "VOCA Log File"
-                    '    Dim fileAttachment As String = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) & "\" & "VOCALog" & Format(Now, "yyyyMM") & ".Vlg"
-                    '    message.Attachments.AddFileAttachment(fileAttachment)
-                    '    message.Attachments(0).ContentId = "VOCALog" & Format(Now, "yyyyMM")
-                    '    message.Importance = 1
-                    '    Try
-                    '        message.SendAndSaveCopy()
-                    If PublicCode.InsUpd("UPDATE Int_user SET UsrLogSnd = 0  WHERE (UsrId = " & Usr.PUsrID & ");", "1006&H") = Nothing Then
-                    End If
-                    '    Catch ex As Exception
-                    '        MsgInf(ex.Message)
-                    '    End Try
+                    'TimerColctLog.Interval = 5000
+                    tempTable.Rows.Clear()
+                    tempTable.Columns.Clear()
+                    GetTbl("Select Mlxx from Alib", tempTable, "0000&H")
+                    Dim exchange As ExchangeService
+                    exchange = New ExchangeService(ExchangeVersion.Exchange2007_SP1)
+                    exchange.Credentials = New WebCredentials("egyptpost\voca-support", tempTable.Rows(0).Item(0).ToString)
+                    exchange.Url() = New Uri("https://mail.egyptpost.org/ews/exchange.asmx")
+                    Dim message As New EmailMessage(exchange)
+                    'message.ToRecipients.Add("voca-support@egyptpost.org")
+                    message.CcRecipients.Add("a.farag@egyptpost.org")
+                    message.Subject = "VOCA Log Of " & Usr.PUsrRlNm & "," & Usr.PUsrID & "," & OsIP()
+                    message.Body = "VOCA Log File"
+                    Dim fileAttachment As String = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) & "\" & "VOCALog" & Format(Now, "yyyyMM") & ".Vlg"
+                    message.Attachments.AddFileAttachment(fileAttachment)
+                    message.Attachments(0).ContentId = "VOCALog" & Format(Now, "yyyyMM")
+                    message.Importance = 1
+                    Try
+                        message.SendAndSaveCopy()
+                        If PublicCode.InsUpd("UPDATE Int_user SET UsrLogSnd = 0  WHERE (UsrId = " & Usr.PUsrID & ");", "1006&H") = Nothing Then
+                        End If
+                    Catch ex As Exception
+                        MsgInf(ex.Message)
+                    End Try
                 End If
 
 #End Region
@@ -348,8 +263,9 @@ Public Class WelcomeScreen
     End Sub
     Private Sub TimerOp_Tick(sender As Object, e As EventArgs) Handles TimerOp.Tick
         If Opacity < 1 Then
-            Opacity += 0.1
+            Opacity += 0.06
         Else
+            Login.TimerClose.Stop()
             Me.TimerOp.Stop()
         End If
     End Sub
@@ -362,7 +278,16 @@ Public Class WelcomeScreen
     End Sub
     Private Sub ExtBt_Click(sender As Object, e As EventArgs) Handles ExtBt.Click
         SinOutEvent()
-        Close()
+        Me.CntxtMnuStrp.Close()
+        'Invoke(Sub() LodngFrm.Close())
+        'Invoke(Sub() LodngFrm.Dispose())
+        On Error Resume Next
+        For Each f As Form In My.Application.OpenForms
+            f.Close()
+            f.Dispose()
+        Next
+        Me.Close()
+        Application.Exit()
     End Sub
     Private Sub SinOutEvent()
         CntxtMnuStrp.Close()
@@ -376,153 +301,12 @@ Public Class WelcomeScreen
             ConnOff.Start()
         End If
     End Sub
-    Private Sub PreciTbl()
-        Dim primaryKey(0) As DataColumn
-        Dim NotComplete As String = "لم يتم تحميل"
-        Invoke(Sub() PublicCode.LoadFrm("", 350, 500))
-        If AreaTable.Rows.Count = 0 Then
-            Invoke(Sub() LodngFrm.LblMsg.Text = "جاري تحميل أسماء المناطق ...")
-            Invoke(Sub() LodngFrm.LblMsg.Refresh())
-            Invoke(Sub() LodngFrm.LblMsg.ScrollToCaret())
-            If PublicCode.GetTbl("SELECT OffArea FROM PostOff GROUP BY OffArea ORDER BY OffArea;", AreaTable, "1012&H") = Nothing Then
-                PrciTblCnt += 1
-            Else
-                NotComplete += " أسماء المناطق / "
-            End If
-        End If
-        If OfficeTable.Rows.Count = 0 Then
-            Invoke(Sub() LodngFrm.LblMsg.Text += vbCrLf & "جاري تحميل أسماء المكاتب ...")
-            Invoke(Sub() LodngFrm.LblMsg.Refresh())
-            Invoke(Sub() LodngFrm.LblMsg.ScrollToCaret())
-            If PublicCode.GetTbl("select OffNm1, OffFinCd, OffArea from PostOff ORDER BY OffNm1;", OfficeTable, "1012&H") = Nothing Then
-                PrciTblCnt += 1
-            Else
-                NotComplete += " أسماء المكاتب / "
-            End If
-        End If
-        If CompSurceTable.Rows.Count = 0 Then
-            Dim SrcStr As String = ""
-            If Usr.PUsrUCatLvl = 7 Then
-                SrcStr = "select SrcCd, SrcNm from CDSrc where SrcSusp=0 and srcCd = 1"
-            Else
-                SrcStr = "select SrcCd, SrcNm from CDSrc where SrcSusp=0 and srcCd > 1 ORDER BY SrcNm"
-            End If
-            Invoke(Sub() LodngFrm.LblMsg.Text += vbCrLf & "جاري تحميل مصادر الشكوى ...")
-            Invoke(Sub() LodngFrm.LblMsg.Refresh())
-            Invoke(Sub() LodngFrm.LblMsg.ScrollToCaret())
-            If PublicCode.GetTbl(SrcStr, CompSurceTable, "1012&H") = Nothing Then
-                PrciTblCnt += 1
-            Else
-                NotComplete += " مصادر الشكوى / "
-            End If
-        End If
-        If CountryTable.Rows.Count = 0 Then
-            Invoke(Sub() LodngFrm.LblMsg.Text += vbCrLf & "جاري تحميل أسماء الدول ...")
-            Invoke(Sub() LodngFrm.LblMsg.Refresh())
-            Invoke(Sub() LodngFrm.LblMsg.ScrollToCaret())
-            If PublicCode.GetTbl("select CounCd,CounNm from CDCountry order by CounNm", CountryTable, "1012&H") = Nothing Then
-                primaryKey(0) = CountryTable.Columns("CounCd")
-                CountryTable.PrimaryKey = primaryKey
-                PrciTblCnt += 1
-            Else
-                NotComplete += " أسماء الدول / "
-            End If
-        End If
-        If ProdKTable.Rows.Count = 0 Then
-            Invoke(Sub() LodngFrm.LblMsg.Text += vbCrLf & "جاري تحميل أنواع الخدمات ...")
-            Invoke(Sub() LodngFrm.LblMsg.Refresh())
-            Invoke(Sub() LodngFrm.LblMsg.ScrollToCaret())
-            If PublicCode.GetTbl("select ProdKCd, ProdKNm, ProdKClr from CDProdK where ProdKSusp = 0 order by ProdKCd", ProdKTable, "1012&H") = Nothing Then
-                primaryKey(0) = ProdKTable.Columns("ProdKNm")
-                ProdKTable.PrimaryKey = primaryKey
-                PrciTblCnt += 1
-            Else
-                NotComplete += " أنواع الخدمات / "
-            End If
-        End If
-        If ProdCompTable.Rows.Count = 0 Then
-            Invoke(Sub() LodngFrm.LblMsg.Text += vbCrLf & "جاري تحميل أنواع المنتجات ...")
-            Invoke(Sub() LodngFrm.LblMsg.Refresh())
-            Invoke(Sub() LodngFrm.LblMsg.ScrollToCaret())
-            If PublicCode.GetTbl("SELECT FnSQL, PrdKind, FnProdCd, PrdNm, FnCompCd, CompNm, FnMend, PrdRef, FnMngr, Prd3, FnSusp,CompHlp FROM VwFnProd where FnSusp = 0 ORDER BY PrdKind, PrdNm, CompNm", ProdCompTable, "1012&H") = Nothing Then
-                primaryKey(0) = ProdCompTable.Columns("FnSQL")
-                ProdCompTable.PrimaryKey = primaryKey
-                PrciTblCnt += 1
-            Else
-                NotComplete += " أنواع المنتجات / "
-            End If
-        End If
-        If UpdateKTable.Rows.Count = 0 Then
-            Invoke(Sub() LodngFrm.LblMsg.Text += vbCrLf & "جاري تحميل أنواع التحديثات ...")
-            Invoke(Sub() LodngFrm.LblMsg.Refresh())
-            Invoke(Sub() LodngFrm.LblMsg.ScrollToCaret())
 
-            If Usr.PUsrUCatLvl >= 3 And Usr.PUsrUCatLvl <= 5 Then
-                If PublicCode.GetTbl("SELECT EvId, EvNm FROM CDEvent where EvSusp = 0 and EvBkOfic = 1 ORDER BY EvNm", UpdateKTable, "1012&H") = Nothing Then
-                    PrciTblCnt += 1
-                Else
-                    NotComplete += " أنواع التحديثات / "
-                End If
-            Else
-                If PublicCode.GetTbl("SELECT EvId, EvNm FROM CDEvent where EvSusp = 0 and EvBkOfic = 0 ORDER BY EvNm", UpdateKTable, "1012&H") = Nothing Then
-                    PrciTblCnt += 1
-                Else
-                    NotComplete += " أنواع التحديثات / "
-                End If
-            End If
-        End If
-        If PrciTblCnt = 7 Then
-            PreciFlag = True
-            DbStat.BackgroundImage = My.Resources.DBOn
-            DbStat.Tag = "تم تحميل قواعد البيانات الأساسية بنجـــاح"
-        Else
-            DbStat.BackgroundImage = My.Resources.DBOff
-            DbStat.Tag = "لم يكتمل تحميل كل قواعد البيانات الأساسية"
-            Me.TimerCon.Start()
-            StatusBar1.Invoke(Sub() StatBrPnlEn.Text = "  Offline  ")
-            StatusBar1.Invoke(Sub() StatBrPnlEn.Icon = My.Resources.WSOff032)
-        End If
-        Invoke(Sub() LodngFrm.Close())
-        Invoke(Sub() LodngFrm.Dispose())
-        GettAttchUpdtesFils()
-        'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-        Dim request As FtpWebRequest = WebRequest.Create("ftp://10.10.26.4/UserPic/" & Usr.PUsrID & " " & Usr.PUsrNm & ".jpg")
-        request.Credentials = New NetworkCredential("administrator", "Hemonad105046")
-        request.Method = WebRequestMethods.Ftp.DownloadFile
-        request.Timeout = 20000
-        Dim frmCollection = Application.OpenForms
-        If frmCollection.OfType(Of WelcomeScreen).Any Then
-            Invoke(Sub() StatBrPnlAr.Text = "جاري تحميل الصورة الشخصية ..................")
-
-            Try
-                Dim ftpStream As Stream = request.GetResponse().GetResponseStream()
-                Dim buffer As Byte() = New Byte(10240 - 1) {}
-                Invoke(Sub() PictureBox1.Image = Image.FromStream(ftpStream)) 'Image.FromFile(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile.MyDocuments) & "\" & Usr.PUsrID & ".jpg")
-                Invoke(Sub() PictureBox1.Refresh())
-                Invoke(Sub() PictureBox1.SizeMode = PictureBoxSizeMode.StretchImage)
-                Invoke(Sub() PictureBox1.BorderStyle = BorderStyle.None)
-                request.Abort()
-                ftpStream.Close()
-                ftpStream.Dispose()
-                StatBrPnlAr.Text = ""
-            Catch ex As Exception
-                'MsgBox(ex.Message)
-                Invoke(Sub() StatBrPnlAr.Text = "لم يتم تحميل الصورة الشخصية")
-            End Try
-            If NotComplete = "لم يتم تحميل" Then
-                NotComplete = ""
-            End If
-            Invoke(Sub() StatBrPnlAr.Text = NotComplete)
-        End If
-    End Sub
     Private Sub Conoff()
-        Dim PrTblTsk As New Thread(AddressOf PreciTbl)
-        PrTblTsk.IsBackground = True
         Try
             If sqlCon.State = ConnectionState.Closed Then
                 sqlCon.Open()
             End If
-            If PreciFlag = False Then PrTblTsk.Start()
             StatBrPnlEn.Text = ""
             StatusBar1.Invoke(Sub() StatBrPnlEn.Icon = My.Resources.WSOn032)
             TimerCon.Stop()
@@ -727,5 +511,9 @@ Public Class WelcomeScreen
         Catch ex As Exception
             MsgBox("Error : " & ex.Message)
         End Try
+    End Sub
+
+    Private Sub WelcomeScreen_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
+        Me.Dispose()
     End Sub
 End Class
