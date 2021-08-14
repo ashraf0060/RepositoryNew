@@ -39,9 +39,9 @@ Partial Class TikSearchNew
         Me.GridTicket = New System.Windows.Forms.DataGridView()
         Me.LblMsg = New System.Windows.Forms.Label()
         Me.CloseBtn = New System.Windows.Forms.Button()
-        Me.TimerkepUpdtd = New System.Windows.Forms.Timer(Me.components)
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Label32 = New System.Windows.Forms.Label()
+        Me.ProgressBar1 = New System.Windows.Forms.ProgressBar()
         Me.GroupBox1.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
         CType(Me.GridTicket, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -171,9 +171,10 @@ Partial Class TikSearchNew
         '
         'PrdKComb
         '
+        Me.PrdKComb.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.PrdKComb.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.PrdKComb.FormattingEnabled = True
-        Me.PrdKComb.Location = New System.Drawing.Point(579, 20)
+        Me.PrdKComb.Location = New System.Drawing.Point(579, 21)
         Me.PrdKComb.Name = "PrdKComb"
         Me.PrdKComb.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.PrdKComb.Size = New System.Drawing.Size(111, 21)
@@ -181,6 +182,7 @@ Partial Class TikSearchNew
         '
         'FilterComb
         '
+        Me.FilterComb.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.FilterComb.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.FilterComb.FormattingEnabled = True
         Me.FilterComb.Location = New System.Drawing.Point(320, 20)
@@ -191,6 +193,7 @@ Partial Class TikSearchNew
         '
         'SerchTxt
         '
+        Me.SerchTxt.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.SerchTxt.Font = New System.Drawing.Font("Times New Roman", 12.0!)
         Me.SerchTxt.ForeColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer))
         Me.SerchTxt.Location = New System.Drawing.Point(127, 16)
@@ -203,6 +206,7 @@ Partial Class TikSearchNew
         '
         'BtnSerch
         '
+        Me.BtnSerch.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.BtnSerch.BackgroundImage = Global.VOCAPlus.My.Resources.Resources.recblue
         Me.BtnSerch.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
         Me.BtnSerch.FlatAppearance.BorderSize = 0
@@ -220,7 +224,7 @@ Partial Class TikSearchNew
         Me.GridTicket.AllowUserToDeleteRows = False
         Me.GridTicket.BackgroundColor = System.Drawing.Color.White
         Me.GridTicket.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.GridTicket.Location = New System.Drawing.Point(2, 64)
+        Me.GridTicket.Location = New System.Drawing.Point(2, 77)
         Me.GridTicket.MultiSelect = False
         Me.GridTicket.Name = "GridTicket"
         Me.GridTicket.ReadOnly = True
@@ -255,12 +259,9 @@ Partial Class TikSearchNew
         Me.CloseBtn.TabIndex = 2024
         Me.CloseBtn.UseVisualStyleBackColor = True
         '
-        'TimerkepUpdtd
-        '
-        Me.TimerkepUpdtd.Interval = 1000
-        '
         'Label2
         '
+        Me.Label2.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label2.AutoSize = True
         Me.Label2.Location = New System.Drawing.Point(514, 23)
         Me.Label2.Name = "Label2"
@@ -271,6 +272,7 @@ Partial Class TikSearchNew
         '
         'Label32
         '
+        Me.Label32.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label32.AutoSize = True
         Me.Label32.Location = New System.Drawing.Point(696, 25)
         Me.Label32.Name = "Label32"
@@ -278,6 +280,14 @@ Partial Class TikSearchNew
         Me.Label32.TabIndex = 2165
         Me.Label32.Text = "نوع الخدمة : "
         Me.Label32.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
+        '
+        'ProgressBar1
+        '
+        Me.ProgressBar1.Location = New System.Drawing.Point(8, 51)
+        Me.ProgressBar1.Name = "ProgressBar1"
+        Me.ProgressBar1.Size = New System.Drawing.Size(306, 20)
+        Me.ProgressBar1.TabIndex = 2167
+        Me.ProgressBar1.Visible = False
         '
         'TikSearchNew
         '
@@ -287,6 +297,7 @@ Partial Class TikSearchNew
         Me.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.BackColor = System.Drawing.Color.White
         Me.ClientSize = New System.Drawing.Size(1283, 465)
+        Me.Controls.Add(Me.ProgressBar1)
         Me.Controls.Add(Me.Label2)
         Me.Controls.Add(Me.Label32)
         Me.Controls.Add(Me.LblMsg)
@@ -329,7 +340,7 @@ Partial Class TikSearchNew
     Friend WithEvents LblMsg As Label
     Friend WithEvents BtnSerch As Button
     Friend WithEvents CloseBtn As Button
-    Friend WithEvents TimerkepUpdtd As Timer
     Friend WithEvents Label2 As Label
     Friend WithEvents Label32 As Label
+    Friend WithEvents ProgressBar1 As ProgressBar
 End Class

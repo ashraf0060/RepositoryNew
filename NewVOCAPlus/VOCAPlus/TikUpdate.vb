@@ -33,7 +33,34 @@ Public Class TikUpdate
         CmbEvent.SelectedIndex = -1
         TxtUpdt.ReadOnly = True
         UpdtCurrTbl.DefaultView.RowFilter = "[TkupTkSql]" & " = " & StruGrdTk.Sql
-        GridUpdt.DataSource = UpdtCurrTbl.DefaultView
+        UpGetSql = New DataTable
+        UpGetSql = UpdtCurrTbl.DefaultView.ToTable()
+        GridUpdt.DataSource = UpGetSql
+
+        'StruGrdTk.LstUpEvId
+        'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+        'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+        'قراءة جميع التحديثات عند الدخول للمتابع
+        UpGetSql.DefaultView.Sort = "TkupUnread"
+        UpGetSql.DefaultView.RowFilter = String.Empty
+        If StruGrdTk.UserId = Usr.PUsrID Then
+            Dim UpSql As New List(Of String)
+            For uu = 0 To UpGetSql.DefaultView.Count - 1
+                If UpGetSql.DefaultView(uu).Item("TkupUnread") = False Then
+                    UpSql.Add("TkupSQL = " & UpGetSql.DefaultView(uu).Item("TkupSQL"))
+                Else
+                    Exit For
+                End If
+            Next
+            If UpSql.Count > 0 Then
+                If PublicCode.InsUpd("update TkEvent set TkupUnread = 1, TkupReDt = (Select GetDate())" & " where  " & String.Join(" OR ", UpSql) & ";", "1035&H") = Nothing Then
+
+                Else
+                    MsgErr(My.Resources.ConnErr & vbCrLf & My.Resources.TryAgain & vbCrLf & Errmsg)
+                End If
+            End If
+
+        End If
         Dim FolwID As String = ""
         If DBNull.Value.Equals(StruGrdTk.UserId) Then FolwID = "" Else FolwID = StruGrdTk.UserId
         UpdateFormt(GridUpdt, FolwID)
@@ -46,8 +73,6 @@ Public Class TikUpdate
                 TimerEscOpen.Stop()
             End If
         End If
-        'StruGrdTk.LstUpEvId
-
     End Sub
     Private Sub BtnSubmt_Click(sender As Object, e As EventArgs) Handles BtnSubmt.Click
         Dim EsStr As String = ""
@@ -61,7 +86,7 @@ Public Class TikUpdate
                 Else
                     If CmbEvent.SelectedValue = 902 Then
                         If PublicCode.InsUpd("update Tickets set TkEscTyp = 1" & " where (TkSQL = " & StruGrdTk.Sql & ");", "1034&H") = Nothing Then
-                            If StruGrdTk.FlwStat = 0 Then
+                            If StruGrdTk.FlwStat = False Then
                                 EsStr = "متابعه 1 جديد" & vbCrLf & TxtUpdt.Text
                             Else
                                 EsStr = "متابعه 1" & vbCrLf & TxtUpdt.Text
@@ -116,6 +141,7 @@ Public Class TikUpdate
                         CmbEvent.Enabled = True
                         TimerEscOpen.Stop()
                     End If
+                    GetPrntrFrm(frm__, gridview_)
                 Else
                     MsgErr("Error : " & Errmsg)
                 End If

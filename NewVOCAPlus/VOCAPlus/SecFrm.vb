@@ -314,4 +314,22 @@
     Private Sub BtnOpn_Click(sender As Object, e As EventArgs) Handles BtnOpn.Click
         SecFrmSub.Show()
     End Sub
+
+    Private Sub TreeSrchBx_KeyPress(sender As Object, e As KeyPressEventArgs) Handles TreeSrchBx.KeyPress
+        If Asc(e.KeyChar) = Keys.Enter Then
+            Label4.Text = ""
+            If IsNothing(SlctedNode) = False Then SlctedNode.BackColor = Color.White
+            UserTree.CollapseAll()
+            If SearchTheTreeView(UserTree, TreeSrchBx.Text) Is Nothing Then
+                Label4.Text = ("No Match Found")
+            Else
+                NodeCnt = 1
+                LblCnt.Text = NodeCnt & " Of " & NODESTHATMATCH.Count
+                UserTree.SelectedNode = SearchTheTreeView(UserTree, TreeSrchBx.Text)
+                SlctedNode = UserTree.SelectedNode
+                SlctedNode.BackColor = Color.LimeGreen
+                AftrSlct()
+            End If
+        End If
+    End Sub
 End Class

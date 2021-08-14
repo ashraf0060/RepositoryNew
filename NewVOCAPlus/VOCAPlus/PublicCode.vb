@@ -80,6 +80,7 @@ Module PublicCode
     Public Rslt As DialogResult
     Public Property MousePosition As Object
 
+#Region "Form Adjust"
     Dim Form_ As Form
     Dim BttonCtrl As Button
     Dim TxtBoxCtrl As TextBox
@@ -117,6 +118,7 @@ Module PublicCode
     Dim MenStripMrgnBttm As New ToolStripTextBox
     Dim MenStripFlwDirc As New ToolStripComboBox
     Dim MenStripResetAll As New ToolStripMenuItem
+#End Region
 
     Dim MyPen As Pen = New Pen(Drawing.Color.Blue, 5)
     Dim myGraphics As Graphics
@@ -132,7 +134,11 @@ Module PublicCode
     Dim bolyy As Boolean = False
     Dim CompList As New List(Of String) 'list of tickets to get tickets updates
     Public CompIds As String ' tickets to get tickets updates
+    Public TickTblMain As New DataTable
     Public UpdtCurrTbl As DataTable
+    Public ProgBar As ProgressBar
+    Public frm__ As Form
+    Public gridview_ As DataGridView
     Public ElapsedTimeSpan As String
     Public Function ConStrFn(tt As String) As String
         '@VocaPlus$21-2
@@ -430,26 +436,26 @@ End_:
           & "\VOCALog" & Format(Now, "yyyyMM") & ".Vlg", Format(Now, "yyyyMMdd HH:mm:ss") & " ," & ErrHndls & LogMsg & " &H" & PassEncoding(SSqlStrs, GenSaltKey) & vbCrLf, True)
     End Sub
     Public Sub AppLogTbl(ErrCd As Integer, Typ As Integer, Optional EXMsg As String = "", Optional SSqlStrs As String = "", Optional rwCnt As Integer = -1)
-        Dim Now_ As DateTime
-        Dim sqlComm1 As New SqlCommand
-        Try
-            Dim OfflineCon As New SqlConnection("Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\OfflineDB.mdf;Integrated Security=True")
-            sqlComm1.Connection = OfflineCon
-            If OfflineCon.State = ConnectionState.Closed Then
-                OfflineCon.Open()
-            End If
-            sqlComm1.CommandType = CommandType.Text
-            If ServrTime() = "00:00:00" Then
-                Now_ = Format(Now, "yyyy/MMM/dd hh:mm:ss tt")
-            Else
-                Now_ = Nw
-            End If
-            sqlComm1.CommandText = "insert into ALog ([LogDt],[LogErrCD],[Logtype],[LogExMsg],[LogSQLStr],[LogRwCnt],[LogIP],LogUsrID) Values ('" & Format(Now, "yyyy/MMM/dd hh:mm:ss tt") & "'," & ErrCd & "," & Typ & ",'" & Replace(EXMsg, "'", "$") & "','" & Replace(SSqlStrs, "'", "$") & "'," & rwCnt & ",'" & OsIP() & "'," & Usr.PUsrID &
-            ");"
-            sqlComm1.ExecuteNonQuery()
-        Catch ex As Exception
-            AppLog("0000&H", ex.Message, sqlComm1.CommandText)
-        End Try
+        'Dim Now_ As DateTime
+        'Dim sqlComm1 As New SqlCommand
+        'Try
+        '    Dim OfflineCon As New SqlConnection("Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\OfflineDB.mdf;Integrated Security=True")
+        '    sqlComm1.Connection = OfflineCon
+        '    If OfflineCon.State = ConnectionState.Closed Then
+        '        OfflineCon.Open()
+        '    End If
+        '    sqlComm1.CommandType = CommandType.Text
+        '    If ServrTime() = "00:00:00" Then
+        '        Now_ = Format(Now, "yyyy/MMM/dd hh:mm:ss tt")
+        '    Else
+        '        Now_ = Nw
+        '    End If
+        '    sqlComm1.CommandText = "insert into ALog ([LogDt],[LogErrCD],[Logtype],[LogExMsg],[LogSQLStr],[LogRwCnt],[LogIP],LogUsrID) Values ('" & Format(Now, "yyyy/MMM/dd hh:mm:ss tt") & "'," & ErrCd & "," & Typ & ",'" & Replace(EXMsg, "'", "$") & "','" & Replace(SSqlStrs, "'", "$") & "'," & rwCnt & ",'" & OsIP() & "'," & Usr.PUsrID &
+        '    ");"
+        '    sqlComm1.ExecuteNonQuery()
+        'Catch ex As Exception
+        '    AppLog("0000&H", ex.Message, sqlComm1.CommandText)
+        'End Try
     End Sub
     Public Sub MsgInf(MsgBdy As String)
         MessageBox.Show(MsgBdy, "رسالة معلومات", MessageBoxButtons.OK, MessageBoxIcon.Information, MessageBoxDefaultButton.Button2, MessageBoxOptions.RtlReading Or MessageBoxOptions.RightAlign)
@@ -462,7 +468,6 @@ End_:
         StW.Start()
         Errmsg = Nothing
         Dim SQLGetAdptr As New SqlDataAdapter            'SQL Table Adapter
-        'sqlComm.CommandTimeout = 90
         sqlComm.Connection = sqlCon
         SQLGetAdptr.SelectCommand = sqlComm
         sqlComm.CommandType = CommandType.Text
@@ -471,7 +476,6 @@ End_:
             If sqlCon.State = ConnectionState.Closed Then
                 sqlCon.Open()
             End If
-
             SQLGetAdptr.Fill(SqlTbl)
             AppLogTbl(Split(ErrHndl, "&H")(0), 0, "", SSqlStr, SqlTbl.Rows.Count)
             If PreciFlag = True Then
@@ -553,8 +557,8 @@ End_:
         End Try
         Return Errmsg
     End Function
-    Public Sub CompGrdTikFill(GrdTick As DataGridView, Tbl As DataTable) ' New Sub
-        GrdTick.DataSource = Tbl
+    Public Sub CompGrdTikFill(GrdTick As DataGridView, Tbl As DataTable, ProgBar As ProgressBar) ' New Sub
+        GrdTick.DataSource = Tbl.DefaultView
         CompList = New List(Of String)
         For HH = 0 To Tbl.Columns.Count - 1
             If Tbl.Columns(HH).ColumnName = "TkDtStart" Then
@@ -566,7 +570,7 @@ End_:
             ElseIf Tbl.Columns(HH).ColumnName = "TkClNm" Then
                 GrdTick.Columns(HH).HeaderText = "اسم العميل"
             ElseIf Tbl.Columns(HH).ColumnName = "TkClPh" Then
-                GrdTick.Columns(HH).HeaderText = "تليفون العميل"
+                GrdTick.Columns(HH).HeaderText = "تليفون العميل1"
             ElseIf Tbl.Columns(HH).ColumnName = "TkClPh1" Then
                 GrdTick.Columns(HH).HeaderText = "تليفون العميل2"
             ElseIf Tbl.Columns(HH).ColumnName = "PrdNm" Then
@@ -580,10 +584,40 @@ End_:
                 GrdTick.Columns(HH).Visible = False
             End If
         Next
+        ProgBar.Visible = True
         For GG = 0 To GrdTick.Rows.Count - 1
+            ProgBar.Maximum = GrdTick.Rows.Count
+            ProgBar.Value = GG + 1
+            ProgBar.Refresh()
             CompList.Add("TkupTkSql = " & GrdTick.Rows(GG).Cells(0).Value)
         Next
         CompIds = String.Join(" OR ", CompList)
+        Tbl.Columns.Add("تاريخ آخر تحديث")
+        Tbl.Columns.Add("نص آخر تحديث")
+        Tbl.Columns.Add("محرر آخر تحديث")
+        Tbl.Columns.Add("TkupReDt")
+        Tbl.Columns.Add("TkupUser")
+        Tbl.Columns.Add("LastUpdateID")
+        Tbl.Columns.Add("EvSusp")
+        Tbl.Columns.Add("UCatLvl")
+        Tbl.Columns.Add("TkupUnread")
+        ProgBar.Visible = False
+    End Sub
+    Public Sub GetPrntrFrm(Frm As Form, GV As DataGridView)
+        Dim gg As DataGridView = Frm.Controls(GV.Name)
+        gg.CurrentRow.Cells("TkDetails").Value = StruGrdTk.Detls
+        gg.CurrentRow.Cells("تاريخ آخر تحديث").Value = StruGrdTk.LstUpDt
+        gg.CurrentRow.Cells("نص آخر تحديث").Value = StruGrdTk.LstUpTxt
+        gg.CurrentRow.Cells("محرر آخر تحديث").Value = StruGrdTk.LstUpUsrNm
+        gg.CurrentRow.Cells("LastUpdateID").Value = StruGrdTk.LstUpEvId
+        gg.CurrentRow.Cells("TkClsStatus").Value = StruGrdTk.ClsStat
+
+        If Frm.Name = "TikFolow" Then
+            If StruGrdTk.ClsStat = True Then
+                gg.Rows.RemoveAt(gg.CurrentRow.Index)
+            End If
+        End If
+
     End Sub
     Public Sub UpdateFormt(GridUpd As DataGridView, Optional StrTick As String = "")     'UpGrgFrmt(GridUpdt, GridTicket)
         For Cnt_ = 0 To GridUpd.Rows.Count - 1
@@ -607,11 +641,11 @@ End_:
             If Year(GridUpd.Rows(Cnt_).Cells("TkupReDt").Value) < 2000 Then
                 GridUpd.Rows(Cnt_).Cells("TkupReDt").Value = ""                                    'Read Date
             End If
-            If GridUpd.Rows(Cnt_).Cells("TkupUnread").Value = False Then                              'Read Status
-                GridUpd.Rows(Cnt_).DefaultCellStyle.Font = New Font("Times New Roman", 12, FontStyle.Bold)
-            Else
-                GridUpd.Rows(Cnt_).DefaultCellStyle.Font = New Font("Times New Roman", 12, FontStyle.Regular)
-            End If
+            'If GridUpd.Rows(Cnt_).Cells("TkupUnread").Value = False Then                              'Read Status
+            '    GridUpd.Rows(Cnt_).DefaultCellStyle.Font = New Font("Times New Roman", 12, FontStyle.Bold)
+            'Else
+            GridUpd.Rows(Cnt_).DefaultCellStyle.Font = New Font("Times New Roman", 12, FontStyle.Regular)
+            'End If
 
         Next
         'TkupSTime, TkupTxt, UsrRealNm,TkupReDt, TkupUser,TkupSQL,TkupTkSql,TkupEvtId, EvSusp, UCatLvl,TkupUnread
@@ -634,41 +668,53 @@ End_:
         GridUpd.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
         GridUpd.ColumnHeadersDefaultCellStyle.WrapMode = DataGridViewTriState.False
     End Sub
-    Public Function TikFormat(TblTicket As DataTable, TblUpdt As DataTable) As TickInfo ' Function to Adjust Ticket Gridview
-        GridCuntRtrn.TickCount = 0
-        GridCuntRtrn.CompCount = 0
-        GridCuntRtrn.NoFlwCount = 0
-        GridCuntRtrn.UnReadCount = 0
-        GridCuntRtrn.ClsCount = 0
+    Public Function TikFormat(TblTicket As DataTable, TblUpdt As DataTable, ProgBar As ProgressBar) As TickInfo ' Function to Adjust Ticket Gridview
+        GridCuntRtrn = New TickInfo
+        ProgBar.Visible = True
+
         For Rws = 0 To TblTicket.Rows.Count - 1
             GridCuntRtrn.TickCount += 1                                          'Grid record count
-            If TblTicket.Rows(Rws).Item("TkKind") = True Then                    'if ticket kind is complaint
-                GridCuntRtrn.CompCount += 1
-            End If    'if Close Status is True                      if Ticket Kind is Complaint
-            If TblTicket.Rows(Rws).Item("TkClsStatus") = True And TblTicket.Rows(Rws).Item("TkKind") = True Then
-                GridCuntRtrn.ClsCount += 1
-            End If
-            If TblTicket.Rows(Rws).Item("TkFolw") = False Then                   'if No Follow Status is True
-                GridCuntRtrn.NoFlwCount += 1
-            End If
-
-            TblUpdt.DefaultView.RowFilter = "[TkupTkSql]" & " = " & TblTicket.Rows(Rws).Item("TkSQL")
-
-            TblTicket.Rows(Rws).Item("تاريخ آخر تحديث") = TblUpdt.DefaultView(0).Item("TkupSTime")
-            TblTicket.Rows(Rws).Item("نص آخر تحديث") = TblUpdt.DefaultView(0).Item("TkupTxt")
-            TblTicket.Rows(Rws).Item("محرر آخر تحديث") = TblUpdt.DefaultView(0).Item("UsrRealNm")
-            TblTicket.Rows(Rws).Item("LastUpdateID") = TblUpdt.DefaultView(0).Item("TkupEvtId")
+            ProgBar.Maximum = TblTicket.Rows.Count
+            ProgBar.Value = GridCuntRtrn.TickCount
+            ProgBar.Refresh()
 
 
-            StruGrdTk.LstUpDt = TblUpdt.DefaultView(0).Item("TkupSTime")
-            StruGrdTk.LstUpTxt = TblUpdt.DefaultView(0).Item("TkupTxt")
-            StruGrdTk.LstUpEnNm = TblUpdt.DefaultView(0).Item("UsrRealNm")
-            StruGrdTk.LstUpEvId = TblUpdt.DefaultView(0).Item("TkupEvtId")
+            Try
+                TblUpdt.DefaultView.RowFilter = "[TkupTkSql]" & " = " & TblTicket.Rows(Rws).Item("TkSQL")
+                TblTicket.Rows(Rws).Item("تاريخ آخر تحديث") = TblUpdt.DefaultView(0).Item("TkupSTime")
+                TblTicket.Rows(Rws).Item("نص آخر تحديث") = TblUpdt.DefaultView(0).Item("TkupTxt")
+                TblTicket.Rows(Rws).Item("محرر آخر تحديث") = TblUpdt.DefaultView(0).Item("UsrRealNm")
+                TblTicket.Rows(Rws).Item("TkupReDt") = TblUpdt.DefaultView(0).Item("TkupReDt")
+                TblTicket.Rows(Rws).Item("TkupUser") = TblUpdt.DefaultView(0).Item("TkupUser")
+                TblTicket.Rows(Rws).Item("LastUpdateID") = TblUpdt.DefaultView(0).Item("TkupEvtId")
+                TblTicket.Rows(Rws).Item("EvSusp") = TblUpdt.DefaultView(0).Item("EvSusp")
+                TblTicket.Rows(Rws).Item("UCatLvl") = TblUpdt.DefaultView(0).Item("UCatLvl")
+                TblTicket.Rows(Rws).Item("TkupUnread") = TblUpdt.DefaultView(0).Item("TkupUnread")
 
-            If TblTicket.Rows(Rws).Item("TkFolw") = False Then                   'if Read Status is false
-                GridCuntRtrn.UnReadCount += 1
-            End If
-        Next
+                StruGrdTk.LstUpDt = TblUpdt.DefaultView(0).Item("TkupSTime")
+                StruGrdTk.LstUpTxt = TblUpdt.DefaultView(0).Item("TkupTxt")
+                StruGrdTk.LstUpUsrNm = TblUpdt.DefaultView(0).Item("UsrRealNm")
+                StruGrdTk.LstUpEvId = TblUpdt.DefaultView(0).Item("TkupEvtId")
+            Catch ex As Exception
+                TblTicket.Rows(Rws).Delete()
+            End Try
+
+
+
+        Next Rws
+        GridCuntRtrn.CompCount = Convert.ToInt32(TblTicket.Compute("count(TkSQL)", String.Empty))
+        GridCuntRtrn.NoFlwCount = Convert.ToInt32(TblTicket.Compute("count(TkFolw)", "TkFolw = 'False'"))
+        GridCuntRtrn.Recved = Convert.ToInt32(TblTicket.Compute("count(TkRecieveDt)", "TkRecieveDt = '" & Format(Nw, "yyyy/MM/dd").ToString & "'"))
+        GridCuntRtrn.ClsCount = Convert.ToInt32(TblTicket.Compute("count(TkClsStatus)", "TkClsStatus = 'True' And TkKind = 'True'"))
+        GridCuntRtrn.UpdtFollow = Convert.ToInt32(TblTicket.Compute("count(UsrRealNm)", "[محرر آخر تحديث] = UsrRealNm"))
+        GridCuntRtrn.UpdtColleg = Convert.ToInt32(TblTicket.Compute("count(UsrRealNm)", "[محرر آخر تحديث] <> UsrRealNm AND UCatLvl >= 3 And UCatLvl <= 5"))
+        GridCuntRtrn.UpdtOthrs = Convert.ToInt32(TblTicket.Compute("count(UsrRealNm)", "[محرر آخر تحديث] <> UsrRealNm AND UCatLvl < 3 And UCatLvl > 5"))
+        GridCuntRtrn.UnReadCount = Convert.ToInt32(TblTicket.Compute("count(TkupUnread)", "TkupUnread = 'False'"))
+        GridCuntRtrn.Esc1 = Convert.ToInt32(TblTicket.Compute("count(LastUpdateID)", "LastUpdateID = 902"))
+        GridCuntRtrn.Esc2 = Convert.ToInt32(TblTicket.Compute("count(LastUpdateID)", "LastUpdateID = 903"))
+        GridCuntRtrn.Esc3 = Convert.ToInt32(TblTicket.Compute("count(LastUpdateID)", "LastUpdateID = 904"))
+
+        ProgBar.Visible = False
         Return GridCuntRtrn 'Return Counters Structure
     End Function
     Public Sub SubGrdTikFill(GrdTick As DataGridView, Tbl As DataTable) 'To Delete Because The new one is "CompGrdTikFill"

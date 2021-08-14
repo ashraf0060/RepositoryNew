@@ -70,6 +70,7 @@ Partial Class TikDetails
         Me.TxtAmount = New System.Windows.Forms.TextBox()
         Me.TxtGP = New System.Windows.Forms.TextBox()
         Me.FlowLayoutPanel2 = New System.Windows.Forms.FlowLayoutPanel()
+        Me.Panel3 = New System.Windows.Forms.Panel()
         Me.BtnClos = New System.Windows.Forms.Button()
         Me.TcktImg = New System.Windows.Forms.PictureBox()
         Me.Panel1 = New System.Windows.Forms.Panel()
@@ -86,6 +87,7 @@ Partial Class TikDetails
         Me.GroupBox4.SuspendLayout()
         Me.GroupBox3.SuspendLayout()
         Me.FlowLayoutPanel2.SuspendLayout()
+        Me.Panel3.SuspendLayout()
         CType(Me.TcktImg, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel1.SuspendLayout()
         Me.Panel2.SuspendLayout()
@@ -134,10 +136,10 @@ Partial Class TikDetails
         Me.FlowLayoutPanel1.Controls.Add(Me.GroupBox4)
         Me.FlowLayoutPanel1.Controls.Add(Me.GroupBox3)
         Me.FlowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft
-        Me.FlowLayoutPanel1.Location = New System.Drawing.Point(573, 3)
+        Me.FlowLayoutPanel1.Location = New System.Drawing.Point(645, 3)
         Me.FlowLayoutPanel1.Name = "FlowLayoutPanel1"
         Me.FlowLayoutPanel1.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.FlowLayoutPanel1.Size = New System.Drawing.Size(774, 598)
+        Me.FlowLayoutPanel1.Size = New System.Drawing.Size(702, 598)
         Me.FlowLayoutPanel1.TabIndex = 2115
         '
         'Label37
@@ -145,7 +147,7 @@ Partial Class TikDetails
         Me.Label37.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label37.Font = New System.Drawing.Font("Times New Roman", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label37.ForeColor = System.Drawing.Color.Blue
-        Me.Label37.Location = New System.Drawing.Point(671, 4)
+        Me.Label37.Location = New System.Drawing.Point(599, 4)
         Me.Label37.Margin = New System.Windows.Forms.Padding(3, 4, 3, 0)
         Me.Label37.MaximumSize = New System.Drawing.Size(100, 50)
         Me.Label37.MinimumSize = New System.Drawing.Size(100, 20)
@@ -162,7 +164,7 @@ Partial Class TikDetails
         Me.TxtPh1.AccessibleName = ""
         Me.TxtPh1.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TxtPh1.Font = New System.Drawing.Font("Times New Roman", 12.0!)
-        Me.TxtPh1.Location = New System.Drawing.Point(436, 7)
+        Me.TxtPh1.Location = New System.Drawing.Point(364, 7)
         Me.TxtPh1.Margin = New System.Windows.Forms.Padding(3, 7, 3, 3)
         Me.TxtPh1.Name = "TxtPh1"
         Me.TxtPh1.ReadOnly = True
@@ -176,7 +178,7 @@ Partial Class TikDetails
         Me.Label50.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label50.Font = New System.Drawing.Font("Times New Roman", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label50.ForeColor = System.Drawing.Color.Blue
-        Me.Label50.Location = New System.Drawing.Point(330, 6)
+        Me.Label50.Location = New System.Drawing.Point(258, 6)
         Me.Label50.Margin = New System.Windows.Forms.Padding(3, 6, 3, 0)
         Me.Label50.Name = "Label50"
         Me.Label50.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -189,7 +191,7 @@ Partial Class TikDetails
         '
         Me.TxtEmail.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TxtEmail.Font = New System.Drawing.Font("Times New Roman", 12.0!)
-        Me.TxtEmail.Location = New System.Drawing.Point(95, 7)
+        Me.TxtEmail.Location = New System.Drawing.Point(23, 7)
         Me.TxtEmail.Margin = New System.Windows.Forms.Padding(3, 7, 3, 3)
         Me.TxtEmail.Name = "TxtEmail"
         Me.TxtEmail.ReadOnly = True
@@ -204,7 +206,7 @@ Partial Class TikDetails
         Me.Label41.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label41.Font = New System.Drawing.Font("Times New Roman", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label41.ForeColor = System.Drawing.Color.Blue
-        Me.Label41.Location = New System.Drawing.Point(671, 40)
+        Me.Label41.Location = New System.Drawing.Point(599, 40)
         Me.Label41.Margin = New System.Windows.Forms.Padding(3, 4, 3, 0)
         Me.Label41.MaximumSize = New System.Drawing.Size(100, 50)
         Me.Label41.MinimumSize = New System.Drawing.Size(100, 20)
@@ -219,7 +221,7 @@ Partial Class TikDetails
         '
         Me.TxtPh2.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TxtPh2.Font = New System.Drawing.Font("Times New Roman", 12.0!)
-        Me.TxtPh2.Location = New System.Drawing.Point(436, 39)
+        Me.TxtPh2.Location = New System.Drawing.Point(364, 39)
         Me.TxtPh2.Name = "TxtPh2"
         Me.TxtPh2.ReadOnly = True
         Me.TxtPh2.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -232,7 +234,7 @@ Partial Class TikDetails
         Me.Label55.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label55.Font = New System.Drawing.Font("Times New Roman", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label55.ForeColor = System.Drawing.Color.Blue
-        Me.Label55.Location = New System.Drawing.Point(330, 42)
+        Me.Label55.Location = New System.Drawing.Point(258, 42)
         Me.Label55.Margin = New System.Windows.Forms.Padding(3, 6, 3, 0)
         Me.Label55.Name = "Label55"
         Me.Label55.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -245,7 +247,7 @@ Partial Class TikDetails
         '
         Me.TxtArea.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TxtArea.Font = New System.Drawing.Font("Times New Roman", 12.0!)
-        Me.TxtArea.Location = New System.Drawing.Point(95, 39)
+        Me.TxtArea.Location = New System.Drawing.Point(23, 39)
         Me.TxtArea.Name = "TxtArea"
         Me.TxtArea.ReadOnly = True
         Me.TxtArea.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -259,7 +261,7 @@ Partial Class TikDetails
         Me.Label34.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label34.Font = New System.Drawing.Font("Times New Roman", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label34.ForeColor = System.Drawing.Color.Blue
-        Me.Label34.Location = New System.Drawing.Point(671, 72)
+        Me.Label34.Location = New System.Drawing.Point(599, 72)
         Me.Label34.Margin = New System.Windows.Forms.Padding(3, 4, 3, 0)
         Me.Label34.MaximumSize = New System.Drawing.Size(100, 50)
         Me.Label34.MinimumSize = New System.Drawing.Size(100, 20)
@@ -274,7 +276,7 @@ Partial Class TikDetails
         '
         Me.TxtDt.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TxtDt.Font = New System.Drawing.Font("Times New Roman", 12.0!)
-        Me.TxtDt.Location = New System.Drawing.Point(436, 71)
+        Me.TxtDt.Location = New System.Drawing.Point(364, 71)
         Me.TxtDt.Name = "TxtDt"
         Me.TxtDt.ReadOnly = True
         Me.TxtDt.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -288,7 +290,7 @@ Partial Class TikDetails
         Me.Label54.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label54.Font = New System.Drawing.Font("Times New Roman", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label54.ForeColor = System.Drawing.Color.Blue
-        Me.Label54.Location = New System.Drawing.Point(330, 74)
+        Me.Label54.Location = New System.Drawing.Point(258, 74)
         Me.Label54.Margin = New System.Windows.Forms.Padding(3, 6, 3, 0)
         Me.Label54.Name = "Label54"
         Me.Label54.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -301,7 +303,7 @@ Partial Class TikDetails
         '
         Me.TxtOff.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TxtOff.Font = New System.Drawing.Font("Times New Roman", 12.0!)
-        Me.TxtOff.Location = New System.Drawing.Point(95, 71)
+        Me.TxtOff.Location = New System.Drawing.Point(23, 71)
         Me.TxtOff.Name = "TxtOff"
         Me.TxtOff.ReadOnly = True
         Me.TxtOff.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -316,7 +318,7 @@ Partial Class TikDetails
         Me.Label36.AutoSize = True
         Me.Label36.Font = New System.Drawing.Font("Times New Roman", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label36.ForeColor = System.Drawing.Color.Blue
-        Me.Label36.Location = New System.Drawing.Point(671, 104)
+        Me.Label36.Location = New System.Drawing.Point(599, 104)
         Me.Label36.Margin = New System.Windows.Forms.Padding(3, 4, 3, 0)
         Me.Label36.MaximumSize = New System.Drawing.Size(100, 50)
         Me.Label36.MinimumSize = New System.Drawing.Size(100, 20)
@@ -332,7 +334,7 @@ Partial Class TikDetails
         Me.TxtNm.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TxtNm.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper
         Me.TxtNm.Font = New System.Drawing.Font("Times New Roman", 12.0!)
-        Me.TxtNm.Location = New System.Drawing.Point(436, 103)
+        Me.TxtNm.Location = New System.Drawing.Point(364, 103)
         Me.TxtNm.Name = "TxtNm"
         Me.TxtNm.ReadOnly = True
         Me.TxtNm.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -346,7 +348,7 @@ Partial Class TikDetails
         Me.Label51.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label51.Font = New System.Drawing.Font("Times New Roman", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label51.ForeColor = System.Drawing.Color.Blue
-        Me.Label51.Location = New System.Drawing.Point(330, 106)
+        Me.Label51.Location = New System.Drawing.Point(258, 106)
         Me.Label51.Margin = New System.Windows.Forms.Padding(3, 6, 3, 0)
         Me.Label51.Name = "Label51"
         Me.Label51.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -359,7 +361,7 @@ Partial Class TikDetails
         '
         Me.TxtProd.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TxtProd.Font = New System.Drawing.Font("Times New Roman", 12.0!)
-        Me.TxtProd.Location = New System.Drawing.Point(95, 103)
+        Me.TxtProd.Location = New System.Drawing.Point(23, 103)
         Me.TxtProd.Name = "TxtProd"
         Me.TxtProd.ReadOnly = True
         Me.TxtProd.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -373,7 +375,7 @@ Partial Class TikDetails
         Me.Label39.AutoSize = True
         Me.Label39.Font = New System.Drawing.Font("Times New Roman", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label39.ForeColor = System.Drawing.Color.Blue
-        Me.Label39.Location = New System.Drawing.Point(671, 136)
+        Me.Label39.Location = New System.Drawing.Point(599, 136)
         Me.Label39.Margin = New System.Windows.Forms.Padding(3, 4, 3, 0)
         Me.Label39.MaximumSize = New System.Drawing.Size(100, 50)
         Me.Label39.MinimumSize = New System.Drawing.Size(100, 20)
@@ -389,7 +391,7 @@ Partial Class TikDetails
         Me.TxtAdd.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TxtAdd.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper
         Me.TxtAdd.Font = New System.Drawing.Font("Times New Roman", 12.0!)
-        Me.TxtAdd.Location = New System.Drawing.Point(436, 135)
+        Me.TxtAdd.Location = New System.Drawing.Point(364, 135)
         Me.TxtAdd.Multiline = True
         Me.TxtAdd.Name = "TxtAdd"
         Me.TxtAdd.ReadOnly = True
@@ -403,7 +405,7 @@ Partial Class TikDetails
         Me.Label52.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label52.Font = New System.Drawing.Font("Times New Roman", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label52.ForeColor = System.Drawing.Color.Blue
-        Me.Label52.Location = New System.Drawing.Point(330, 138)
+        Me.Label52.Location = New System.Drawing.Point(258, 138)
         Me.Label52.Margin = New System.Windows.Forms.Padding(3, 6, 3, 0)
         Me.Label52.Name = "Label52"
         Me.Label52.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -416,7 +418,7 @@ Partial Class TikDetails
         '
         Me.TxtComp.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TxtComp.Font = New System.Drawing.Font("Times New Roman", 12.0!)
-        Me.TxtComp.Location = New System.Drawing.Point(95, 135)
+        Me.TxtComp.Location = New System.Drawing.Point(23, 135)
         Me.TxtComp.Name = "TxtComp"
         Me.TxtComp.ReadOnly = True
         Me.TxtComp.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -429,7 +431,7 @@ Partial Class TikDetails
         Me.Label53.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label53.Font = New System.Drawing.Font("Times New Roman", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label53.ForeColor = System.Drawing.Color.Blue
-        Me.Label53.Location = New System.Drawing.Point(671, 223)
+        Me.Label53.Location = New System.Drawing.Point(599, 223)
         Me.Label53.Name = "Label53"
         Me.Label53.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.Label53.Size = New System.Drawing.Size(100, 29)
@@ -441,7 +443,7 @@ Partial Class TikDetails
         '
         Me.TxtSrc.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TxtSrc.Font = New System.Drawing.Font("Times New Roman", 12.0!)
-        Me.TxtSrc.Location = New System.Drawing.Point(436, 226)
+        Me.TxtSrc.Location = New System.Drawing.Point(364, 226)
         Me.TxtSrc.Name = "TxtSrc"
         Me.TxtSrc.ReadOnly = True
         Me.TxtSrc.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -454,7 +456,7 @@ Partial Class TikDetails
         Me.Label1.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label1.Font = New System.Drawing.Font("Times New Roman", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label1.ForeColor = System.Drawing.Color.Blue
-        Me.Label1.Location = New System.Drawing.Point(330, 229)
+        Me.Label1.Location = New System.Drawing.Point(258, 229)
         Me.Label1.Margin = New System.Windows.Forms.Padding(3, 6, 3, 0)
         Me.Label1.Name = "Label1"
         Me.Label1.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -467,7 +469,7 @@ Partial Class TikDetails
         '
         Me.TxtFolw.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TxtFolw.Font = New System.Drawing.Font("Times New Roman", 12.0!)
-        Me.TxtFolw.Location = New System.Drawing.Point(95, 226)
+        Me.TxtFolw.Location = New System.Drawing.Point(23, 226)
         Me.TxtFolw.Name = "TxtFolw"
         Me.TxtFolw.ReadOnly = True
         Me.TxtFolw.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -480,7 +482,7 @@ Partial Class TikDetails
         Me.Label43.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label43.Font = New System.Drawing.Font("Times New Roman", 11.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
         Me.Label43.ForeColor = System.Drawing.Color.Blue
-        Me.Label43.Location = New System.Drawing.Point(671, 255)
+        Me.Label43.Location = New System.Drawing.Point(599, 255)
         Me.Label43.Name = "Label43"
         Me.Label43.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.Label43.Size = New System.Drawing.Size(100, 35)
@@ -491,7 +493,7 @@ Partial Class TikDetails
         'TxtDetails
         '
         Me.TxtDetails.Font = New System.Drawing.Font("Times New Roman", 12.0!)
-        Me.TxtDetails.Location = New System.Drawing.Point(95, 258)
+        Me.TxtDetails.Location = New System.Drawing.Point(23, 258)
         Me.TxtDetails.Name = "TxtDetails"
         Me.TxtDetails.ReadOnly = True
         Me.TxtDetails.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -508,7 +510,7 @@ Partial Class TikDetails
         Me.GroupBox4.Controls.Add(Me.Label47)
         Me.GroupBox4.Controls.Add(Me.TxtDist)
         Me.GroupBox4.Controls.Add(Me.TxtOrgin)
-        Me.GroupBox4.Location = New System.Drawing.Point(248, 418)
+        Me.GroupBox4.Location = New System.Drawing.Point(176, 418)
         Me.GroupBox4.Margin = New System.Windows.Forms.Padding(3, 3, 110, 3)
         Me.GroupBox4.Name = "GroupBox4"
         Me.GroupBox4.Size = New System.Drawing.Size(416, 160)
@@ -592,7 +594,7 @@ Partial Class TikDetails
         Me.GroupBox3.Controls.Add(Me.TxtAmount)
         Me.GroupBox3.Controls.Add(Me.TxtGP)
         Me.GroupBox3.Font = New System.Drawing.Font("Times New Roman", 10.0!)
-        Me.GroupBox3.Location = New System.Drawing.Point(248, 584)
+        Me.GroupBox3.Location = New System.Drawing.Point(176, 584)
         Me.GroupBox3.Margin = New System.Windows.Forms.Padding(3, 3, 110, 3)
         Me.GroupBox3.Name = "GroupBox3"
         Me.GroupBox3.Size = New System.Drawing.Size(416, 197)
@@ -713,7 +715,7 @@ Partial Class TikDetails
         'FlowLayoutPanel2
         '
         Me.FlowLayoutPanel2.AutoScroll = True
-        Me.FlowLayoutPanel2.Controls.Add(Me.BtnClos)
+        Me.FlowLayoutPanel2.Controls.Add(Me.Panel3)
         Me.FlowLayoutPanel2.Controls.Add(Me.TcktImg)
         Me.FlowLayoutPanel2.Controls.Add(Me.Panel1)
         Me.FlowLayoutPanel2.Controls.Add(Me.TxtDetailsAdd)
@@ -723,14 +725,27 @@ Partial Class TikDetails
         Me.FlowLayoutPanel2.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft
         Me.FlowLayoutPanel2.Location = New System.Drawing.Point(12, 3)
         Me.FlowLayoutPanel2.Name = "FlowLayoutPanel2"
-        Me.FlowLayoutPanel2.Size = New System.Drawing.Size(555, 598)
+        Me.FlowLayoutPanel2.Size = New System.Drawing.Size(627, 598)
         Me.FlowLayoutPanel2.TabIndex = 2116
+        '
+        'Panel3
+        '
+        Me.Panel3.Controls.Add(Me.BtnClos)
+        Me.Panel3.Location = New System.Drawing.Point(533, 7)
+        Me.Panel3.Margin = New System.Windows.Forms.Padding(3, 7, 3, 3)
+        Me.Panel3.Name = "Panel3"
+        Me.Panel3.Size = New System.Drawing.Size(91, 85)
+        Me.Panel3.TabIndex = 2169
         '
         'BtnClos
         '
         Me.BtnClos.BackgroundImage = Global.VOCAPlus.My.Resources.Resources.CpClose
         Me.BtnClos.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
-        Me.BtnClos.Location = New System.Drawing.Point(477, 3)
+        Me.BtnClos.FlatAppearance.BorderColor = System.Drawing.Color.White
+        Me.BtnClos.FlatAppearance.MouseDownBackColor = System.Drawing.Color.White
+        Me.BtnClos.FlatAppearance.MouseOverBackColor = System.Drawing.Color.White
+        Me.BtnClos.FlatStyle = System.Windows.Forms.FlatStyle.Flat
+        Me.BtnClos.Location = New System.Drawing.Point(9, 4)
         Me.BtnClos.Name = "BtnClos"
         Me.BtnClos.Size = New System.Drawing.Size(75, 76)
         Me.BtnClos.TabIndex = 2164
@@ -741,7 +756,7 @@ Partial Class TikDetails
         '
         'TcktImg
         '
-        Me.TcktImg.Location = New System.Drawing.Point(199, 3)
+        Me.TcktImg.Location = New System.Drawing.Point(255, 3)
         Me.TcktImg.Name = "TcktImg"
         Me.TcktImg.Size = New System.Drawing.Size(272, 203)
         Me.TcktImg.TabIndex = 2054
@@ -750,7 +765,7 @@ Partial Class TikDetails
         'Panel1
         '
         Me.Panel1.Controls.Add(Me.BtnUpd)
-        Me.Panel1.Location = New System.Drawing.Point(81, 7)
+        Me.Panel1.Location = New System.Drawing.Point(137, 7)
         Me.Panel1.Margin = New System.Windows.Forms.Padding(3, 7, 3, 3)
         Me.Panel1.Name = "Panel1"
         Me.Panel1.Size = New System.Drawing.Size(112, 53)
@@ -777,12 +792,12 @@ Partial Class TikDetails
         '
         Me.TxtDetailsAdd.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TxtDetailsAdd.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper
-        Me.TxtDetailsAdd.Location = New System.Drawing.Point(13, 212)
+        Me.TxtDetailsAdd.Location = New System.Drawing.Point(10, 212)
         Me.TxtDetailsAdd.Multiline = True
         Me.TxtDetailsAdd.Name = "TxtDetailsAdd"
         Me.TxtDetailsAdd.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.TxtDetailsAdd.ScrollBars = System.Windows.Forms.ScrollBars.Vertical
-        Me.TxtDetailsAdd.Size = New System.Drawing.Size(539, 86)
+        Me.TxtDetailsAdd.Size = New System.Drawing.Size(614, 86)
         Me.TxtDetailsAdd.TabIndex = 2111
         Me.TxtDetailsAdd.TabStop = False
         Me.TxtDetailsAdd.Tag = "Details"
@@ -790,7 +805,7 @@ Partial Class TikDetails
         'Panel2
         '
         Me.Panel2.Controls.Add(Me.BtnAddEdt)
-        Me.Panel2.Location = New System.Drawing.Point(400, 304)
+        Me.Panel2.Location = New System.Drawing.Point(472, 304)
         Me.Panel2.Name = "Panel2"
         Me.Panel2.Size = New System.Drawing.Size(152, 51)
         Me.Panel2.TabIndex = 2168
@@ -817,7 +832,7 @@ Partial Class TikDetails
         Me.FlowLayoutPanel2.SetFlowBreak(Me.LblWDays, True)
         Me.LblWDays.Font = New System.Drawing.Font("Times New Roman", 12.0!, System.Drawing.FontStyle.Bold)
         Me.LblWDays.ForeColor = System.Drawing.Color.Green
-        Me.LblWDays.Location = New System.Drawing.Point(13, 306)
+        Me.LblWDays.Location = New System.Drawing.Point(85, 306)
         Me.LblWDays.Margin = New System.Windows.Forms.Padding(3, 5, 3, 0)
         Me.LblWDays.Name = "LblWDays"
         Me.LblWDays.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -829,11 +844,11 @@ Partial Class TikDetails
         'LblHelp
         '
         Me.LblHelp.Font = New System.Drawing.Font("Times New Roman", 12.0!)
-        Me.LblHelp.Location = New System.Drawing.Point(13, 363)
+        Me.LblHelp.Location = New System.Drawing.Point(10, 363)
         Me.LblHelp.Margin = New System.Windows.Forms.Padding(3, 5, 3, 0)
         Me.LblHelp.Name = "LblHelp"
         Me.LblHelp.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.LblHelp.Size = New System.Drawing.Size(539, 235)
+        Me.LblHelp.Size = New System.Drawing.Size(614, 235)
         Me.LblHelp.TabIndex = 2166
         Me.LblHelp.Text = "Label2"
         '
@@ -861,6 +876,7 @@ Partial Class TikDetails
         Me.GroupBox3.PerformLayout()
         Me.FlowLayoutPanel2.ResumeLayout(False)
         Me.FlowLayoutPanel2.PerformLayout()
+        Me.Panel3.ResumeLayout(False)
         CType(Me.TcktImg, System.ComponentModel.ISupportInitialize).EndInit()
         Me.Panel1.ResumeLayout(False)
         Me.Panel2.ResumeLayout(False)
@@ -926,4 +942,5 @@ Partial Class TikDetails
     Friend WithEvents LblHelp As Label
     Friend WithEvents Panel1 As Panel
     Friend WithEvents Panel2 As Panel
+    Friend WithEvents Panel3 As Panel
 End Class

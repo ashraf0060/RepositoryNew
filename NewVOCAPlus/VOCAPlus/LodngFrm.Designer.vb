@@ -51,6 +51,7 @@ Partial Class LodngFrm
         Me.LblMsg.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.LblMsg.Size = New System.Drawing.Size(260, 258)
         Me.LblMsg.TabIndex = 2037
+        Me.LblMsg.TabStop = False
         Me.LblMsg.Text = ""
         '
         'LodngFrm

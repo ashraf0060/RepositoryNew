@@ -23,7 +23,7 @@ Partial Class FolwTicket
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
-        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.TabControl1 = New System.Windows.Forms.TabControl()
         Me.TabPage1 = New System.Windows.Forms.TabPage()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
@@ -55,6 +55,7 @@ Partial Class FolwTicket
         Me.CopySelectedToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.PreviewToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.TabPage2 = New System.Windows.Forms.TabPage()
+        Me.LblHelp = New System.Windows.Forms.Label()
         Me.TcktImg = New System.Windows.Forms.PictureBox()
         Me.BtnClos = New System.Windows.Forms.Button()
         Me.BtnUpd = New System.Windows.Forms.Button()
@@ -119,7 +120,6 @@ Partial Class FolwTicket
         Me.StatusBar1 = New System.Windows.Forms.StatusBar()
         Me.StatBrPnlEn = New System.Windows.Forms.StatusBarPanel()
         Me.StatBrPnlAr = New System.Windows.Forms.StatusBarPanel()
-        Me.LblHelp = New System.Windows.Forms.Label()
         Me.TabControl1.SuspendLayout()
         Me.TabPage1.SuspendLayout()
         Me.GroupBox1.SuspendLayout()
@@ -562,6 +562,16 @@ Partial Class FolwTicket
         Me.TabPage2.TabIndex = 1
         Me.TabPage2.Text = "TabPage2"
         Me.TabPage2.UseVisualStyleBackColor = True
+        '
+        'LblHelp
+        '
+        Me.LblHelp.ForeColor = System.Drawing.Color.Green
+        Me.LblHelp.Location = New System.Drawing.Point(42, 368)
+        Me.LblHelp.Name = "LblHelp"
+        Me.LblHelp.Size = New System.Drawing.Size(740, 136)
+        Me.LblHelp.TabIndex = 2084
+        Me.LblHelp.Text = "Label56"
+        Me.LblHelp.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'TcktImg
         '
@@ -1262,8 +1272,8 @@ Partial Class FolwTicket
         Me.GridUpdt.MultiSelect = False
         Me.GridUpdt.Name = "GridUpdt"
         Me.GridUpdt.ReadOnly = True
-        DataGridViewCellStyle2.Font = New System.Drawing.Font("Times New Roman", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.GridUpdt.RowsDefaultCellStyle = DataGridViewCellStyle2
+        DataGridViewCellStyle1.Font = New System.Drawing.Font("Times New Roman", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.GridUpdt.RowsDefaultCellStyle = DataGridViewCellStyle1
         Me.GridUpdt.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect
         Me.GridUpdt.Size = New System.Drawing.Size(1082, 408)
         Me.GridUpdt.TabIndex = 2086
@@ -1336,16 +1346,6 @@ Partial Class FolwTicket
         Me.StatBrPnlAr.AutoSize = System.Windows.Forms.StatusBarPanelAutoSize.Spring
         Me.StatBrPnlAr.Name = "StatBrPnlAr"
         Me.StatBrPnlAr.Width = 675
-        '
-        'LblHelp
-        '
-        Me.LblHelp.ForeColor = System.Drawing.Color.Green
-        Me.LblHelp.Location = New System.Drawing.Point(42, 368)
-        Me.LblHelp.Name = "LblHelp"
-        Me.LblHelp.Size = New System.Drawing.Size(740, 136)
-        Me.LblHelp.TabIndex = 2084
-        Me.LblHelp.Text = "Label56"
-        Me.LblHelp.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
         '
         'FolwTicket
         '

@@ -306,9 +306,6 @@ Public Class FolwTicket
             AESpaceNumberOnly(e)
         End If
     End Sub
-    Private Sub GridUpdt_CellClick(sender As Object, e As DataGridViewCellEventArgs) Handles GridUpdt.CellClick
-
-    End Sub
     Private Sub CmbEvent_SelectedIndexChanged(sender As Object, e As EventArgs) Handles CmbEvent.SelectedIndexChanged
         TxtUpdt.ReadOnly = False
         BtnBrws.Enabled = True

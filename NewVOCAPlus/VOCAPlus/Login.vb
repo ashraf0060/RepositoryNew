@@ -16,7 +16,7 @@ Public Class Login
         Cmbo.Items.Add("Test Database")
         Invoke(Sub() Cmbo.Text = "Eg Server")
         AddHandler Cmbo.SelectedIndexChanged, AddressOf Cmbo_SelectedIndexChanged
-
+        StatusBarPanel1.Icon = My.Resources.WSOff032
         ' Check Ver.
         LblUsrIP.Text = "IP: " & OsIP()
         'AssVerLbl.Text = "Assembly Ver. : " & My.Application.Info.Version.ToString ' major.minor.build.revision

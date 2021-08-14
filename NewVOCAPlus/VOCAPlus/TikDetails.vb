@@ -9,6 +9,7 @@
             TxtDetailsAdd.Text = "لا يمكن عمل تعديل أو إضافة على تفاصيل شكوى مغلقة"
             TxtDetailsAdd.TextAlign = HorizontalAlignment.Center
             TxtDetailsAdd.Font = New Font("Times New Roman", 16, FontStyle.Regular)
+            BtnClos.Visible = False
         Else
             TcktImg.BackgroundImage = My.Resources.Tckon
             TcktImg.BackgroundImageLayout = ImageLayout.Stretch
@@ -17,6 +18,11 @@
             TxtDetailsAdd.Text = ""
             TxtDetailsAdd.Font = New Font("Times New Roman", 12, FontStyle.Regular)
             TxtDetailsAdd.TextAlign = HorizontalAlignment.Left
+            If StruGrdTk.UsrNm = Usr.PUsrRlNm Then
+                BtnClos.Visible = True
+            Else
+                BtnClos.Visible = False
+            End If
         End If
 
         TxtPh1.Text = StruGrdTk.Ph1
@@ -46,6 +52,7 @@
 
         TxtFolw.Text = StruGrdTk.UsrNm
 
+
         LblWDays.Text = "تم تسجيل الشكوى منذ : " & CalDate(StruGrdTk.DtStrt, Nw, "0000&H") & " يوم عمل"
         If StruGrdTk.ProdK = 1 Then
             GroupBox3.Visible = True
@@ -67,6 +74,7 @@
                 TxtDetails.Text &= vbCrLf & "تعديل : بواسطة  " & Usr.PUsrRlNm & " في " & ServrTime() & " من خلال IP : " & OsIP() & vbCrLf & TxtDetailsAdd.Text
                 SelctSerchTxt(TxtDetails, "تعديل : بواسطة")
                 StruGrdTk.Detls = TxtDetails.Text
+                GetPrntrFrm(frm__, gridview_)
                 TxtDetailsAdd.Text = ""
             Else
                 MsgInf(My.Resources.ConnErr & vbCrLf & My.Resources.TryAgain)
@@ -93,5 +101,40 @@
 
     Private Sub BtnUpd_Click(sender As Object, e As EventArgs) Handles BtnUpd.Click
         TikUpdate.ShowDialog()
+    End Sub
+
+    Private Sub BtnClos_Click(sender As Object, e As EventArgs) Handles BtnClos.Click
+        Dim Rslt As DialogResult
+        Rslt = MessageBox.Show("سيتم إغلاق الشكوى نهائيا" & vbCrLf & "هل تريد الإستمرار؟", "رسالة معلومات", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2, MessageBoxOptions.RtlReading Or MessageBoxOptions.RightAlign)
+        If Rslt = DialogResult.Yes Then
+            BtnClos.Enabled = False
+            If InsTrans("update Tickets set TkDtClose = (Select GetDate())" & ", TkDuration = " & CalDate(StruGrdTk.DtStrt, Nw, "1036&H") & ", TkClsStatus = 1" & ", TkFolw = 1" & " where (TkSQL = " & StruGrdTk.Sql & ");",
+                    "insert into TkEvent (TkupTkSql, TkupTxt, TkupUnread, TkupEvtId, TkupUserIP, TkupUser) VALUES ('" &
+                    StruGrdTk.Sql & "','" & "The Complaint has been closed" & "','" & "1" & "','" & "900" & "','" & OsIP() & "','" & Usr.PUsrID & "')", "1037&H") = Nothing Then
+                TcktImg.BackgroundImage = My.Resources.Tckoff
+                StruGrdTk.ClsStat = True
+                BtnClos.BackgroundImage = My.Resources.Tckoff
+                'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+                If StruGrdTk.UserId = Usr.PUsrID Then
+                    Dim UpSql As New List(Of String)
+                    For uu = 0 To UpdtCurrTbl.DefaultView.Count - 1
+                        UpSql.Add("TkupSQL = " & UpdtCurrTbl.DefaultView(uu).Item("TkupSQL"))
+                    Next
+                    If PublicCode.InsUpd("update TkEvent set TkupUnread = 1, TkupReDt = (Select GetDate())" & " where  " & String.Join(" OR ", UpSql) & ";", "1035&H") = Nothing Then
+
+                    End If
+                End If
+                'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+                BtnUpd.Visible = False
+
+                Usr.PUsrClsN -= 1   'to don't recieve notification with Ticket count trnasfered to 
+                GetPrntrFrm(frm__, gridview_)
+                TikFormat(TickTblMain, UpdtCurrTbl, ProgBar)
+                MsgInf("تم إغلاق الشكوى رقم " & StruGrdTk.TkId & " في عدد " & CalDate(StruGrdTk.DtStrt, CStr(Nw), "1036&H") & " يوم عمل")
+            Else
+                BtnClos.Enabled = True
+                MsgErr(My.Resources.ConnErr & vbCrLf & My.Resources.TryAgain)
+            End If
+        End If
     End Sub
 End Class

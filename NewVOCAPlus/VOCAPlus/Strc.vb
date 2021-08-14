@@ -47,6 +47,13 @@
         Public NoFlwCount As Integer
         Public UnReadCount As Integer
         Public ClsCount As Integer
+        Public Recved As Integer
+        Public UpdtFollow As Integer
+        Public UpdtColleg As Integer
+        Public UpdtOthrs As Integer
+        Public Esc1 As Integer
+        Public Esc2 As Integer
+        Public Esc3 As Integer
     End Structure
     Structure TickFld                                                    'Ticket Gridview Values
         Public Ser As Integer        'Columns(0)  "م"

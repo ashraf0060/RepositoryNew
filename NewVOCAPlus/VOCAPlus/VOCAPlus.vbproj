@@ -221,6 +221,12 @@
     <Compile Include="ExportAdmin.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="TikFolow.Designer.vb">
+      <DependentUpon>TikFolow.vb</DependentUpon>
+    </Compile>
+    <Compile Include="TikFolow.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="HeldDlvryRprt.Designer.vb">
       <DependentUpon>HeldDlvryRprt.vb</DependentUpon>
     </Compile>
@@ -602,6 +608,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="ExportAdmin.resx">
       <DependentUpon>ExportAdmin.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TikFolow.resx">
+      <DependentUpon>TikFolow.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="HeldDlvryRprt.resx">
       <DependentUpon>HeldDlvryRprt.vb</DependentUpon>

@@ -177,44 +177,40 @@ Public Class TikSearchNew
                 FltrStr = " Where " & FltrStr
 
                 '  Grid                        1        2       3       4      5       6       7        8       9      10       11       12       13        14       15          16         17      18        19       20             21         22      23        24         25          26      27             28                    29                  30                  31               32                    33              34             35              36                        37        38            39       40      **************
-                If PublicCode.GetTbl("SELECT TkSQL, TkKind, TkDtStart, TkID, SrcNm, TkClNm, TkClPh, TkClPh1, TkMail, TkClAdr, TkCardNo, TkShpNo, TkGBNo, TkClNtID, TkAmount, TkTransDate, PrdKind, PrdNm, CompNm, CounNmSender, CounNmConsign, OffNm1, OffArea, TkDetails, TkClsStatus, TkFolw, TkEmpNm, UsrRealNm, 0 AS LstSqlEv, '' AS LstUpdtTime, '' AS TkupTxt, 1 AS TkupUnread, 0 AS TkupEvtId, '' AS LstUpUsr, TkReOp, TkRecieveDt, TkEscTyp, ProdKNm, CompHelp FROM dbo.TicketsAll " & FltrStr & " ORDER BY TkSQL DESC;", TickSrchTable, "1042&H") = Nothing Then
+                If PublicCode.GetTbl("SELECT TkSQL, TkKind, TkDtStart, TkID, SrcNm, TkClNm, TkClPh, TkClPh1, TkMail, TkClAdr, TkCardNo, TkShpNo, TkGBNo, TkClNtID, TkAmount, TkTransDate, PrdKind, PrdNm, CompNm, CounNmSender, CounNmConsign, OffNm1, OffArea, TkDetails, TkClsStatus, TkFolw, TkEmpNm, UsrRealNm, TkReOp, TkRecieveDt, TkEscTyp, ProdKNm, CompHelp FROM dbo.TicketsAll " & FltrStr & " ORDER BY TkSQL DESC;", TickSrchTable, "1042&H") = Nothing Then
                     Me.Text = "بحث الشكاوى والاستفسارات" & "_" & ElapsedTimeSpan
                     If TickSrchTable.Rows.Count > 0 Then
                         LblMsg.Text = "جاري تنسيق البيانات ..........."
                         LblMsg.ForeColor = Color.Blue
                         LblMsg.Refresh()
-                        CompGrdTikFill(GridTicket, TickSrchTable)  'Adjust Fill Table and assign Grid Data source of Ticket Gridview
+                        CompGrdTikFill(GridTicket, TickSrchTable, ProgressBar1)  'Adjust Fill Table and assign Grid Data source of Ticket Gridview
                         GetUpdtEvnt_()
-                        TickSrchTable.Columns.Add("تاريخ آخر تحديث")
-                        TickSrchTable.Columns.Add("نص آخر تحديث")
-                        TickSrchTable.Columns.Add("محرر آخر تحديث")
-                        TickSrchTable.Columns.Add("LastUpdateID")
 
+                        TikFormat(TickSrchTable, UpdtCurrTbl, ProgressBar1)
+
+                        GridTicket.Columns("TkupReDt").Visible = False
+                        GridTicket.Columns("TkupUser").Visible = False
                         GridTicket.Columns("LastUpdateID").Visible = False
-
-                        TikFormat(TickSrchTable, UpdtCurrTbl)
+                        GridTicket.Columns("EvSusp").Visible = False
+                        GridTicket.Columns("UCatLvl").Visible = False
+                        GridTicket.Columns("TkupUnread").Visible = False
 
                         LblMsg.Text = ("نتيجة البحث : إجمالي عدد " & GridCuntRtrn.TickCount & " -- عدد الشكاوى : " & GridCuntRtrn.CompCount & " -- عدد الاستفسارات : " & GridCuntRtrn.TickCount - GridCuntRtrn.CompCount & " -- شكاوى مغلقة : " & GridCuntRtrn.ClsCount & " -- شكاوى مفتوحة : " & GridCuntRtrn.CompCount - GridCuntRtrn.ClsCount & " -- لم يتم المتابعة : " & GridCuntRtrn.NoFlwCount)
                         LblMsg.ForeColor = Color.Green
                         GridTicket.ClearSelection()
-                        TimerkepUpdtd.Start()
                     Else
-                        TimerkepUpdtd.Stop()
                         LblMsg.Text = ("لا توجد نتيجة للبحث بـ" & FilterComb.Text)
                         LblMsg.ForeColor = Color.Red
                         Beep()
                     End If
                 Else
-                    TimerkepUpdtd.Stop()
                     LblMsg.Text = "لم ينجح البحث - يرجى المحاولة مرة أخرى"
                     LblMsg.ForeColor = Color.Red
                     Beep()
                 End If
             Else
-                TimerkepUpdtd.Stop()
             End If
         Else
-            TimerkepUpdtd.Stop()
             LblMsg.Text = ("برجاء ادخال كلمات البحث")
             LblMsg.ForeColor = Color.Red
             Beep()
@@ -262,6 +258,7 @@ Public Class TikSearchNew
                 StruGrdTk.UsrNm = GridTicket.CurrentRow.Cells("UsrRealNm").Value
                 StruGrdTk.Help_ = GridTicket.CurrentRow.Cells("CompHelp").Value.ToString
                 StruGrdTk.ProdK = GridTicket.CurrentRow.Cells("PrdKind").Value
+                StruGrdTk.UserId = GridTicket.CurrentRow.Cells("TkEmpNm").Value
                 TikDetails.Text = "شكوى رقم " & StruGrdTk.Sql
 
 
@@ -270,6 +267,8 @@ Public Class TikSearchNew
                 StruGrdTk.LstUpUsrNm = GridTicket.CurrentRow.Cells("محرر آخر تحديث").Value
                 StruGrdTk.LstUpEvId = GridTicket.CurrentRow.Cells("LastUpdateID").Value
 
+                frm__ = Me
+                gridview_ = GridTicket
                 TikDetails.ShowDialog()
 
             End If
@@ -297,22 +296,12 @@ Public Class TikSearchNew
             Filtr()
         End If
     End Sub
-
-    Private Sub TimerkepUpdtd_Tick(sender As Object, e As EventArgs) Handles TimerkepUpdtd.Tick
-        If GridTicket.SelectedRows.Count >= 0 Then
-            If StruGrdTk.Sql > 0 Then
-                GridTicket.Rows(CurrRw).Cells("TkDetails").Value = StruGrdTk.Detls
-                GridTicket.Rows(CurrRw).Cells("تاريخ آخر تحديث").Value = StruGrdTk.LstUpDt
-                GridTicket.Rows(CurrRw).Cells("نص آخر تحديث").Value = StruGrdTk.LstUpTxt
-                GridTicket.Rows(CurrRw).Cells("محرر آخر تحديث").Value = StruGrdTk.LstUpUsrNm
-                GridTicket.Rows(CurrRw).Cells("LastUpdateID").Value = StruGrdTk.LstUpEvId
-                'TikFormat(TickSrchTable, UpdtCurrTbl)
-            End If
-        End If
-    End Sub
-
     Private Sub GridTicket_RowEnter(sender As Object, e As DataGridViewCellEventArgs) Handles GridTicket.RowEnter
         StruGrdTk.Sql = 0
+    End Sub
+
+    Private Sub TikSearchNew_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
+        Me.Dispose()
     End Sub
 #End Region
 
