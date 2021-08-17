@@ -4,6 +4,7 @@
     End Sub
 
     Private Sub LodngFrm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        CheckForIllegalCrossThreadCalls = False
         LblMsg.Text = ""
     End Sub
 End Class

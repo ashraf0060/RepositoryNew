@@ -21,7 +21,6 @@
         SecTree.Size = New Point((WelcomeScreen.Width - FlowLayoutPanel1.Width) * 0.35, Me.Height - 80)
         'UserTree.Size = New Point(SecTree.Width, Me.Height - 80)
         UserTree.Size = New Point((WelcomeScreen.Width - FlowLayoutPanel1.Width) * 0.6, Me.Height - 80)
-        BtnSub(Me)
         'Me.Size = New Point(screenWidth, screenHeight)
         WelcomeScreen.StatBrPnlAr.Text = "جاري تحميل البيانات ........................."
         sqlComm.Connection = sqlCon

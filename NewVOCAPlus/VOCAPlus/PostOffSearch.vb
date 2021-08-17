@@ -2,7 +2,6 @@
 Public Class PostOffSearch
     Dim tbl As New DataTable
     Private Sub Form2_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        BtnSub(Me)
         Dim NodeTbl As New DataTable
         GetTbl("select Sector from PO group by Sector  order by Sector", NodeTbl, "0000&H")
         For tt = 0 To NodeTbl.Rows.Count - 1

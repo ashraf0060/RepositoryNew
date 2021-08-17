@@ -1,6 +1,5 @@
 ﻿Public Class TikDetails
     Private Sub TikDetails_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        BtnSub(Me)
         If StruGrdTk.FlwStat = True Then
             TcktImg.BackgroundImage = My.Resources.Tckoff
             TcktImg.BackgroundImageLayout = ImageLayout.Stretch
@@ -65,6 +64,10 @@
             GroupBox4.Visible = False
         End If
         LblHelp.Text = StruGrdTk.Help_
+        TxtTikID.Text = "شكوى رقم : " & StruGrdTk.Sql
+        TxtTikID.RightToLeft = RightToLeft.Yes
+        TxtTikID.Font = New Font("Times New Roman", 14, FontStyle.Bold)
+        TxtTikID.TextAlign = ContentAlignment.BottomCenter
         SelctSerchTxt(TxtDetails, "تعديل : بواسطة")
     End Sub
 
@@ -115,13 +118,20 @@
                 StruGrdTk.ClsStat = True
                 BtnClos.BackgroundImage = My.Resources.Tckoff
                 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
-                If StruGrdTk.UserId = Usr.PUsrID Then
-                    Dim UpSql As New List(Of String)
-                    For uu = 0 To UpdtCurrTbl.DefaultView.Count - 1
+                UpdtCurrTbl.DefaultView.RowFilter = "[TkupTkSql]" & " = " & StruGrdTk.Sql
+                Dim UpSql As New List(Of String)
+                For uu = 0 To UpdtCurrTbl.DefaultView.Count - 1
+                    If UpdtCurrTbl.DefaultView(uu).Item("TkupUnread") = False Then
                         UpSql.Add("TkupSQL = " & UpdtCurrTbl.DefaultView(uu).Item("TkupSQL"))
-                    Next
+                    Else
+                        Exit For
+                    End If
+                Next
+                If UpSql.Count > 0 Then
                     If PublicCode.InsUpd("update TkEvent set TkupUnread = 1, TkupReDt = (Select GetDate())" & " where  " & String.Join(" OR ", UpSql) & ";", "1035&H") = Nothing Then
 
+                    Else
+                        MsgErr(My.Resources.ConnErr & vbCrLf & My.Resources.TryAgain & vbCrLf & Errmsg)
                     End If
                 End If
                 'xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
@@ -130,6 +140,11 @@
                 Usr.PUsrClsN -= 1   'to don't recieve notification with Ticket count trnasfered to 
                 GetPrntrFrm(frm__, gridview_)
                 TikFormat(TickTblMain, UpdtCurrTbl, ProgBar)
+                BtnAddEdt.Enabled = False
+                TxtDetailsAdd.Enabled = False
+                TxtDetailsAdd.Text = "لا يمكن عمل تعديل أو إضافة على تفاصيل شكوى مغلقة"
+                TxtDetailsAdd.TextAlign = HorizontalAlignment.Center
+                TxtDetailsAdd.Font = New Font("Times New Roman", 16, FontStyle.Regular)
                 MsgInf("تم إغلاق الشكوى رقم " & StruGrdTk.TkId & " في عدد " & CalDate(StruGrdTk.DtStrt, CStr(Nw), "1036&H") & " يوم عمل")
             Else
                 BtnClos.Enabled = True

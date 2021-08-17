@@ -17,7 +17,6 @@
             Beep()
             Me.Close()
         Else
-            BtnSub(Me)
             WelcomeScreen.StatBrPnlAr.Text = ""
             SerchTable.Rows.Clear()
             SerchTable.Columns.Clear()

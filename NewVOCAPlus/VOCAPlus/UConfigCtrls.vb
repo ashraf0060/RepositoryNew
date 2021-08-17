@@ -55,8 +55,8 @@
                     InsUpd("delete from AControls where CtlFormName = '" & tbl.Rows(Cnt_).Item(0) & "'", "0000&H")
                 End If
             End If
-            BtnSub(form1_)
-            StatBrPnlEn.Text = Cnt_ + 1 & " من " & tbl.Rows.Count
+                FrmAllSub(form1_)
+                StatBrPnlEn.Text = Cnt_ + 1 & " من " & tbl.Rows.Count
         Next
         Dim SQLBulkCopy As SqlBulkCopy = New SqlBulkCopy(sqlCon)
         SQLBulkCopy.DestinationTableName = "AControls"

@@ -2,7 +2,7 @@
     Dim URstTbl As DataTable = New DataTable
     Dim TmpUsrSusp As Boolean
     Private Sub UReset_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        BtnSub(Me)    '     0  ,    1 ,   2      ,    3   ,  4
+        '     0  ,    1 ,   2      ,    3   ,  4
         Me.Size = New Point(screenWidth, screenHeight - 100)
         UsrData.Size = New Point(UsrData.Width, Me.Height - 100)
         If PublicCode.GetTbl("SELECT UsrId, UsrNm, UsrRealNm, UsrSusp, UCatNm FROM Int_user INNER JOIN IntUserCat ON Int_user.UsrCat = IntUserCat.UCatId", URstTbl, "1046&H") = Nothing Then

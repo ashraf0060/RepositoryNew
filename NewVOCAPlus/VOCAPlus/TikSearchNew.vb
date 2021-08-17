@@ -25,7 +25,6 @@ Public Class TikSearchNew
         End Get
     End Property
     Private Sub TikSearch_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        BtnSub(Me)
         Me.Size = New Point(screenWidth, screenHeight - 120)
         Me.GridTicket.Width = screenWidth - 30
         Me.GridTicket.Height = Me.Height - 150
@@ -180,13 +179,18 @@ Public Class TikSearchNew
                 If PublicCode.GetTbl("SELECT TkSQL, TkKind, TkDtStart, TkID, SrcNm, TkClNm, TkClPh, TkClPh1, TkMail, TkClAdr, TkCardNo, TkShpNo, TkGBNo, TkClNtID, TkAmount, TkTransDate, PrdKind, PrdNm, CompNm, CounNmSender, CounNmConsign, OffNm1, OffArea, TkDetails, TkClsStatus, TkFolw, TkEmpNm, UsrRealNm, TkReOp, TkRecieveDt, TkEscTyp, ProdKNm, CompHelp FROM dbo.TicketsAll " & FltrStr & " ORDER BY TkSQL DESC;", TickSrchTable, "1042&H") = Nothing Then
                     Me.Text = "بحث الشكاوى والاستفسارات" & "_" & ElapsedTimeSpan
                     If TickSrchTable.Rows.Count > 0 Then
-                        LblMsg.Text = "جاري تنسيق البيانات ..........."
+                        If TickSrchTable.Rows.Count > 10000 Then
+                            MsgInf(" برجاء تقليل البحث")
+                            Exit Sub
+                        End If
+                        LblMsg.Text = "جاري تحميل التحديثات ..........."
                         LblMsg.ForeColor = Color.Blue
                         LblMsg.Refresh()
                         CompGrdTikFill(GridTicket, TickSrchTable, ProgressBar1)  'Adjust Fill Table and assign Grid Data source of Ticket Gridview
                         GetUpdtEvnt_()
-
-                        TikFormat(TickSrchTable, UpdtCurrTbl, ProgressBar1)
+                        LblMsg.Text = "جاري تنسيق البيانات ..........."
+                        LblMsg.ForeColor = Color.Blue
+                        LblMsg.Refresh()
 
                         GridTicket.Columns("TkupReDt").Visible = False
                         GridTicket.Columns("TkupUser").Visible = False
@@ -194,6 +198,10 @@ Public Class TikSearchNew
                         GridTicket.Columns("EvSusp").Visible = False
                         GridTicket.Columns("UCatLvl").Visible = False
                         GridTicket.Columns("TkupUnread").Visible = False
+
+                        TikFormat(TickSrchTable, UpdtCurrTbl, ProgressBar1)
+
+
 
                         LblMsg.Text = ("نتيجة البحث : إجمالي عدد " & GridCuntRtrn.TickCount & " -- عدد الشكاوى : " & GridCuntRtrn.CompCount & " -- عدد الاستفسارات : " & GridCuntRtrn.TickCount - GridCuntRtrn.CompCount & " -- شكاوى مغلقة : " & GridCuntRtrn.ClsCount & " -- شكاوى مفتوحة : " & GridCuntRtrn.CompCount - GridCuntRtrn.ClsCount & " -- لم يتم المتابعة : " & GridCuntRtrn.NoFlwCount)
                         LblMsg.ForeColor = Color.Green
@@ -232,45 +240,12 @@ Public Class TikSearchNew
         If (GridTicket.SelectedCells.Count) > 0 Then
             If GridTicket.CurrentRow.Index <> -1 Then
                 CurrRw = GridTicket.CurrentRow.Index
-                StruGrdTk.Tick = GridTicket.CurrentRow.Cells("TkKind").Value
-                StruGrdTk.FlwStat = GridTicket.CurrentRow.Cells("TkClsStatus").Value
-                StruGrdTk.Sql = GridTicket.CurrentRow.Cells("TkSQL").Value
-                StruGrdTk.Ph1 = GridTicket.CurrentRow.Cells("TkClPh").Value
-                StruGrdTk.Ph2 = GridTicket.CurrentRow.Cells("TkClPh1").Value.ToString
-                StruGrdTk.DtStrt = GridTicket.CurrentRow.Cells("TkDtStart").Value
-                StruGrdTk.ClNm = GridTicket.CurrentRow.Cells("TkClNm").Value
-                StruGrdTk.Adress = GridTicket.CurrentRow.Cells("TkClAdr").Value.ToString
-                StruGrdTk.Email = GridTicket.CurrentRow.Cells("TkMail").Value.ToString
-                StruGrdTk.Detls = GridTicket.CurrentRow.Cells("TkDetails").Value.ToString
-                StruGrdTk.Area = GridTicket.CurrentRow.Cells("OffArea").Value.ToString
-                StruGrdTk.Offic = GridTicket.CurrentRow.Cells("OffNm1").Value.ToString
-                StruGrdTk.ProdNm = GridTicket.CurrentRow.Cells("PrdNm").Value
-                StruGrdTk.CompNm = GridTicket.CurrentRow.Cells("CompNm").Value
-                StruGrdTk.Src = GridTicket.CurrentRow.Cells("SrcNm").Value
-                StruGrdTk.Trck = GridTicket.CurrentRow.Cells("TkShpNo").Value.ToString
-                StruGrdTk.Orig = GridTicket.CurrentRow.Cells("CounNmSender").Value.ToString
-                StruGrdTk.Dist = GridTicket.CurrentRow.Cells("CounNmConsign").Value.ToString
-                StruGrdTk.Card = GridTicket.CurrentRow.Cells("TkCardNo").Value.ToString
-                StruGrdTk.Gp = GridTicket.CurrentRow.Cells("TkGBNo").Value.ToString
-                StruGrdTk.NID = GridTicket.CurrentRow.Cells("TkClNtID").Value.ToString
-                StruGrdTk.Amnt = GridTicket.CurrentRow.Cells("TkAmount").Value
-                If DBNull.Value.Equals(GridTicket.CurrentRow.Cells("TkTransDate").Value) = False Then StruGrdTk.TransDt = GridTicket.CurrentRow.Cells("TkTransDate").Value
-                StruGrdTk.UsrNm = GridTicket.CurrentRow.Cells("UsrRealNm").Value
-                StruGrdTk.Help_ = GridTicket.CurrentRow.Cells("CompHelp").Value.ToString
-                StruGrdTk.ProdK = GridTicket.CurrentRow.Cells("PrdKind").Value
-                StruGrdTk.UserId = GridTicket.CurrentRow.Cells("TkEmpNm").Value
-                TikDetails.Text = "شكوى رقم " & StruGrdTk.Sql
-
-
-                StruGrdTk.LstUpDt = GridTicket.CurrentRow.Cells("تاريخ آخر تحديث").Value
-                StruGrdTk.LstUpTxt = GridTicket.CurrentRow.Cells("نص آخر تحديث").Value
-                StruGrdTk.LstUpUsrNm = GridTicket.CurrentRow.Cells("محرر آخر تحديث").Value
-                StruGrdTk.LstUpEvId = GridTicket.CurrentRow.Cells("LastUpdateID").Value
-
-                frm__ = Me
-                gridview_ = GridTicket
-                TikDetails.ShowDialog()
-
+                If TikGVDblClck(GridTicket) = Nothing Then
+                    TikDetails.Text = "شكوى رقم " & StruGrdTk.Sql
+                    TikDetails.ShowDialog()
+                Else
+                    MsgErr(My.Resources.ConnErr & vbCrLf & My.Resources.TryAgain & vbCrLf & Errmsg)
+                End If
             End If
         End If
     End Sub
@@ -286,7 +261,7 @@ Public Class TikSearchNew
         If PublicCode.GetTbl("SELECT TkupSTime, TkupTxt, UsrRealNm,TkupReDt, TkupUser,TkupSQL,TkupTkSql,TkupEvtId, EvSusp, UCatLvl,TkupUnread FROM TkEvent INNER JOIN Int_user ON TkupUser = UsrId INNER JOIN CDEvent ON TkupEvtId = EvId INNER JOIN IntUserCat ON Int_user.UsrCat = IntUserCat.UCatId Where ( " & CompIds & ") ORDER BY TkupTkSql,TkupSQL DESC", UpdtCurrTbl, "1019&H") = Nothing Then
             UpdtCurrTbl.Columns.Add("File")        ' Add files Columns 
         Else
-            MsgErr(My.Resources.ConnErr & vbCrLf & My.Resources.TryAgain)
+            MsgErr(My.Resources.ConnErr & vbCrLf & My.Resources.TryAgain & vbCrLf & Errmsg)
         End If
     End Sub
 #End Region

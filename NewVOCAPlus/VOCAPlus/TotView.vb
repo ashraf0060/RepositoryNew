@@ -17,7 +17,6 @@ Public Class TotView
         End Get
     End Property
     Private Sub TotView_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        BtnSub(Me)
         UsrStr = ""
         UserTable.Rows.Clear()
         MyUsrsTable.Rows.Clear()

@@ -35,7 +35,6 @@
             End If
             UserTree.ExpandAll()
         End If
-        BtnSub(Me)
         RadioButton1.Checked = True
         Me.Size = New Point(WelcomeScreen.Width, WelcomeScreen.Height - 110)
         GridHeld.Size = New Point(Me.Width - (UserTree.Width + 45), Me.Height - 125)

@@ -25,7 +25,6 @@ Public Class CompSetup
         End Get
     End Property
     Private Sub CompSetup_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        BtnSub(Me)
         Dim UsrIdsTable As New DataTable
 
         GetTbl("SELECT UsrId, UsrRealNm FROM Int_user WHERE (((UsrRealNm) Like '%' + 'فريق' + '%'));", UsrIdsTable, "000&H")

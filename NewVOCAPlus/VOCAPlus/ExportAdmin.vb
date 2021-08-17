@@ -28,7 +28,6 @@ Public Class ExportAdmin
                        Invoke(Sub() WelcomeScreen.StatBrPnlAr.Text = "لم يكتمل تحميل جميع البيانات")
                        Beep()
                    Else
-                       BtnSub(Me)
                        Me.Enabled = False
                        Invoke(Sub() WelcomeScreen.StatBrPnlAr.Text = "جاري تحميل البيانات .........................")
                        Invoke(Sub() DateTimeFrom.Value = CStr(Format(Today, "yyyy/MM/dd")))

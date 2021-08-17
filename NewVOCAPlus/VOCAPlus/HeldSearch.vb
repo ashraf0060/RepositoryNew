@@ -14,7 +14,6 @@ Public Class HeldSearch
         End Get
     End Property
     Private Sub HeldSearch_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        BtnSub(Me)
         TabControl1.TabPages.Remove(TabPage2)
         TabControl1.TabPages.Remove(TabPage3)
 

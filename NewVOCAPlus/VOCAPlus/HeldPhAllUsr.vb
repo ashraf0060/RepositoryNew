@@ -19,7 +19,6 @@ Public Class HeldPhAllUsr
         End Get
     End Property
     Private Sub HeldSearch_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        BtnSub(Me)
         FilPhPool1()
     End Sub
     Private Sub FilPhPool1()

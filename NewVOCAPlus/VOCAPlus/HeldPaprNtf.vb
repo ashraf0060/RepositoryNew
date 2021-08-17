@@ -8,7 +8,6 @@
     'Dim sqlCon As New SqlConnection("Data Source=10.10.26.4;Initial Catalog=CSSYS;Persist Security Info=True;User ID=ntf;Password=@asdasdasd123321") ' I Have assigned conn STR here and delete this row from all project
     'Dim sqlCon As New SqlConnection("Data Source=ASHRAF-PC\ASHRAFSQL;Initial Catalog=vocaplus;Persist Security Info=True;User ID=sa;Password=Hemonad105046") ' I Have assigned conn STR here and delete this row from all project
     Private Sub HeldPhPool_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        BtnSub(Me)
         RdioPaperAll.Checked = True
         FilPhPool()
     End Sub

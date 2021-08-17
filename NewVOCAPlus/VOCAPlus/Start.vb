@@ -1,4 +1,6 @@
 ﻿
+Imports System.Threading
+
 Public Class Start
     Private Sub Start_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Invoke(Sub() LblUsrIP.Text = "IP: " & OsIP())

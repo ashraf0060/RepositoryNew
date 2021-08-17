@@ -5,10 +5,8 @@ Public Class TikUpdate
     Dim Ext As String
     Dim FileName As String
     Dim EscTable As New DataTable
-    Dim UpGetSql As New DataTable
     Dim UpSQlMax_ As Integer = 0
     Private Sub TikUpdate_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        BtnSub(Me)
         Me.Size = New Point(screenWidth, screenHeight - 120)
         GridUpdt.Size = New Point(Me.Size.Width, Me.Size.Height - 185)
         If StruGrdTk.Tick = 0 Then
@@ -38,8 +36,6 @@ Public Class TikUpdate
         GridUpdt.DataSource = UpGetSql
 
         'StruGrdTk.LstUpEvId
-        'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-        'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
         'قراءة جميع التحديثات عند الدخول للمتابع
         UpGetSql.DefaultView.Sort = "TkupUnread"
         UpGetSql.DefaultView.RowFilter = String.Empty
@@ -59,12 +55,12 @@ Public Class TikUpdate
                     MsgErr(My.Resources.ConnErr & vbCrLf & My.Resources.TryAgain & vbCrLf & Errmsg)
                 End If
             End If
-
         End If
         Dim FolwID As String = ""
         If DBNull.Value.Equals(StruGrdTk.UserId) Then FolwID = "" Else FolwID = StruGrdTk.UserId
         UpdateFormt(GridUpdt, FolwID)
         Me.Text = "تحديثات شكوى رقم " & StruGrdTk.Sql
+        GettAttchUpdtesFils()
         CompareDataTables(FTPTable, UpdtCurrTbl, GridUpdt)  ' Compare Attached Table With Updtes Table On SQL Column and File Name
         If Usr.PUsrUCatLvl < 3 Or Usr.PUsrUCatLvl > 5 Then
             If StruGrdTk.LstUpEvId = 902 Or StruGrdTk.LstUpEvId = 903 Or StruGrdTk.LstUpEvId = 904 Then

@@ -49,9 +49,6 @@ Public Class DistribTicket
         Else
             MsgErr(My.Resources.ConnErr & vbCrLf & My.Resources.TryAgain)
         End If
-
-        BtnSub(Me)
-
     End Sub
     Private Sub BtnBck_Click(sender As Object, e As EventArgs) Handles BtnBck.Click
         TabControl1.TabPages.Remove(TabPage2)

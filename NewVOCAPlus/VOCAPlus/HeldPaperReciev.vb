@@ -17,7 +17,6 @@ Public Class HeldPaperReciev
         End Get
     End Property
     Private Sub HeldPapeCnt_eciev_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        BtnSub(Me)
         BtnBrws.Enabled = False
         BtnUplod.Enabled = False
         BtnClint.Enabled = False

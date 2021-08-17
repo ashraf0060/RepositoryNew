@@ -7,6 +7,7 @@ Imports System.Text.RegularExpressions
 Imports ClosedXML.Excel
 Imports Microsoft.Exchange.WebServices.Data
 Imports VOCAPlus.Strc
+Imports System.Threading
 Module PublicCode
 
     Public screenWidth As Integer = Screen.PrimaryScreen.Bounds.Width
@@ -88,36 +89,17 @@ Module PublicCode
     Dim DefCmStrip As ContextMenuStrip
     Dim TikCmStrip As ContextMenuStrip
     Dim UpdtCmStrip As ContextMenuStrip
-    Dim MenStrip As MenuStrip
-    Dim CmStripCatch As New ToolStripMenuItem
-    Dim CmStripFix As New ToolStripMenuItem
-    Dim CmStripRest As New ToolStripMenuItem
-    Dim CmStripFrmt As New ToolStripMenuItem
-    Dim CmStripCatchTik As New ToolStripMenuItem
-    Dim CmStripFixTik As New ToolStripMenuItem
-    Dim CmStripRestTik As New ToolStripMenuItem
-    Dim CmStripFrmtTik As New ToolStripMenuItem
+
     Dim CmStripCopy As New ToolStripMenuItem
     Dim CmStripPast As New ToolStripMenuItem
     Dim CmStripPrvw As New ToolStripMenuItem
+    Dim CmStripUpVew As New ToolStripMenuItem
     Dim CmStripUpload As New ToolStripMenuItem
     Dim CmStripDwnload As New ToolStripMenuItem
 
     Dim CmstripItemTmp1 As New ToolStripMenuItem
     Dim CmstripItemTmp2 As New ToolStripMenuItem
     Dim CmstripItemTmp3 As New ToolStripMenuItem
-
-    Dim MenStripCmboFnt As New ToolStripComboBox
-    Dim MenStripForward As New ToolStripMenuItem
-    Dim MenStripBack As New ToolStripMenuItem
-    Dim MenStripFlowBreak As New ToolStripMenuItem
-    Dim MenStripMargin As New ToolStripMenuItem
-    Dim MenStripMrgnLft As New ToolStripTextBox
-    Dim MenStripMrgnTop As New ToolStripTextBox
-    Dim MenStripMrgnRght As New ToolStripTextBox
-    Dim MenStripMrgnBttm As New ToolStripTextBox
-    Dim MenStripFlwDirc As New ToolStripComboBox
-    Dim MenStripResetAll As New ToolStripMenuItem
 #End Region
 
     Dim MyPen As Pen = New Pen(Drawing.Color.Blue, 5)
@@ -136,10 +118,16 @@ Module PublicCode
     Public CompIds As String ' tickets to get tickets updates
     Public TickTblMain As New DataTable
     Public UpdtCurrTbl As DataTable
+    Public UpGetSql As New DataTable
     Public ProgBar As ProgressBar
     Public frm__ As Form
     Public gridview_ As DataGridView
     Public ElapsedTimeSpan As String
+    Public NewElapsedTimeSpan As String
+    Public TreadQueue As Queue(Of Thread)
+    Public Sub Frm_Activated(sender As Object, e As EventArgs)
+        FrmAllSub(sender)
+    End Sub
     Public Function ConStrFn(tt As String) As String
         '@VocaPlus$21-2
 
@@ -153,10 +141,21 @@ Module PublicCode
             strConn = "Data Source=10.10.26.4;Initial Catalog=VOCAPlusDemo;Persist Security Info=True;User ID=vocaplus21;Password=@VocaPlus$21-4"
             ServerNm = "Test Database"
         End If
-        If sqlCon.State = ConnectionState.Connecting Or sqlCon.State = ConnectionState.Open Then
+        'If sqlCon.State = ConnectionState.Connecting Or sqlCon.State = ConnectionState.Open Then
+
+        Try
+            sqlCon = New SqlConnection
+            sqlCon.ConnectionString = strConn
+        Catch ex As Exception
             sqlCon.Close()
-        End If
-        sqlCon.ConnectionString = strConn
+            SqlConnection.ClearPool(sqlCon)
+            sqlCon.ConnectionString = strConn
+        End Try
+
+        'Else
+        '    sqlCon.ConnectionString = strConn
+        'End If
+
         Return strConn
     End Function
     Function OsIP() As String              'Returns the Ip address 
@@ -364,7 +363,9 @@ End_:
         End With
         D.FileName = FileNm & "_" & Format(Now, "yyyy-MM-dd_HHmm") '& GroupBox1.Tag & GroupBox2.Tag & GroupBox3.Tag & GrpDtKnd.Tag
         If D.ShowDialog() = DialogResult.OK Then
-            LoadFrm("", 350, 500)
+            LoadFrm(350, 500)
+            LodngFrm.LblMsg.Text += vbCrLf & "جاري استخراج البيانات ..."
+            LodngFrm.LblMsg.Refresh()
             Try
                 Dim Workbook As XLWorkbook = New XLWorkbook()
                 Workbook.Worksheets.Add(Tbl, "FileNm")
@@ -463,19 +464,20 @@ End_:
     Public Sub MsgErr(MsgBdy As String)
         MessageBox.Show(MsgBdy, "رسالة خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button2, MessageBoxOptions.RtlReading Or MessageBoxOptions.RightAlign)
     End Sub
+
     Public Function GetTbl(SSqlStr As String, SqlTbl As DataTable, ErrHndl As String) As String
         Dim StW As New Stopwatch
         StW.Start()
         Errmsg = Nothing
         Dim SQLGetAdptr As New SqlDataAdapter            'SQL Table Adapter
-        sqlComm.Connection = sqlCon
-        SQLGetAdptr.SelectCommand = sqlComm
-        sqlComm.CommandType = CommandType.Text
-        sqlComm.CommandText = SSqlStr
+        Dim sqlCommW As New SqlCommand
         Try
             If sqlCon.State = ConnectionState.Closed Then
                 sqlCon.Open()
             End If
+            SQLGetAdptr = New SqlDataAdapter            'SQL Table Adapter
+            sqlCommW = New SqlCommand(SSqlStr, sqlCon)
+            SQLGetAdptr.SelectCommand = sqlCommW
             SQLGetAdptr.Fill(SqlTbl)
             AppLogTbl(Split(ErrHndl, "&H")(0), 0, "", SSqlStr, SqlTbl.Rows.Count)
             If PreciFlag = True Then
@@ -488,18 +490,23 @@ End_:
             StW.Stop()
             Dim TimSpn As TimeSpan = (StW.Elapsed)
             ElapsedTimeSpan = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", TimSpn.Hours, TimSpn.Minutes, TimSpn.Seconds, TimSpn.Milliseconds / 10)
-            sqlCon.Close()
         Catch ex As Exception
-            Dim frmCollection = Application.OpenForms
-            If frmCollection.OfType(Of WelcomeScreen).Any Then
-                WelcomeScreen.TimerCon.Start()
-                WelcomeScreen.StatBrPnlEn.Icon = My.Resources.WSOff032
-            End If
-            AppLog(ErrHndl, ex.Message, SSqlStr)
-            AppLogTbl(Split(ErrHndl, "&H")(0), 1, ex.Message, SSqlStr, SqlTbl.Rows.Count)
-            Errmsg = ex.Message
+        My.Application.Log.WriteException(ex, TraceEventType.Error, "")
+
+        Dim frmCollection = Application.OpenForms
+        If frmCollection.OfType(Of WelcomeScreen).Any Then
+            WelcomeScreen.TimerCon.Start()
+            WelcomeScreen.StatBrPnlEn.Icon = My.Resources.WSOff032
+        End If
+        AppLog(ErrHndl, ex.Message, SSqlStr)
+        AppLogTbl(Split(ErrHndl, "&H")(0), 1, ex.Message, SSqlStr, SqlTbl.Rows.Count)
+        Errmsg = ex.Message
         End Try
+        SqlTbl.Dispose()
         SQLGetAdptr.Dispose()
+        sqlCommW.Dispose()
+        sqlCon.Close()
+        SqlConnection.ClearPool(sqlCon)
         Return Errmsg
     End Function
     Public Function InsUpd(SSqlStr As String, ErrHndl As String) As String
@@ -523,6 +530,8 @@ End_:
             Errmsg = ex.Message
             AppLogTbl(Split(ErrHndl, "&H")(0), 1, ex.Message, SSqlStr)
         End Try
+        sqlCon.Close()
+        SqlConnection.ClearPool(sqlCon)
         Return Errmsg
     End Function
     Public Function InsTrans(TranStr1 As String, TranStr2 As String, ErrHndl As String) As String
@@ -555,130 +564,199 @@ End_:
             End If
             Errmsg = ex.Message
         End Try
+        sqlCon.Close()
+        SqlConnection.ClearPool(sqlCon)
         Return Errmsg
     End Function
-    Public Sub CompGrdTikFill(GrdTick As DataGridView, Tbl As DataTable, ProgBar As ProgressBar) ' New Sub
-        GrdTick.DataSource = Tbl.DefaultView
-        CompList = New List(Of String)
-        For HH = 0 To Tbl.Columns.Count - 1
-            If Tbl.Columns(HH).ColumnName = "TkDtStart" Then
-                GrdTick.Columns(HH).HeaderText = "تاريخ الشكوى"
-            ElseIf Tbl.Columns(HH).ColumnName = "TkID" Then
-                GrdTick.Columns(HH).HeaderText = "رقم الشكوى"
-            ElseIf Tbl.Columns(HH).ColumnName = "SrcNm" Then
-                GrdTick.Columns(HH).HeaderText = "مصدر الشكوى"
-            ElseIf Tbl.Columns(HH).ColumnName = "TkClNm" Then
-                GrdTick.Columns(HH).HeaderText = "اسم العميل"
-            ElseIf Tbl.Columns(HH).ColumnName = "TkClPh" Then
-                GrdTick.Columns(HH).HeaderText = "تليفون العميل1"
-            ElseIf Tbl.Columns(HH).ColumnName = "TkClPh1" Then
-                GrdTick.Columns(HH).HeaderText = "تليفون العميل2"
-            ElseIf Tbl.Columns(HH).ColumnName = "PrdNm" Then
-                GrdTick.Columns(HH).HeaderText = "اسم المنتج"
-            ElseIf Tbl.Columns(HH).ColumnName = "CompNm" Then
-                GrdTick.Columns(HH).HeaderText = "نوع الشكوى"
-            ElseIf Tbl.Columns(HH).ColumnName = "UsrRealNm" Then
-                GrdTick.Columns(HH).HeaderText = "متابع الشكوى"
-            Else
-                GrdTick.Columns(HH).HeaderText = "unknown"
-                GrdTick.Columns(HH).Visible = False
-            End If
-        Next
-        ProgBar.Visible = True
-        For GG = 0 To GrdTick.Rows.Count - 1
+    Public Function CompGrdTikFill(GrdTick As DataGridView, Tbl As DataTable, ProgBar As ProgressBar) As String
+        Errmsg = Nothing
+        Try
+            GrdTick.DataSource = Tbl.DefaultView
+            CompList = New List(Of String)
+            ProgBar.Visible = True
+            ProgBar.Maximum = Tbl.Columns.Count
+            For HH = 0 To Tbl.Columns.Count - 1
+                ProgBar.Value = HH + 1
+                ProgBar.Refresh()
+                If Tbl.Columns(HH).ColumnName = "TkDtStart" Then
+                    GrdTick.Columns(HH).HeaderText = "تاريخ الشكوى"
+                ElseIf Tbl.Columns(HH).ColumnName = "TkID" Then
+                    GrdTick.Columns(HH).HeaderText = "رقم الشكوى"
+                ElseIf Tbl.Columns(HH).ColumnName = "SrcNm" Then
+                    GrdTick.Columns(HH).HeaderText = "مصدر الشكوى"
+                ElseIf Tbl.Columns(HH).ColumnName = "TkClNm" Then
+                    GrdTick.Columns(HH).HeaderText = "اسم العميل"
+                ElseIf Tbl.Columns(HH).ColumnName = "TkClPh" Then
+                    GrdTick.Columns(HH).HeaderText = "تليفون العميل1"
+                ElseIf Tbl.Columns(HH).ColumnName = "TkClPh1" Then
+                    GrdTick.Columns(HH).HeaderText = "تليفون العميل2"
+                ElseIf Tbl.Columns(HH).ColumnName = "PrdNm" Then
+                    GrdTick.Columns(HH).HeaderText = "اسم المنتج"
+                ElseIf Tbl.Columns(HH).ColumnName = "CompNm" Then
+                    GrdTick.Columns(HH).HeaderText = "نوع الشكوى"
+                ElseIf Tbl.Columns(HH).ColumnName = "UsrRealNm" Then
+                    GrdTick.Columns(HH).HeaderText = "متابع الشكوى"
+                Else
+                    GrdTick.Columns(HH).HeaderText = "unknown"
+                    GrdTick.Columns(HH).Visible = False
+                End If
+            Next
             ProgBar.Maximum = GrdTick.Rows.Count
-            ProgBar.Value = GG + 1
-            ProgBar.Refresh()
-            CompList.Add("TkupTkSql = " & GrdTick.Rows(GG).Cells(0).Value)
-        Next
-        CompIds = String.Join(" OR ", CompList)
-        Tbl.Columns.Add("تاريخ آخر تحديث")
-        Tbl.Columns.Add("نص آخر تحديث")
-        Tbl.Columns.Add("محرر آخر تحديث")
-        Tbl.Columns.Add("TkupReDt")
-        Tbl.Columns.Add("TkupUser")
-        Tbl.Columns.Add("LastUpdateID")
-        Tbl.Columns.Add("EvSusp")
-        Tbl.Columns.Add("UCatLvl")
-        Tbl.Columns.Add("TkupUnread")
+            For GG = 0 To GrdTick.Rows.Count - 1
+                ProgBar.Value = GG + 1
+                ProgBar.Refresh()
+                CompList.Add("TkupTkSql = " & GrdTick.Rows(GG).Cells("TkSQL").Value)
+            Next
+            CompIds = String.Join(" OR ", CompList)
+            Tbl.Columns.Add("تاريخ آخر تحديث")
+            Tbl.Columns.Add("نص آخر تحديث")
+            Tbl.Columns.Add("محرر آخر تحديث")
+            Tbl.Columns.Add("TkupReDt")
+            Tbl.Columns.Add("TkupUser")
+            Tbl.Columns.Add("LastUpdateID")
+            Tbl.Columns.Add("EvSusp")
+            Tbl.Columns.Add("UCatLvl")
+            Tbl.Columns.Add("TkupUnread")
+
+        Catch ex As Exception
+            Errmsg = ex.Message
+        End Try
         ProgBar.Visible = False
-    End Sub
-    Public Sub GetPrntrFrm(Frm As Form, GV As DataGridView)
-        Dim gg As DataGridView = Frm.Controls(GV.Name)
-        gg.CurrentRow.Cells("TkDetails").Value = StruGrdTk.Detls
-        gg.CurrentRow.Cells("تاريخ آخر تحديث").Value = StruGrdTk.LstUpDt
-        gg.CurrentRow.Cells("نص آخر تحديث").Value = StruGrdTk.LstUpTxt
-        gg.CurrentRow.Cells("محرر آخر تحديث").Value = StruGrdTk.LstUpUsrNm
-        gg.CurrentRow.Cells("LastUpdateID").Value = StruGrdTk.LstUpEvId
-        gg.CurrentRow.Cells("TkClsStatus").Value = StruGrdTk.ClsStat
+        Return Errmsg
+    End Function
+    Public Function TikGVDblClck(GrdTick As DataGridView) As String
+        Errmsg = Nothing
 
-        If Frm.Name = "TikFolow" Then
-            If StruGrdTk.ClsStat = True Then
-                gg.Rows.RemoveAt(gg.CurrentRow.Index)
-            End If
-        End If
+        Try
+            StruGrdTk.Tick = GrdTick.CurrentRow.Cells("TkKind").Value
+            StruGrdTk.FlwStat = GrdTick.CurrentRow.Cells("TkClsStatus").Value
+            StruGrdTk.Sql = GrdTick.CurrentRow.Cells("TkSQL").Value
+            StruGrdTk.Ph1 = GrdTick.CurrentRow.Cells("TkClPh").Value
+            StruGrdTk.Ph2 = GrdTick.CurrentRow.Cells("TkClPh1").Value.ToString
+            StruGrdTk.DtStrt = GrdTick.CurrentRow.Cells("TkDtStart").Value
+            StruGrdTk.ClNm = GrdTick.CurrentRow.Cells("TkClNm").Value
+            StruGrdTk.Adress = GrdTick.CurrentRow.Cells("TkClAdr").Value.ToString
+            StruGrdTk.Email = GrdTick.CurrentRow.Cells("TkMail").Value.ToString
+            StruGrdTk.Detls = GrdTick.CurrentRow.Cells("TkDetails").Value.ToString
+            StruGrdTk.Area = GrdTick.CurrentRow.Cells("OffArea").Value.ToString
+            StruGrdTk.Offic = GrdTick.CurrentRow.Cells("OffNm1").Value.ToString
+            StruGrdTk.ProdNm = GrdTick.CurrentRow.Cells("PrdNm").Value
+            StruGrdTk.CompNm = GrdTick.CurrentRow.Cells("CompNm").Value
+            StruGrdTk.Src = GrdTick.CurrentRow.Cells("SrcNm").Value
+            StruGrdTk.Trck = GrdTick.CurrentRow.Cells("TkShpNo").Value.ToString
+            StruGrdTk.Orig = GrdTick.CurrentRow.Cells("CounNmSender").Value.ToString
+            StruGrdTk.Dist = GrdTick.CurrentRow.Cells("CounNmConsign").Value.ToString
+            StruGrdTk.Card = GrdTick.CurrentRow.Cells("TkCardNo").Value.ToString
+            StruGrdTk.Gp = GrdTick.CurrentRow.Cells("TkGBNo").Value.ToString
+            StruGrdTk.NID = GrdTick.CurrentRow.Cells("TkClNtID").Value.ToString
+            StruGrdTk.Amnt = GrdTick.CurrentRow.Cells("TkAmount").Value
+            If DBNull.Value.Equals(GrdTick.CurrentRow.Cells("TkTransDate").Value) = False Then StruGrdTk.TransDt = GrdTick.CurrentRow.Cells("TkTransDate").Value
+            StruGrdTk.UsrNm = GrdTick.CurrentRow.Cells("UsrRealNm").Value
+            StruGrdTk.Help_ = GrdTick.CurrentRow.Cells("CompHelp").Value.ToString
+            StruGrdTk.ProdK = GrdTick.CurrentRow.Cells("PrdKind").Value
+            StruGrdTk.UserId = GrdTick.CurrentRow.Cells("TkEmpNm").Value
 
-    End Sub
-    Public Sub UpdateFormt(GridUpd As DataGridView, Optional StrTick As String = "")     'UpGrgFrmt(GridUpdt, GridTicket)
-        For Cnt_ = 0 To GridUpd.Rows.Count - 1
-            If GridUpd.Rows(Cnt_).Cells("EvSusp").Value = True Then                             'Event Sys True
-                GridUpd.Rows(Cnt_).Cells("TkupReDt").Value = ""                                    'Read Date
-                GridUpd.Rows(Cnt_).DefaultCellStyle.BackColor = My.Settings.ClrSys
-            ElseIf StrTick <> "" Then
-                If GridUpd.Rows(Cnt_).Cells("TkupUser").Value = StrTick Then                        'Event UserId
-                    GridUpd.Rows(Cnt_).DefaultCellStyle.BackColor = My.Settings.ClrUsr
-                ElseIf GridUpd.Rows(Cnt_).Cells("TkupUser").Value <> StrTick Then                        'Event UserId
-                    If GridUpd.Rows(Cnt_).Cells("UCatLvl").Value >= 3 And GridUpd.Rows(Cnt_).Cells("UCatLvl").Value <= 5 Then
-                        GridUpd.Rows(Cnt_).DefaultCellStyle.BackColor = My.Settings.ClrSamCat
-                    ElseIf GridUpd.Rows(Cnt_).Cells("UCatLvl").Value = 12 Then
-                        GridUpd.Rows(Cnt_).DefaultCellStyle.BackColor = My.Settings.ClrOperation
-                    Else
-                        GridUpd.Rows(Cnt_).DefaultCellStyle.BackColor = My.Settings.ClrNotUsr
-                    End If
+            StruGrdTk.LstUpDt = GrdTick.CurrentRow.Cells("تاريخ آخر تحديث").Value
+            StruGrdTk.LstUpTxt = GrdTick.CurrentRow.Cells("نص آخر تحديث").Value
+            StruGrdTk.LstUpUsrNm = GrdTick.CurrentRow.Cells("محرر آخر تحديث").Value
+            StruGrdTk.LstUpEvId = GrdTick.CurrentRow.Cells("LastUpdateID").Value
+
+            frm__ = GrdTick.FindForm
+            gridview_ = GrdTick
+        Catch ex As Exception
+            Errmsg = ex.Message
+        End Try
+        Return Errmsg
+    End Function
+    Public Function GetPrntrFrm(Frm As Form, GV As DataGridView) As String
+        Errmsg = Nothing
+        Try
+            Dim GrivVw_ As DataGridView = Frm.Controls(GV.Name)
+            GrivVw_.CurrentRow.Cells("TkDetails").Value = StruGrdTk.Detls
+            GrivVw_.CurrentRow.Cells("تاريخ آخر تحديث").Value = StruGrdTk.LstUpDt
+            GrivVw_.CurrentRow.Cells("نص آخر تحديث").Value = StruGrdTk.LstUpTxt
+            GrivVw_.CurrentRow.Cells("محرر آخر تحديث").Value = StruGrdTk.LstUpUsrNm
+            GrivVw_.CurrentRow.Cells("LastUpdateID").Value = StruGrdTk.LstUpEvId
+            GrivVw_.CurrentRow.Cells("TkClsStatus").Value = StruGrdTk.ClsStat
+
+            If Frm.Name = "TikFolow" Then
+                If StruGrdTk.ClsStat = True Then
+                    GrivVw_.Rows.RemoveAt(GrivVw_.CurrentRow.Index)
                 End If
             End If
+        Catch ex As Exception
+            Errmsg = ex.Message
+        End Try
+        Return Errmsg
+    End Function
+    Public Function UpdateFormt(GridUpd As DataGridView, Optional StrTick As String = "") As String
+        Errmsg = Nothing
 
-            If Year(GridUpd.Rows(Cnt_).Cells("TkupReDt").Value) < 2000 Then
-                GridUpd.Rows(Cnt_).Cells("TkupReDt").Value = ""                                    'Read Date
-            End If
-            'If GridUpd.Rows(Cnt_).Cells("TkupUnread").Value = False Then                              'Read Status
-            '    GridUpd.Rows(Cnt_).DefaultCellStyle.Font = New Font("Times New Roman", 12, FontStyle.Bold)
-            'Else
-            GridUpd.Rows(Cnt_).DefaultCellStyle.Font = New Font("Times New Roman", 12, FontStyle.Regular)
-            'End If
+        Try
+            For Cnt_ = 0 To GridUpd.Rows.Count - 1
+                If GridUpd.Rows(Cnt_).Cells("TkupUnread").Value = False Then                              'Read Status
+                    GridUpd.Rows(Cnt_).DefaultCellStyle.Font = New Font("Times New Roman", 12, FontStyle.Bold)
+                End If
+                GridUpd.Rows(Cnt_).DefaultCellStyle.Font = New Font("Times New Roman", 12, FontStyle.Regular)
+                If GridUpd.Rows(Cnt_).Cells("TkupEvtId").Value = 902 Then                             'Event Sys True
+                    GridUpd.Rows(Cnt_).DefaultCellStyle.BackColor = Color.Red
+                    GridUpd.Rows(Cnt_).DefaultCellStyle.ForeColor = Color.Yellow
+                    GridUpd.Rows(Cnt_).DefaultCellStyle.Font = New Font("Times New Roman", 12, FontStyle.Bold)
+                ElseIf GridUpd.Rows(Cnt_).Cells("EvSusp").Value = True Then                             'Event Sys True
+                    GridUpd.Rows(Cnt_).Cells("TkupReDt").Value = ""                                    'Read Date
+                    GridUpd.Rows(Cnt_).DefaultCellStyle.BackColor = My.Settings.ClrSys
+                ElseIf StrTick <> "" Then
+                    If GridUpd.Rows(Cnt_).Cells("TkupUser").Value = StrTick Then                        'Event UserId
+                        GridUpd.Rows(Cnt_).DefaultCellStyle.BackColor = My.Settings.ClrUsr
+                    ElseIf GridUpd.Rows(Cnt_).Cells("TkupUser").Value <> StrTick Then                        'Event UserId
+                        If GridUpd.Rows(Cnt_).Cells("UCatLvl").Value >= 3 And GridUpd.Rows(Cnt_).Cells("UCatLvl").Value <= 5 Then
+                            GridUpd.Rows(Cnt_).DefaultCellStyle.BackColor = My.Settings.ClrSamCat
+                        ElseIf GridUpd.Rows(Cnt_).Cells("UCatLvl").Value = 12 Then
+                            GridUpd.Rows(Cnt_).DefaultCellStyle.BackColor = My.Settings.ClrOperation
+                        Else
+                            GridUpd.Rows(Cnt_).DefaultCellStyle.BackColor = My.Settings.ClrNotUsr
+                        End If
+                    End If
+                End If
 
-        Next
-        'TkupSTime, TkupTxt, UsrRealNm,TkupReDt, TkupUser,TkupSQL,TkupTkSql,TkupEvtId, EvSusp, UCatLvl,TkupUnread
-        GridUpd.Columns("TkupSTime").DefaultCellStyle.Format = "dd/MM/yyyy ddd HH:mm"
-        GridUpd.Columns("TkupSTime").HeaderText = "تاريخ التحديث"
-        GridUpd.Columns("TkupTxt").HeaderText = "نص التحديث"
-        GridUpd.Columns("UsrRealNm").HeaderText = "محرر التحديث"
-        GridUpd.Columns("TkupReDt").HeaderText = "قراءة التحديث"
-        GridUpd.Columns("TkupUser").Visible = False
-        GridUpd.Columns("TkupSQL").Visible = False
-        GridUpd.Columns("TkupTkSql").Visible = False
-        GridUpd.Columns("TkupEvtId").Visible = False
-        GridUpd.Columns("EvSusp").Visible = False
-        GridUpd.Columns("UCatLvl").Visible = False
-        GridUpd.Columns("TkupUnread").Visible = False
-        GridUpd.AutoResizeColumns()
-        GridUpd.Columns("TkupTxt").Width = GridUpd.Width - (GridUpd.Columns("TkupSTime").Width + GridUpd.Columns("UsrRealNm").Width + GridUpd.Columns("TkupReDt").Width + GridUpd.Columns("File").Width + 50)
-        GridUpd.Columns("TkupTxt").DefaultCellStyle.WrapMode = DataGridViewTriState.True
-        GridUpd.AutoResizeRows()
-        GridUpd.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
-        GridUpd.ColumnHeadersDefaultCellStyle.WrapMode = DataGridViewTriState.False
-    End Sub
+                If Year(GridUpd.Rows(Cnt_).Cells("TkupReDt").Value) < 2000 Then
+                    GridUpd.Rows(Cnt_).Cells("TkupReDt").Value = ""                                    'Read Date
+                End If
+            Next
+            'TkupSTime, TkupTxt, UsrRealNm,TkupReDt, TkupUser,TkupSQL,TkupTkSql,TkupEvtId, EvSusp, UCatLvl,TkupUnread
+            GridUpd.Columns("TkupSTime").DefaultCellStyle.Format = "dd/MM/yyyy ddd HH:mm"
+            GridUpd.Columns("TkupSTime").HeaderText = "تاريخ التحديث"
+            GridUpd.Columns("TkupTxt").HeaderText = "نص التحديث"
+            GridUpd.Columns("UsrRealNm").HeaderText = "محرر التحديث"
+            GridUpd.Columns("TkupReDt").HeaderText = "قراءة التحديث"
+            GridUpd.Columns("TkupUser").Visible = False
+            GridUpd.Columns("TkupSQL").Visible = False
+            GridUpd.Columns("TkupTkSql").Visible = False
+            GridUpd.Columns("TkupEvtId").Visible = False
+            GridUpd.Columns("EvSusp").Visible = False
+            GridUpd.Columns("UCatLvl").Visible = False
+            GridUpd.Columns("TkupUnread").Visible = False
+            GridUpd.AutoResizeColumns()
+            GridUpd.Columns("TkupTxt").Width = GridUpd.Width - (GridUpd.Columns("TkupSTime").Width + GridUpd.Columns("UsrRealNm").Width + GridUpd.Columns("TkupReDt").Width + GridUpd.Columns("File").Width + 50)
+            GridUpd.Columns("TkupTxt").DefaultCellStyle.WrapMode = DataGridViewTriState.True
+            GridUpd.AutoResizeRows()
+            GridUpd.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter
+            GridUpd.ColumnHeadersDefaultCellStyle.WrapMode = DataGridViewTriState.False
+            RemoveHandler GridUpd.FindForm.Activated, AddressOf Frm_Activated
+            AddHandler GridUpd.FindForm.Activated, AddressOf Frm_Activated
+        Catch ex As Exception
+            Errmsg = ex.Message
+        End Try
+        Return Errmsg
+    End Function
     Public Function TikFormat(TblTicket As DataTable, TblUpdt As DataTable, ProgBar As ProgressBar) As TickInfo ' Function to Adjust Ticket Gridview
         GridCuntRtrn = New TickInfo
         ProgBar.Visible = True
-
         For Rws = 0 To TblTicket.Rows.Count - 1
             GridCuntRtrn.TickCount += 1                                          'Grid record count
             ProgBar.Maximum = TblTicket.Rows.Count
             ProgBar.Value = GridCuntRtrn.TickCount
             ProgBar.Refresh()
-
-
             Try
                 TblUpdt.DefaultView.RowFilter = "[TkupTkSql]" & " = " & TblTicket.Rows(Rws).Item("TkSQL")
                 TblTicket.Rows(Rws).Item("تاريخ آخر تحديث") = TblUpdt.DefaultView(0).Item("TkupSTime")
@@ -698,9 +776,6 @@ End_:
             Catch ex As Exception
                 TblTicket.Rows(Rws).Delete()
             End Try
-
-
-
         Next Rws
         GridCuntRtrn.CompCount = Convert.ToInt32(TblTicket.Compute("count(TkSQL)", String.Empty))
         GridCuntRtrn.NoFlwCount = Convert.ToInt32(TblTicket.Compute("count(TkFolw)", "TkFolw = 'False'"))
@@ -713,7 +788,6 @@ End_:
         GridCuntRtrn.Esc1 = Convert.ToInt32(TblTicket.Compute("count(LastUpdateID)", "LastUpdateID = 902"))
         GridCuntRtrn.Esc2 = Convert.ToInt32(TblTicket.Compute("count(LastUpdateID)", "LastUpdateID = 903"))
         GridCuntRtrn.Esc3 = Convert.ToInt32(TblTicket.Compute("count(LastUpdateID)", "LastUpdateID = 904"))
-
         ProgBar.Visible = False
         Return GridCuntRtrn 'Return Counters Structure
     End Function
@@ -994,54 +1068,40 @@ End_:
 
         Return UsrStr
     End Function
-    Public Sub LoadFrm(LblMsg As String, PX As Integer, PY As Integer)
+    Public Sub LoadFrm(PX As Integer, PY As Integer)
         LodngFrm.Show()
         LodngFrm.Location = New Point((Screen.PrimaryScreen.Bounds.Width - LodngFrm.Width) / 2, (Screen.PrimaryScreen.Bounds.Height - LodngFrm.Height) / 2)
         LodngFrm.Refresh()
-        LodngFrm.LblMsg.Text = LblMsg
+        LodngFrm.LblMsg.Text = ""
         LodngFrm.LblMsg.Refresh()
     End Sub
-    Public Sub BtnSub(Frm As Form)
-        'ConStrFn("My Labtop")
-        'sqlCon.ConnectionString = strConn
+    Public Function GetAll(ByVal sender As Control) As IEnumerable(Of Control)
+        Dim controls = sender.Controls.Cast(Of Control)()
+        Return controls.SelectMany(Function(ctrl) GetAll(ctrl)).Concat(controls)
+    End Function
+    Public Sub FrmAllSub(Frm As Form)
         Form_ = Frm
         If Frm.Name <> "Login" Then
             Frm.Location = New Point(0, 52)
         End If
-
+        'MsgBox(Frm.Name)
         Slctd = False
 #Region "Default ContextMenuStrip"
         DefCmStrip = New ContextMenuStrip
         DefCmStrip.Font = New Font("Times New Roman", 12, FontStyle.Regular)
         CmStripPast = New ToolStripMenuItem
-        'CmStripCatch = New ToolStripMenuItem
-        'CmStripFix = New ToolStripMenuItem
-        'CmStripRest = New ToolStripMenuItem
-        CmStripFrmt = New ToolStripMenuItem
+
 
         DefCmStrip.Items.Add(CmStripPast)
-        'DefCmStrip.Items.Add(CmStripCatch)
-        'DefCmStrip.Items.Add(CmStripFix)
-        'DefCmStrip.Items.Add(CmStripRest)
-        DefCmStrip.Items.Add(CmStripFrmt)
 
         CmStripPast.Image = My.Resources.Paste1
-        'CmStripCatch.Image = My.Resources.Catch1
-        'CmStripFix.Image = My.Resources.pin1
-        'CmStripRest.Image = My.Resources.Reset1
-        CmStripFrmt.Image = My.Resources.Format1
 
         CmStripPast.Text = "Paste"
-        'CmStripCatch.Text = "Catch Control"
-        'CmStripFix.Text = "Fix Control"
-        'CmStripRest.Text = "Restore Control"
-        CmStripFrmt.Text = "Format Control"
 
+
+        RemoveHandler CmStripPast.Click, AddressOf Paste_Click
         AddHandler CmStripPast.Click, AddressOf Paste_Click
-        'AddHandler CmStripCatch.Click, AddressOf CmStripCatch_Click
-        'AddHandler CmStripFix.Click, AddressOf CmStripFix_Click
-        'AddHandler CmStripRest.Click, AddressOf CmStripRest_Click
-        AddHandler CmStripFrmt.Click, AddressOf CmStripFrmt_Click
+
 #End Region
 
 #Region "Ticket ContextMenuStrip"
@@ -1050,359 +1110,200 @@ End_:
         CmStripCopy = New ToolStripMenuItem
         CmStripPast = New ToolStripMenuItem
         CmStripPrvw = New ToolStripMenuItem
-        'CmStripCatchTik = New ToolStripMenuItem
-        'CmStripFixTik = New ToolStripMenuItem
-        'CmStripRestTik = New ToolStripMenuItem
-        CmStripFrmtTik = New ToolStripMenuItem
+
+
 
         TikCmStrip.Items.Add(CmStripCopy)
         TikCmStrip.Items.Add(CmStripPast)
         TikCmStrip.Items.Add(CmStripPrvw)
-        'TikCmStrip.Items.Add(CmStripCatchTik)
-        'TikCmStrip.Items.Add(CmStripFixTik)
-        'TikCmStrip.Items.Add(CmStripRestTik)
-        TikCmStrip.Items.Add(CmStripFrmtTik)
+        TikCmStrip.Items.Add(CmStripUpVew)
+
 
         CmStripCopy.Image = My.Resources.Copy
         CmStripPast.Image = My.Resources.Paste1
         CmStripPrvw.Image = My.Resources.Preview
-        'CmStripCatchTik.Image = My.Resources.Catch1
-        'CmStripFixTik.Image = My.Resources.pin1
-        'CmStripRestTik.Image = My.Resources.Reset1
-        CmStripFrmtTik.Image = My.Resources.Format1
+        CmStripUpVew.Image = My.Resources.Update
+
+
 
         CmStripCopy.Text = "Copy Selected Cell"
         CmStripPast.Text = "Paste"
-        CmStripPrvw.Text = "Preview " + Chr(38) + " Print"
-        'CmStripCatchTik.Text = "Catch Control"
-        'CmStripFixTik.Text = "Fix Control"
-        'CmStripRestTik.Text = "Restore Control"
-        CmStripFrmtTik.Text = "Format Control"
+        CmStripPrvw.Text = "Preview And Print"
+        CmStripUpVew.Text = "Preview Updates"
+
+        RemoveHandler CmStripCopy.Click, AddressOf CopySelectedToolStripMenuItem_Click_1
+        RemoveHandler CmStripPast.Click, AddressOf Paste_Click
+        RemoveHandler CmStripPrvw.Click, AddressOf PreviewTik_Click
+        RemoveHandler CmStripUpVew.Click, AddressOf PreviewUpdt_Click
 
         AddHandler CmStripCopy.Click, AddressOf CopySelectedToolStripMenuItem_Click_1
         AddHandler CmStripPast.Click, AddressOf Paste_Click
-        AddHandler CmStripPrvw.Click, AddressOf PreviewToolStripMenuItem_Click
-        'AddHandler CmStripCatchTik.Click, AddressOf CmStripCatch_Click
-        'AddHandler CmStripFixTik.Click, AddressOf CmStripFix_Click
-        'AddHandler CmStripRestTik.Click, AddressOf CmStripRest_Click
-        AddHandler CmStripFrmtTik.Click, AddressOf CmStripFrmt_Click
+        AddHandler CmStripPrvw.Click, AddressOf PreviewTik_Click
+        AddHandler CmStripUpVew.Click, AddressOf PreviewUpdt_Click
+
+
 #End Region
-        'UsrCnrlTbl = New DataTable
-        'If GetTbl("Select * from AUsrControls where UCtlFormName = '" & Form_.Name & "' AND UCtlUsrId = " & Usr.PUsrID & " order by UCtlIndx", UsrCnrlTbl, "0000&H") = Nothing Then
-        '    primaryKey(0) = UsrCnrlTbl.Columns("UCtlControlName")
-        '    UsrCnrlTbl.PrimaryKey = primaryKey
-        'Else
-        '    MsgErr("Connection has been lost" & vbNewLine & "Please try agian")
-        'End If
-        For Each CTTTRL In Frm.Controls
-            If TypeOf CTTTRL Is TabControl Then
-                For Each TabPg In CTTTRL.Controls
-                    For Each Crl In TabPg.Controls
-                        If TypeOf Crl Is FlowLayoutPanel Then
-                            For Each C In Crl.Controls
-                                If TypeOf C Is Button Then
-                                    BttonCtrl = C
-                                    CalIfBtn(BttonCtrl)
-                                ElseIf TypeOf C Is TextBox Then
-                                    TxtBoxCtrl = C
-                                    CalIfTxt(TxtBoxCtrl)
-                                ElseIf TypeOf C Is GroupBox Then
-                                    For Each CRLS In C.Controls
-                                        If TypeOf CRLS Is Button Then
-                                            BttonCtrl = CRLS
-                                            CalIfBtn(BttonCtrl)
-                                        ElseIf TypeOf CRLS Is TextBox Then
-                                            TxtBoxCtrl = CRLS
-                                            CalIfTxt(TxtBoxCtrl)
-                                        End If
-                                    Next
-                                ElseIf TypeOf C Is FlowLayoutPanel Then
-                                    For Each CRLSA In C.Controls
-                                        If TypeOf CRLSA Is FlowLayoutPanel Then
-                                            For Each H In CRLSA.Controls
-                                                If TypeOf H Is Panel Then
-                                                    For Each V In H.Controls
-                                                        If TypeOf V Is Button Then
-                                                            BttonCtrl = V
-                                                            CalIfBtn(BttonCtrl)
-                                                        End If
-                                                    Next
-                                                ElseIf TypeOf H Is FlowLayoutPanel Then
-                                                    For Each V In H.Controls
-                                                        If TypeOf V Is Panel Then
-                                                            For Each VF In V.Controls
-                                                                If TypeOf VF Is Button Then
-                                                                    BttonCtrl = VF
-                                                                    CalIfBtn(BttonCtrl)
-                                                                End If
-                                                            Next
-                                                        End If
-                                                    Next
-                                                End If
-                                            Next
-                                        ElseIf TypeOf CRLSA Is Panel Then
-                                            For Each V In CRLSA.Controls
-                                                If TypeOf V Is Button Then
-                                                    BttonCtrl = V
-                                                    CalIfBtn(BttonCtrl)
-                                                End If
-                                            Next
-                                        End If
-                                    Next CRLSA
-                                End If
-                                CmstripAsgn(C)
-                                'If Application.OpenForms().OfType(Of UConfigCtrls).Any Then
-                                '    If C.Dock = DockStyle.None And TypeOf C IsNot MenuStrip Then SndCntls(C)
-                                'End If
-                            Next
-                        ElseIf TypeOf Crl Is Button Then
-                            BttonCtrl = Crl
-                            CalIfBtn(BttonCtrl)
-                        ElseIf TypeOf Crl Is TextBox Then
-                            TxtBoxCtrl = Crl
-                            CalIfTxt(TxtBoxCtrl)
-                        End If
-                        CmstripAsgn(Crl)
-                    Next
-                Next
-            ElseIf TypeOf CTTTRL Is FlowLayoutPanel Then
-                For Each Crl In CTTTRL.Controls
-                    If TypeOf Crl Is Button Then
-                        BttonCtrl = Crl
-                        CalIfBtn(BttonCtrl)
-                    ElseIf TypeOf Crl Is TextBox Then
-                        TxtBoxCtrl = Crl
-                        CalIfTxt(TxtBoxCtrl)
-                    ElseIf TypeOf Crl Is GroupBox Then
-                        For Each C In Crl.Controls
-                            If TypeOf C Is Button Then
-                                BttonCtrl = C
-                                CalIfBtn(BttonCtrl)
-                            ElseIf TypeOf C Is TextBox Then
-                                TxtBoxCtrl = C
-                                CalIfTxt(TxtBoxCtrl)
-                            End If
-                        Next
-                    ElseIf TypeOf Crl Is FlowLayoutPanel Then
-                        For Each C In Crl.Controls
-                            If TypeOf C Is Panel Then
-                                If TypeOf C Is Button Then
-                                    BttonCtrl = C
-                                    CalIfBtn(BttonCtrl)
-                                ElseIf TypeOf C Is Panel Then
-                                    For Each D In C.Controls
-                                        If TypeOf D Is Button Then
-                                            BttonCtrl = D
-                                            CalIfBtn(BttonCtrl)
-                                        End If
-                                    Next
-                                End If
-                            End If
-                        Next
-                    ElseIf TypeOf Crl Is Panel Then
-                        For Each C In Crl.Controls
-                            If TypeOf C Is Button Then
-                                BttonCtrl = C
-                                CalIfBtn(BttonCtrl)
-                            End If
-                        Next
-                    End If
-                    CmstripAsgn(Crl)
-                    'If Crl.Dock = DockStyle.None Then CmstripAsgn(Crl)
-                    'If Application.OpenForms().OfType(Of UConfigCtrls).Any Then
-                    '    If Crl.Dock = DockStyle.None And TypeOf Crl IsNot MenuStrip Then SndCntls(Crl)
-                    'End If
-                Next
-            ElseIf TypeOf CTTTRL Is Button Then
-                BttonCtrl = CTTTRL
-                CalIfBtn(BttonCtrl)
-            ElseIf TypeOf CTTTRL Is TextBox Then
-                TxtBoxCtrl = CTTTRL
-                CalIfTxt(TxtBoxCtrl)
-            ElseIf TypeOf CTTTRL Is Panel Then
-                For Each C In CTTTRL.Controls
-                    If TypeOf C Is Button Then
-                        BttonCtrl = C
-                        CalIfBtn(BttonCtrl)
-                    ElseIf TypeOf C Is TextBox Then
-                        TxtBoxCtrl = C
-                        CalIfTxt(TxtBoxCtrl)
-                    End If
-                Next
+        Dim CTRLLst As New List(Of Control)
+        GetAll(Frm).ToList.ForEach(Sub(c)
+                                       CTRLLst.Add(c)
+                                   End Sub)
+
+        For UU = 0 To CTRLLst.Count - 1
+            If TypeOf CTRLLst(UU) Is Button Then
+                CalIfBtn(CTRLLst(UU))
+            ElseIf TypeOf CTRLLst(UU) Is TextBox Then
+                CalIfTxt(CTRLLst(UU))
+            ElseIf TypeOf CTRLLst(UU) Is TextBox Then
+                CalIfTxt(CTRLLst(UU))
             End If
-            CmstripAsgn(CTTTRL)
+            CmstripAsgn(CTRLLst(UU))
         Next
-
-#Region "Menu Strip"
-        MenStrip = New MenuStrip
-        MenStrip.Font = New Font("Times New Roman", 14, FontStyle.Regular)
-        'Cmstrip1.RightToLeft = RightToLeft.Yes
-        MenStrip.Dock = DockStyle.None
-        MenStrip.AutoSize = False
-        MenStrip.Width = Frm.Size.Width / 2
-        MenStrip.Height = 30
-        MenStrip.BackColor = Color.AntiqueWhite
-        Frm.Controls.Add(MenStrip)
-        MenStrip.Visible = False
+#Region ""
+        'For Each CTTTRL In Frm.Controls
 
 
-        MenStripCmboFnt = New ToolStripComboBox
-        'MenStripForward = New ToolStripMenuItem
-        'MenStripBack = New ToolStripMenuItem
-        'MenStripFlowBreak = New ToolStripMenuItem
-        'MenStripMargin = New ToolStripMenuItem
-        'MenStripMrgnLft = New ToolStripTextBox
-        'MenStripMrgnTop = New ToolStripTextBox
-        'MenStripMrgnRght = New ToolStripTextBox
-        'MenStripMrgnBttm = New ToolStripTextBox
-        'MenStripFlwDirc = New ToolStripComboBox
-        'MenStripResetAll = New ToolStripMenuItem
-
-        MenStripCmboFnt.Text = 0
-
-        'MenStripForward.Text = "Forward"
-        'MenStripBack.Text = "Back"
-        'MenStripFlowBreak.Text = "Flow Break"
-        'MenStripMargin.Text = "Margin"
-        'MenStripResetAll.Text = "Reset All"
-
-
-        MenStrip.Items.Add(MenStripCmboFnt)
-        'MenStrip.Items.Add(MenStripForward)
-        'MenStrip.Items.Add(MenStripBack)
-        'MenStrip.Items.Add(MenStripFlowBreak)
-        'MenStrip.Items.Add(MenStripMargin)
-        'MenStrip.Items.Add(MenStripMrgnLft)
-        'MenStrip.Items.Add(MenStripMrgnTop)
-        'MenStrip.Items.Add(MenStripMrgnRght)
-        'MenStrip.Items.Add(MenStripMrgnBttm)
-        'MenStrip.Items.Add(MenStripFlwDirc)
-        'MenStrip.Items.Add(MenStripResetAll)
-
-        'For gg = 0 To MenStrip.Items.Count - 1
-        '    MenStrip.Items(gg).BackColor = Color.Aqua
-        '    MenStrip.Items(gg).DisplayStyle = ToolStripItemDisplayStyle.ImageAndText
+        '    If TypeOf CTTTRL Is TabControl Then
+        '        For Each TabPg In CTTTRL.Controls
+        '            For Each Crl In TabPg.Controls
+        '                If TypeOf Crl Is FlowLayoutPanel Then
+        '                    For Each C In Crl.Controls
+        '                        If TypeOf C Is Button Then
+        '                            BttonCtrl = C
+        '                            CalIfBtn(BttonCtrl)
+        '                        ElseIf TypeOf C Is TextBox Then
+        '                            TxtBoxCtrl = C
+        '                            CalIfTxt(TxtBoxCtrl)
+        '                        ElseIf TypeOf C Is GroupBox Then
+        '                            For Each CRLS In C.Controls
+        '                                If TypeOf CRLS Is Button Then
+        '                                    BttonCtrl = CRLS
+        '                                    CalIfBtn(BttonCtrl)
+        '                                ElseIf TypeOf CRLS Is TextBox Then
+        '                                    TxtBoxCtrl = CRLS
+        '                                    CalIfTxt(TxtBoxCtrl)
+        '                                End If
+        '                            Next
+        '                        ElseIf TypeOf C Is FlowLayoutPanel Then
+        '                            For Each CRLSA In C.Controls
+        '                                If TypeOf CRLSA Is FlowLayoutPanel Then
+        '                                    For Each H In CRLSA.Controls
+        '                                        If TypeOf H Is Panel Then
+        '                                            For Each V In H.Controls
+        '                                                If TypeOf V Is Button Then
+        '                                                    BttonCtrl = V
+        '                                                    CalIfBtn(BttonCtrl)
+        '                                                End If
+        '                                            Next
+        '                                        ElseIf TypeOf H Is FlowLayoutPanel Then
+        '                                            For Each V In H.Controls
+        '                                                If TypeOf V Is Panel Then
+        '                                                    For Each VF In V.Controls
+        '                                                        If TypeOf VF Is Button Then
+        '                                                            BttonCtrl = VF
+        '                                                            CalIfBtn(BttonCtrl)
+        '                                                        End If
+        '                                                    Next
+        '                                                End If
+        '                                            Next
+        '                                        End If
+        '                                    Next
+        '                                ElseIf TypeOf CRLSA Is Panel Then
+        '                                    For Each V In CRLSA.Controls
+        '                                        If TypeOf V Is Button Then
+        '                                            BttonCtrl = V
+        '                                            CalIfBtn(BttonCtrl)
+        '                                        End If
+        '                                    Next
+        '                                End If
+        '                            Next CRLSA
+        '                        End If
+        '                        CmstripAsgn(C)
+        '                    Next
+        '                ElseIf TypeOf Crl Is Button Then
+        '                    BttonCtrl = Crl
+        '                    CalIfBtn(BttonCtrl)
+        '                ElseIf TypeOf Crl Is TextBox Then
+        '                    TxtBoxCtrl = Crl
+        '                    CalIfTxt(TxtBoxCtrl)
+        '                End If
+        '                CmstripAsgn(Crl)
+        '            Next
+        '        Next
+        '    ElseIf TypeOf CTTTRL Is FlowLayoutPanel Then
+        '        For Each Crl In CTTTRL.Controls
+        '            If TypeOf Crl Is Button Then
+        '                BttonCtrl = Crl
+        '                CalIfBtn(BttonCtrl)
+        '            ElseIf TypeOf Crl Is TextBox Then
+        '                TxtBoxCtrl = Crl
+        '                CalIfTxt(TxtBoxCtrl)
+        '            ElseIf TypeOf Crl Is GroupBox Then
+        '                For Each C In Crl.Controls
+        '                    If TypeOf C Is Button Then
+        '                        BttonCtrl = C
+        '                        CalIfBtn(BttonCtrl)
+        '                    ElseIf TypeOf C Is TextBox Then
+        '                        TxtBoxCtrl = C
+        '                        CalIfTxt(TxtBoxCtrl)
+        '                    End If
+        '                Next
+        '            ElseIf TypeOf Crl Is FlowLayoutPanel Then
+        '                For Each C In Crl.Controls
+        '                    If TypeOf C Is Panel Then
+        '                        If TypeOf C Is Button Then
+        '                            BttonCtrl = C
+        '                            CalIfBtn(BttonCtrl)
+        '                        ElseIf TypeOf C Is Panel Then
+        '                            For Each D In C.Controls
+        '                                If TypeOf D Is Button Then
+        '                                    BttonCtrl = D
+        '                                    CalIfBtn(BttonCtrl)
+        '                                End If
+        '                            Next
+        '                        End If
+        '                    End If
+        '                Next
+        '            ElseIf TypeOf Crl Is Panel Then
+        '                For Each C In Crl.Controls
+        '                    If TypeOf C Is Button Then
+        '                        BttonCtrl = C
+        '                        CalIfBtn(BttonCtrl)
+        '                    End If
+        '                Next
+        '            End If
+        '            CmstripAsgn(Crl)
+        '        Next
+        '    ElseIf TypeOf CTTTRL Is Button Then
+        '        BttonCtrl = CTTTRL
+        '        CalIfBtn(BttonCtrl)
+        '    ElseIf TypeOf CTTTRL Is TextBox Then
+        '        TxtBoxCtrl = CTTTRL
+        '        CalIfTxt(TxtBoxCtrl)
+        '    ElseIf TypeOf CTTTRL Is Panel Then
+        '        For Each C In CTTTRL.Controls
+        '            If TypeOf C Is Button Then
+        '                BttonCtrl = C
+        '                CalIfBtn(BttonCtrl)
+        '            ElseIf TypeOf C Is TextBox Then
+        '                TxtBoxCtrl = C
+        '                CalIfTxt(TxtBoxCtrl)
+        '            End If
+        '        Next
+        '    End If
+        '    CmstripAsgn(CTTTRL)
         'Next
-        'MenStripFlwDirc.Items.Add("LeftToRight")
-        'MenStripFlwDirc.Items.Add("TopDown")
-        'MenStripFlwDirc.Items.Add("RightToLeft")
-        'MenStripFlwDirc.Items.Add("BottomUp")
-
-
-        'MenStripFlwDirc.RightToLeft = RightToLeft.No
-        'MenStripFlwDirc.Size = New Point(75, 20)
-        'MenStripMrgnLft.Size = New Point(30, 20)
-        'MenStripMrgnTop.Size = New Point(30, 20)
-        'MenStripMrgnRght.Size = New Point(30, 20)
-        'MenStripMrgnBttm.Size = New Point(30, 20)
-
-        MenStripCmboFnt.ComboBox.Height = 50
-        MenStripCmboFnt.Size = New Point(75, 20)
-        MenStripCmboFnt.ComboBox.DropDownStyle = ComboBoxStyle.DropDownList
-        MenStripCmboFnt.ComboBox.Text = HorizontalAlignment.Center
-        MenStripCmboFnt.ComboBox.RightToLeft = RightToLeft.Yes
-
-        For dd = 8 To 18
-            MenStripCmboFnt.ComboBox.Items.Add(dd)
-        Next
-
-        AddHandler MenStripCmboFnt.SelectedIndexChanged, AddressOf FontSize_Click
-        'AddHandler MenStripForward.Click, AddressOf MenStripForward_Click
-        'AddHandler MenStripBack.Click, AddressOf MenStripBack_Click
-        'AddHandler MenStripFlowBreak.Click, AddressOf MenStripFlowBreak_Click
-        'AddHandler MenStripMargin.Click, AddressOf MenStripMargin_Click
-        'AddHandler MenStripResetAll.Click, AddressOf MenStripResetAll_Click
-
-
-        'CmStripFix.Enabled = False
 #End Region
         WelcomeScreen.StatBrPnlAr.Text = ""
     End Sub
     Public Function CmstripAsgn(Cnrol As Control) As Control
-        '        Dim frmCollection = Application.OpenForms
-        '        If frmCollection.OfType(Of WelcomeScreen).Any And frmCollection.OfType(Of Login).Any Then
-        '            GoTo ChckCntlIfExit_
-        '        ElseIf frmCollection.OfType(Of UConfigCtrls).Any Or frmCollection.OfType(Of Login).Any Then
-        '            'Cnrol.Location = Cnrol.Location
-        '            Cnrol.Font = Cnrol.Font
-        '            Cnrol.Width = Cnrol.Width
-        '            Cnrol.Height = Cnrol.Height
-        '            Cnrol.ContextMenuStrip = DefCmStrip
-        '            AddHandler Cnrol.MouseEnter, AddressOf Ctrl_MouseEnter
-        '        Else
-        '            GoTo ChckCntlIfExit_
-        '        End If
-        '        Return Cnrol
-        '        Exit Function
-        'ChckCntlIfExit_:
-
-        '        If UsrCnrlTbl.Rows.Count > 0 Then
-        '            Drow = UsrCnrlTbl.Rows.Find(Cnrol.Name)
-        '            If Cnrol.Name = Drow.ItemArray(2) Then
-        '                GoTo Yes_
-        '            End If
-        '        Else
-        '            Dim Ctrls As New DataTable
-        '            If GetTbl("Select  '',[CtlFormName], [CtlControlName], [CtlControlType],[CtlX], [CtlY], [CtlFntSize],[CtlFntWidth], [CtlFntHeight],[CtlIndx],[CtlMargnLft],[CtlMargnTop],[CtlMargnRght],[CtlMargnBttm],[CtlFlowBreak], " & Usr.PUsrID & " from AControls where CtlFormName = '" & Form_.Name & "' order by CtlIndx", Ctrls, "0000&H") = Nothing Then
-        '                Dim SQLBulkCopy As SqlBulkCopy = New SqlBulkCopy(sqlCon)
-        '                SQLBulkCopy.DestinationTableName = "AUsrControls"
-        '                If sqlCon.State = ConnectionState.Closed Then
-        '                    sqlCon.Open()
-        '                End If
-        '                SQLBulkCopy.WriteToServer(Ctrls)
-        '                UsrCnrlTbl = Ctrls.Copy
-        '                primaryKey(0) = UsrCnrlTbl.Columns("CtlControlName")
-        '                UsrCnrlTbl.PrimaryKey = primaryKey
-        '                SQLBulkCopy.Close()
-        '                WelcomeScreen.StatBrPnlAr.Text = "جاري تحميل الأدوات للإستخدام الأول ... " ' & Ctrls.Rows(0).Item(3)
-        '                'GoTo Yes_
-        '                'If InsUpd("insert into AUsrControls ([UCtlFormName],[UCtlControlName],[UCtlControlType],[UCtlX],[UCtlY],[UCtlFntSize],[UCtlFntWidth],[UCtlFntHeight],[UCtlIndx],[UCtlMargnLft],[UCtlMargnTop],[UCtlMargnRght],[UCtlMargnBttm],[UCtlFlowBreak],[UCtlUsrId]) values('" & Ctrls.Rows(0).Item(1) & "','" & Ctrls.Rows(0).Item(2) & "','" & Ctrls.Rows(0).Item(3) & "'," & Ctrls.Rows(0).Item(4) & "," & Ctrls.Rows(0).Item(5) & "," & Ctrls.Rows(0).Item(6) & "," & Ctrls.Rows(0).Item(7) & "," & Ctrls.Rows(0).Item(8) & "," & Ctrls.Rows(0).Item(9) & "," & Ctrls.Rows(0).Item(10) & "," & Ctrls.Rows(0).Item(11) & "," & Ctrls.Rows(0).Item(12) & "," & Ctrls.Rows(0).Item(13) & ",'" & Ctrls.Rows(0).Item(14) & "'," & Usr.PUsrID & ")", "0000&H") = Nothing Then
-        '                'End If
-        '            Else
-        '                MsgErr("Connection has been lost" & vbNewLine & "Please try agian")
-        '            End If
-        '        End If
-        '        Exit Function
-        'Yes_:
-        '        Cnrol.Font = New Font(Cnrol.Font.FontFamily, Drow.ItemArray(6), Cnrol.Font.Style)
-        '        Cnrol.Width = Drow.ItemArray(7)
-        '        Cnrol.Height = Drow.ItemArray(8)
-        '        Dim rr As FlowLayoutPanel = Cnrol.Parent
-        '        rr.Controls.SetChildIndex(Cnrol, Drow.ItemArray(9))
-        '        Cnrol.Margin = New Padding(Drow.ItemArray(10), Drow.ItemArray(11), Drow.ItemArray(12), Drow.ItemArray(13))
-        '        rr.SetFlowBreak(Cnrol, Drow.ItemArray(14))
         If Cnrol.Name = "GridUpdt" Then
             If Cnrol.ContextMenuStrip IsNot Nothing Then
                 Cnrol.ContextMenuStrip.Font = New Font("Times New Roman", 12, FontStyle.Regular)
-                'CmStripCatch = New ToolStripMenuItem
-                'CmStripFix = New ToolStripMenuItem
-                'CmStripRest = New ToolStripMenuItem
-                'CmStripFrmt = New ToolStripMenuItem
-
-                'Cnrol.ContextMenuStrip.Items.Add(CmStripCatch)
-                'Cnrol.ContextMenuStrip.Items.Add(CmStripFix)
-                'Cnrol.ContextMenuStrip.Items.Add(CmStripRest)
-                'Cnrol.ContextMenuStrip.Items.Add(CmStripFrmt)
-
-                'CmStripCatch.Image = My.Resources.Catch1
-                'CmStripFix.Image = My.Resources.pin1
-                'CmStripRest.Image = My.Resources.Reset1
-                'CmStripFrmt.Image = My.Resources.Format1
-
-                'CmStripCatch.Text = "Catch Control"
-                'CmStripFix.Text = "Fix Control"
-                'CmStripRest.Text = "Restore Control"
-                'CmStripFrmt.Text = "Format Control"
-
-                'AddHandler CmStripCatch.Click, AddressOf CmStripCatch_Click
-                'AddHandler CmStripFix.Click, AddressOf CmStripFix_Click
-                'AddHandler CmStripRest.Click, AddressOf CmStripRest_Click
-                'AddHandler CmStripFrmt.Click, AddressOf CmStripFrmt_Click
             End If
         Else
             Cnrol.ContextMenuStrip = TikCmStrip
         End If
-
+        RemoveHandler Cnrol.MouseEnter, AddressOf Ctrl_MouseEnter
         AddHandler Cnrol.MouseEnter, AddressOf Ctrl_MouseEnter
         Return Cnrol
     End Function
@@ -1431,12 +1332,14 @@ End_:
     End Sub
     Public Sub CalIfBtn(Btn As Button)
         VCtheme.BtnCtrl(Btn)
+        RemoveHandler Btn.MouseEnter, (AddressOf Btn_MouseEnter)
+        RemoveHandler Btn.MouseLeave, (AddressOf Btn_MouseLeave)
         AddHandler Btn.MouseEnter, (AddressOf Btn_MouseEnter)
         AddHandler Btn.MouseLeave, (AddressOf Btn_MouseLeave)
     End Sub
     Public Sub CalIfTxt(TxtBox As TextBox)
+        RemoveHandler TxtBox.Click, (AddressOf TxtSlctOn_Click)
         AddHandler TxtBox.Click, (AddressOf TxtSlctOn_Click)
-        'AddHandler TxtBox.Enter, (AddressOf TxtSlctOn_Click)
     End Sub
     Public Sub Ctrl_MouseEnter(sender As Object, e As EventArgs)
         If Slctd = False Then
@@ -1447,21 +1350,24 @@ End_:
                 CmStripPast.Enabled = False
                 If CTTTRL.Name = "GridTicket" Then
                     CmStripPrvw.Enabled = True
+                    CmStripUpVew.Enabled = True
                 ElseIf CTTTRL.Name = "GridHeld" Then
                     CmStripPrvw.Enabled = False
+                    CmStripUpVew.Enabled = False
                 ElseIf CTTTRL.Name = "GridHeldUpdt" Then
                     CmStripPrvw.Enabled = False
+                    CmStripUpVew.Enabled = False
                 End If
             ElseIf TypeOf CTTTRL Is TextBox Or TypeOf CTTTRL Is MaskedTextBox Then
                 CmStripPrvw.Enabled = False
+                CmStripUpVew.Enabled = False
                 CmStripPast.Enabled = True
             Else
                 CmStripPrvw.Enabled = False
+                CmStripUpVew.Enabled = False
                 CmStripPast.Enabled = False
             End If
         End If
-        MenStrip.Visible = False
-
     End Sub
     Public Sub Btn_MouseEnter(sender As Object, e As EventArgs)
         Dim Botn As Button = sender
@@ -1471,10 +1377,6 @@ End_:
         Dim Botn As Control = sender
         BtnDecrease(Botn)
     End Sub
-    'Public Sub Frm_MouseMove(sender As Object, e As MouseEventArgs)
-    '    CTTTRL.Location = New Point(e.X - (CTTTRL.Size.Width / 2), e.Y + 1)
-    '    WelcomeScreen.StatBrPnlEn.Text = New Point(e.X, e.Y).ToString
-    'End Sub
     Private Sub CopySelectedToolStripMenuItem_Click_1(sender As Object, e As EventArgs)
         Dim sms = (sender.GetCurrentParent()).SourceControl
         If TypeOf sms Is DataGridView Then
@@ -1487,318 +1389,31 @@ End_:
         Dim sms = (sender.GetCurrentParent()).SourceControl
         sms.Text = Clipboard.GetText()
     End Sub
-    Private Sub PreviewToolStripMenuItem_Click(sender As Object, e As EventArgs)
-        'Dim hit As DataGridView.HitTestInfo = GridTicket.HitTest()
+    Private Sub PreviewTik_Click(sender As Object, e As EventArgs)
         Dim sms = sender.GetCurrentParent().SourceControl
         If sms.SelectedCells.Count > 0 Then
-            TikIDRep_ = sms.CurrentRow.Cells(0).Value
+            TikIDRep_ = sms.CurrentRow.Cells("TkSQL").Value
             TikFrmRep.ShowDialog()
         Else
             MsgInf("برجاء اختيار الشكوى المراد عرضها أولاً")
         End If
     End Sub
-    Public Sub CmStripCatch_Click(sender As Object, e As EventArgs)
-        'AddHandler BacCtrl.MouseMove, AddressOf Frm_MouseMove
-        BacCtrl.ContextMenuStrip = DefCmStrip
-        CmStripCatch.Enabled = False
-        CmStripFix.Enabled = True
-        CmStripCatchTik.Enabled = False
-        CmStripFixTik.Enabled = True
-        Slctd = True
-    End Sub
-    Public Sub CmStripFix_Click(sender As Object, e As EventArgs)
-        InsUpd("Update AUsrControls set UCtlX = " & CTTTRL.Location.X & ", UCtlY = " & CTTTRL.Location.Y & ", UCtlFntSize = " & CTTTRL.Font.Size &
-               " Where UCtlUsrId = " & Usr.PUsrID & " AND UCtlFormName = '" & Form_.Name & "' AND UCtlControlName = '" & CTTTRL.Name & "'", "0000&H")
-        'RemoveHandler BacCtrl.MouseMove, AddressOf Frm_MouseMove
-        WelcomeScreen.StatBrPnlEn.Text = ""
-        Slctd = False
-        CmStripCatch.Enabled = True
-        CmStripFix.Enabled = False
-        CmStripCatchTik.Enabled = True
-        CmStripFixTik.Enabled = False
-    End Sub
-    Public Sub CmStripRest_Click(sender As Object, e As EventArgs)
-        tempTable.Rows.Clear()
-        tempTable.Columns.Clear()
-        GetTbl("select * from AControls where CtlFormName = '" & Form_.Name & "' AND CtlControlName = '" & CTTTRL.Name & "'", tempTable, "0000&H")
-        CTTTRL.Location = New Point(tempTable.Rows(0).Item(4), tempTable.Rows(0).Item(5))
-        CTTTRL.Font = New Font(CTTTRL.Font.FontFamily, tempTable.Rows(0).Item(6), CTTTRL.Font.Style)
-        CTTTRL.Width = tempTable.Rows(0).Item(7)
-        CTTTRL.Height = tempTable.Rows(0).Item(8)
-        InsUpd("Update AUsrControls set UCtlX = " & CTTTRL.Location.X & ", UCtlY = " & CTTTRL.Location.Y & ", UCtlFntSize = " & CTTTRL.Font.Size & ", UCtlFntWidth = " & CTTTRL.Width & ", UCtlFntHeight = " & CTTTRL.Height &
-               " Where UCtlUsrId = " & Usr.PUsrID & " AND UCtlFormName = '" & Form_.Name & "' AND UCtlControlName = '" & CTTTRL.Name & "'", "0000&H")
-        'RemoveHandler BacCtrl.MouseMove, AddressOf Frm_MouseMove
-        WelcomeScreen.StatBrPnlEn.Text = ""
-        Slctd = False
-        CmStripCatch.Enabled = True
-        CmStripFix.Enabled = False
-        CmStripCatchTik.Enabled = True
-        CmStripFixTik.Enabled = False
-    End Sub
-    Public Sub FontSize_Click(sender As Object, e As EventArgs)
-        'Drow = UsrCnrlTbl.Rows.Find(CTTTRL.Name)
-        'If CTTTRL.Name = Drow.ItemArray(2) Then
-        CTTTRL.Font = New Font(CTTTRL.Font.FontFamily, CInt(MenStripCmboFnt.Text), CTTTRL.Font.Style)
-        '    Drow.ItemArray(6) = 15
-        'End If
-        Slctd = False
-        CmStripCatch.Enabled = True
-        CmStripFix.Enabled = False
-        'tempTable.Rows.Clear()
-        'tempTable.Columns.Clear()
-        'GetTbl("select * from AControls where CtlFormName = '" & Form_.Name & "' AND CtlControlName = '" & CTTTRL.Name & "'", tempTable, "0000&H")
-        'InsUpd("Update AUsrControls set UCtlFntSize = " & CTTTRL.Font.Size &
-        '       " Where UCtlUsrId = " & Usr.PUsrID & " AND UCtlFormName = '" & Form_.Name & "' AND UCtlControlName = '" & CTTTRL.Name & "'", "0000&H")
-        'RemoveHandler BacCtrl.MouseMove, AddressOf Frm_MouseMove
-        'WelcomeScreen.StatBrPnlEn.Text = ""
+    Private Sub PreviewUpdt_Click(sender As Object, e As EventArgs)
+        'Dim hit As DataGridView.HitTestInfo = GridTicket.HitTest()
+        Dim sms As DataGridView = sender.GetCurrentParent().SourceControl
+        Dim smss = sms.Parent
+        If sms.SelectedCells.Count > 0 Then
 
-        Dim PPoint As Point
-        PPoint = MenStrip.PointToScreen(New Point(MenStripCmboFnt.ComboBox.Location.X + MenStripCmboFnt.ComboBox.Width / 2, MenStripCmboFnt.ComboBox.Location.Y + MenStripCmboFnt.ComboBox.Height / 2))
-        Cursor.Position = PPoint
-    End Sub
-    Public Sub MenStripForward_Click(sender As Object, e As EventArgs)
-        Dim rr As FlowLayoutPanel = CTTTRL.Parent
-        Dim CurrIndex As Integer = rr.Controls.GetChildIndex(CTTTRL)
-        rr.Controls.SetChildIndex(CTTTRL, CurrIndex + 1)
-
-        'rr.Controls.Item(rr.Controls.GetChildIndex(CTTTRL) - 1)
-        If CurrIndex < rr.Controls.Count Then
-            If IsNothing(myGraphics) = False Then myGraphics.Dispose()
-            rr.Refresh()
-            myGraphics = rr.CreateGraphics
-            myGraphics.DrawRectangle(MyPen, CTTTRL.Location.X, CTTTRL.Location.Y, CTTTRL.Width, CTTTRL.Height)
-            'InsUpd("update AAAAA set AAAAA.indx = " & rr.Controls.GetChildIndex(CTTTRL) & " Where AAAAA.Name = '" & CTTTRL.Name & "'", "0000&H")
-            Dim ff As Control = rr.Controls.Item(rr.Controls.GetChildIndex(CTTTRL) - 1)
-            'InsUpd("update AAAAA set AAAAA.indx = " & rr.Controls.GetChildIndex(rr.Controls.Item(rr.Controls.GetChildIndex(CTTTRL) - 1)) & " Where AAAAA.Name = '" & rr.Controls.Item(rr.Controls.GetChildIndex(CTTTRL) - 1).Name & "'", "0000&H")
-        End If
-
-
-        'tempTable.Rows.Clear()
-        'tempTable.Columns.Clear()
-        'GetTbl("select * from AControls where CtlFormName = '" & Form_.Name & "' AND CtlControlName = '" & CTTTRL.Name & "'", tempTable, "0000&H")
-
-        'CTTTRL.Width = CTTTRL.Width + 1
-        'InsUpd("Update AUsrControls set UCtlFntWidth = " & CTTTRL.Width &
-        '           " Where UCtlUsrId = " & Usr.PUsrID & " AND UCtlFormName = '" & Form_.Name & "' AND UCtlControlName = '" & CTTTRL.Name & "'", "0000&H")
-        ''RemoveHandler BacCtrl.MouseMove, AddressOf Frm_MouseMove
-        'WelcomeScreen.StatBrPnlEn.Text = ""
-        Slctd = False
-        CmStripCatch.Enabled = True
-        CmStripFix.Enabled = False
-
-    End Sub
-    Public Sub MenStripBack_Click(sender As Object, e As EventArgs)
-        Dim rr As FlowLayoutPanel = CTTTRL.Parent
-        Dim CurrIndex As Integer = rr.Controls.GetChildIndex(CTTTRL)
-        If CurrIndex - 1 > 0 Then
-            rr.Controls.SetChildIndex(CTTTRL, CurrIndex - 1)
-            If IsNothing(myGraphics) = False Then myGraphics.Dispose()
-            rr.Refresh()
-            myGraphics = rr.CreateGraphics
-            myGraphics.DrawRectangle(MyPen, CTTTRL.Location.X, CTTTRL.Location.Y, CTTTRL.Width, CTTTRL.Height)
-            'InsUpd("update AAAAA set AAAAA.indx = " & FlowLayoutPanel1.Controls.GetChildIndex(FFW) & " Where AAAAA.Name = '" & FFW.Name & "'", "0000&H")
-            'InsUpd("update AAAAA set AAAAA.indx = " & FlowLayoutPanel1.Controls.GetChildIndex(FlowLayoutPanel1.Controls.Item(FlowLayoutPanel1.Controls.GetChildIndex(FFW) + 1)) & " Where AAAAA.Name = '" & FlowLayoutPanel1.Controls.Item(FlowLayoutPanel1.Controls.GetChildIndex(FFW) + 1).Name & "'", "0000&H")
-        End If
-
-        'tempTable.Rows.Clear()
-        'tempTable.Columns.Clear()
-        'GetTbl("select * from AControls where CtlFormName = '" & Form_.Name & "' AND CtlControlName = '" & CTTTRL.Name & "'", tempTable, "0000&H")
-        'CTTTRL.Width = CTTTRL.Width - 1
-        'InsUpd("Update AUsrControls set UCtlFntWidth = " & CTTTRL.Width &
-        '       " Where UCtlUsrId = " & Usr.PUsrID & " AND UCtlFormName = '" & Form_.Name & "' AND UCtlControlName = '" & CTTTRL.Name & "'", "0000&H")
-        ''RemoveHandler BacCtrl.MouseMove, AddressOf Frm_MouseMove
-        'WelcomeScreen.StatBrPnlEn.Text = ""
-        Slctd = False
-        CmStripCatch.Enabled = True
-        CmStripFix.Enabled = False
-    End Sub
-    Public Sub MenStripFlowBreak_Click(sender As Object, e As EventArgs)
-        Dim rr As FlowLayoutPanel = CTTTRL.Parent
-
-        If rr.GetFlowBreak(CTTTRL) = False Then
-            rr.SetFlowBreak(CTTTRL, True)
-            MenStripFlowBreak.Text = "Same Line"
-        Else
-            rr.SetFlowBreak(CTTTRL, False)
-            MenStripFlowBreak.Text = "New Line"
-        End If
-
-        'tempTable.Rows.Clear()
-        'tempTable.Columns.Clear()
-        'GetTbl("select * from AControls where CtlFormName = '" & Form_.Name & "' AND CtlControlName = '" & CTTTRL.Name & "'", tempTable, "0000&H")
-        'CTTTRL.Height = CTTTRL.Height + 1
-        'InsUpd("Update AUsrControls set UCtlFntHeight = " & CTTTRL.Height &
-        '       " Where UCtlUsrId = " & Usr.PUsrID & " AND UCtlFormName = '" & Form_.Name & "' AND UCtlControlName = '" & CTTTRL.Name & "'", "0000&H")
-        ''RemoveHandler BacCtrl.MouseMove, AddressOf Frm_MouseMove
-        'WelcomeScreen.StatBrPnlEn.Text = ""
-        Slctd = False
-        CmStripCatch.Enabled = True
-        CmStripFix.Enabled = False
-    End Sub
-    Public Sub MenStripMargin_Click(sender As Object, e As EventArgs)
-        Dim rr As FlowLayoutPanel = CTTTRL.Parent
-        CTTTRL.Margin = New Padding(MenStripMrgnLft.Text, MenStripMrgnTop.Text, MenStripMrgnRght.Text, MenStripMrgnBttm.Text)
-        If IsNothing(myGraphics) = False Then myGraphics.Dispose()
-        rr.Refresh()
-        myGraphics = rr.CreateGraphics
-        myGraphics.DrawRectangle(MyPen, CTTTRL.Location.X, CTTTRL.Location.Y, CTTTRL.Width, CTTTRL.Height)
-        'tempTable.Rows.Clear()
-        'tempTable.Columns.Clear()
-        'GetTbl("select * from AControls where CtlFormName = '" & Form_.Name & "' AND CtlControlName = '" & CTTTRL.Name & "'", tempTable, "0000&H")
-        'CTTTRL.Height = CTTTRL.Height - 1
-        'InsUpd("Update AUsrControls set UCtlFntHeight = " & CTTTRL.Height &
-        '       " Where UCtlUsrId = " & Usr.PUsrID & " AND UCtlFormName = '" & Form_.Name & "' AND UCtlControlName = '" & CTTTRL.Name & "'", "0000&H")
-        ''RemoveHandler BacCtrl.MouseMove, AddressOf Frm_MouseMove
-        'WelcomeScreen.StatBrPnlEn.Text = ""
-        Slctd = False
-        CmStripCatch.Enabled = True
-        CmStripFix.Enabled = False
-    End Sub
-    Public Sub CmStripFrmt_Click(sender As Object, e As EventArgs)
-        MenStrip.Visible = True
-        MenStrip.BringToFront()
-        MenStrip.Dock = DockStyle.Top
-
-        'Dim rr As FlowLayoutPanel = CTTTRL.Parent
-        'myGraphics = rr.CreateGraphics
-        'MyPen.DashStyle = Drawing.Drawing2D.DashStyle.Solid
-        'myGraphics.DrawRectangle(MyPen, CTTTRL.Location.X, CTTTRL.Location.Y, CTTTRL.Width, CTTTRL.Height)
-
-        'If rr.GetFlowBreak(CTTTRL) = False Then
-        '    MenStripFlowBreak.Text = "New Line"
-        'Else
-        '    MenStripFlowBreak.Text = "Same Line"
-        'End If
-
-
-        'MenStripMrgnLft.Text = CTTTRL.Margin.Left
-        'MenStripMrgnTop.Text = CTTTRL.Margin.Top
-        'MenStripMrgnRght.Text = CTTTRL.Margin.Right
-        'MenStripMrgnBttm.Text = CTTTRL.Margin.Bottom
-
-        'Dim X_ As Integer = 0
-        'Dim Y_ As Integer = 0
-
-        'If TypeOf CTTTRL.Parent Is Form Or TypeOf CTTTRL.Parent Is TabPage Then
-        '    If CTTTRL.Location.X + MenStrip.Width > Form_.Width Then
-        '        X_ = CTTTRL.Location.X - MenStrip.Width
-        '    Else
-        '        X_ = CTTTRL.Location.X
-        '    End If
-        'ElseIf TypeOf CTTTRL.Parent Is GroupBox Then
-        '    If CTTTRL.Parent.Location.X + MenStrip.Width > Form_.Width Then
-        '        X_ = CTTTRL.Parent.Location.X - MenStrip.Width
-        '    Else
-        '        X_ = CTTTRL.Parent.Location.X
-        '    End If
-        'End If
-
-        'If TypeOf CTTTRL.Parent Is Form Or TypeOf CTTTRL.Parent Is TabPage Then
-        '    If CTTTRL.Location.Y + MenStrip.Height + CTTTRL.Height + 35 > Form_.Height Then
-        '        Y_ = (CTTTRL.Location.Y) + (CTTTRL.Location.Y + MenStrip.Height + CTTTRL.Height + 35 - Form_.Height) - MenStrip.Height
-        '    Else
-        '        Y_ = CTTTRL.Location.Y + CTTTRL.Height
-        '    End If
-        'ElseIf TypeOf CTTTRL.Parent Is GroupBox Then
-        '    If CTTTRL.Parent.Location.Y + MenStrip.Height > Form_.Height Then
-        '        Y_ = CTTTRL.Parent.Location.Y - CTTTRL.Height - MenStrip.Height
-        '    Else
-        '        Y_ = CTTTRL.Parent.Location.Y
-        '    End If
-        'End If
-
-
-        'MenStrip.Location = New Point(X_, Y_)
-
-        If Form_.RightToLeft = True Then
-            MenStrip.RightToLeft = RightToLeft.No
-        Else
-            MenStrip.RightToLeft = RightToLeft.Yes
-        End If
-
-        MenStripCmboFnt.Text = CTTTRL.Font.Size
-        Dim PPoint As Point
-        PPoint = MenStrip.PointToScreen(New Point(MenStripCmboFnt.ComboBox.Location.X + MenStripCmboFnt.ComboBox.Width / 2, MenStripCmboFnt.ComboBox.Location.Y + MenStripCmboFnt.ComboBox.Height / 2))
-        Cursor.Position = PPoint
-
-        'If TypeOf CTTTRL.Parent Is Form Or TypeOf CTTTRL.Parent Is TabPage Then
-        '    If CTTTRL.Location.X + Cmstrip1.Width > Form_.Width Then
-        '        Cmstrip1.Location = New Point(X_, CTTTRL.Location.Y + CTTTRL.Height)
-        '    Else
-        '        Cmstrip1.Location = New Point(CTTTRL.Location.X, CTTTRL.Location.Y + CTTTRL.Height)
-        '    End If
-
-        'ElseIf TypeOf CTTTRL.Parent Is GroupBox Then
-        '    If CTTTRL.Parent.Location.X + Cmstrip1.Width > Form_.Width Then
-        '        Cmstrip1.Location = New Point(CTTTRL.Parent.Location.X - Cmstrip1.Width, CTTTRL.Parent.Location.Y + CTTTRL.Height)
-        '    Else
-        '        Cmstrip1.Location = New Point(CTTTRL.Parent.Location.X, CTTTRL.Parent.Location.Y + CTTTRL.Height)
-        '    End If
-        'End If
-
-
-
-    End Sub
-    Public Sub MenStripResetAll_Click(sender As Object, e As EventArgs)
-        tempTable.Rows.Clear()
-        tempTable.Columns.Clear()
-        GetTbl("Select * from AControls where CtlFormName = '" & Form_.Name & "'", tempTable, "0000&H")
-
-        Dim EstCtrl As New Control
-
-        For Each CTTTRL In Form_.Controls
-            If TypeOf CTTTRL Is TabControl Then
-                For Each TabPg1 In CTTTRL.Controls
-                    For Each Crl As Control In TabPg1.Controls
-                        For cnt = 0 To tempTable.Rows.Count - 1
-                            If Crl.Name = tempTable.Rows(cnt).Item(2) Then
-                                Crl.Location = New Point(tempTable.Rows(cnt).Item(4), tempTable.Rows(cnt).Item(5))
-                                Crl.Font = New Font(Crl.Font.FontFamily, tempTable.Rows(cnt).Item(6), Crl.Font.Style)
-                                Crl.Width = tempTable.Rows(cnt).Item(7)
-                                Crl.Height = tempTable.Rows(cnt).Item(8)
-                                UpdtCtrl(Crl)
-                            End If
-                        Next cnt
-                        If TypeOf TabPg1 Is GroupBox Then
-                            For Each c As Control In TabPg1
-                                For cnt = 0 To tempTable.Rows.Count - 1
-                                    If c.Name = tempTable.Rows(cnt).Item(2) Then
-                                        c.Location = New Point(tempTable.Rows(cnt).Item(4), tempTable.Rows(cnt).Item(5))
-                                        c.Font = New Font(c.Font.FontFamily, tempTable.Rows(cnt).Item(6), c.Font.Style)
-                                        c.Width = tempTable.Rows(cnt).Item(7)
-                                        c.Height = tempTable.Rows(cnt).Item(8)
-                                        UpdtCtrl(c)
-                                    End If
-                                Next cnt
-                            Next
-                        End If
-                    Next
-                Next
-            ElseIf TypeOf CTTTRL Is GroupBox Then
-                For Each c As Control In CTTTRL.Controls
-                    For cnt = 0 To tempTable.Rows.Count - 1
-                        If c.Name = tempTable.Rows(cnt).Item(2) Then
-                            c.Location = New Point(tempTable.Rows(cnt).Item(4), tempTable.Rows(cnt).Item(5))
-                            c.Font = New Font(c.Font.FontFamily, tempTable.Rows(cnt).Item(6), c.Font.Style)
-                            c.Width = tempTable.Rows(cnt).Item(7)
-                            c.Height = tempTable.Rows(cnt).Item(8)
-                            UpdtCtrl(c)
-                        End If
-                    Next
-                Next
+            If TikGVDblClck(sms) = Nothing Then
+                TikUpdate.Text = "تحديثات شكوى رقم " & StruGrdTk.Sql
+                TikUpdate.ShowDialog()
+            Else
+                MsgErr(My.Resources.ConnErr & vbCrLf & My.Resources.TryAgain & vbCrLf & Errmsg)
             End If
-            For cnt = 0 To tempTable.Rows.Count - 1
-                If CTTTRL.Name = tempTable.Rows(cnt).Item(2) Then
-                    CTTTRL.Location = New Point(tempTable.Rows(cnt).Item(4), tempTable.Rows(cnt).Item(5))
-                    CTTTRL.Font = New Font(CTTTRL.Font.FontFamily, tempTable.Rows(cnt).Item(6), CTTTRL.Font.Style)
-                    CTTTRL.Width = tempTable.Rows(cnt).Item(7)
-                    CTTTRL.Height = tempTable.Rows(cnt).Item(8)
-                    UpdtCtrl(CTTTRL)
-                End If
-            Next cnt
 
-        Next
-        MenStrip.Visible = False
+        Else
+            MsgInf("برجاء اختيار الشكوى المراد عرضها أولاً")
+        End If
     End Sub
     Private Sub UpdtCtrl(UpdtCtrl As Control)
         InsUpd("Update AUsrControls set UCtlX = " & UpdtCtrl.Location.X & ", UCtlY = " & UpdtCtrl.Location.Y & ", UCtlFntSize = " & UpdtCtrl.Font.Size & ", UCtlFntWidth = " & UpdtCtrl.Width & ", UCtlFntHeight = " & UpdtCtrl.Height &
@@ -1816,6 +1431,7 @@ End_:
     Public Sub GettAttchUpdtesFils()
         LodngFrm.LblMsg.Text += vbCrLf & "جاري تحميل الصورة المرفقات .................."
         WelcomeScreen.StatBrPnlAr.Text = "جاري تحميل قائمة المرفقات .................."
+        LodngFrm.LblMsg.Refresh()
         Dim lol As String
         Dim arr() As String
         FTPTable.Rows.Clear()
@@ -2124,6 +1740,8 @@ End_:
     Public Function SelctSerchTxt(richtxtbx As RichTextBox, Strng As String, Optional bL As Boolean = True) As String
         Dim HH As String = Nothing
         Try
+            RemoveHandler richtxtbx.FindForm.Activated, AddressOf Frm_Activated
+            AddHandler richtxtbx.FindForm.Activated, AddressOf Frm_Activated
             'richtxtbx = New RichTextBox
             Dim starttxt As Integer = 0
             Dim endtxt As Integer
@@ -2146,6 +1764,27 @@ End_:
         Catch ex As Exception
             HH = "X"
             MsgBox(ex.Message)
+        End Try
+        Return HH
+    End Function
+    Public Function ClorTxt(richtxtbx As RichTextBox, Strng As String, Clr As Color) As String
+        Dim HH As String = Nothing
+        Try
+            'richtxtbx = New RichTextBox
+            Dim starttxt As Integer = 0
+            Dim endtxt As Integer
+            endtxt = richtxtbx.Text.LastIndexOf(Strng)
+            'richtxtbx.SelectAll()
+            'richtxtbx.SelectionBackColor = Color.White
+            While starttxt < endtxt
+                If richtxtbx.Find(Strng, starttxt, richtxtbx.TextLength, RichTextBoxFinds.MatchCase) > 0 Then
+                    richtxtbx.SelectionColor = Clr
+                    'richtxtbx.SelectionFont = New Font("Times New Roman", 14, FontStyle.Bold)
+                End If
+                starttxt += 1
+            End While
+        Catch ex As Exception
+            HH = "X"
         End Try
         Return HH
     End Function

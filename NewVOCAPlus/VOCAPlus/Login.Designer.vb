@@ -32,7 +32,6 @@ Partial Class Login
         Me.ExitBtn = New System.Windows.Forms.Button()
         Me.LblUsrPw = New System.Windows.Forms.Label()
         Me.LblUsrNm = New System.Windows.Forms.Label()
-        Me.MskLbl = New System.Windows.Forms.Label()
         Me.LblUsrIP = New System.Windows.Forms.Label()
         Me.PictureBox2 = New System.Windows.Forms.PictureBox()
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
@@ -155,26 +154,13 @@ Partial Class Login
         Me.LblUsrNm.Text = "User Name:"
         Me.LblUsrNm.TextAlign = System.Drawing.ContentAlignment.MiddleRight
         '
-        'MskLbl
-        '
-        Me.MskLbl.BackColor = System.Drawing.Color.Transparent
-        Me.MskLbl.Font = New System.Drawing.Font("Times New Roman", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.MskLbl.ForeColor = System.Drawing.SystemColors.AppWorkspace
-        Me.MskLbl.Location = New System.Drawing.Point(164, 116)
-        Me.MskLbl.Name = "MskLbl"
-        Me.MskLbl.Size = New System.Drawing.Size(224, 19)
-        Me.MskLbl.TabIndex = 67
-        Me.MskLbl.Text = "User Name:"
-        Me.MskLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.ToolTip1.SetToolTip(Me.MskLbl, "اسم المستخدم")
-        '
         'LblUsrIP
         '
         Me.LblUsrIP.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.LblUsrIP.BackColor = System.Drawing.Color.Transparent
         Me.LblUsrIP.Font = New System.Drawing.Font("Times New Roman", 9.0!)
         Me.LblUsrIP.ForeColor = System.Drawing.Color.Red
-        Me.LblUsrIP.Location = New System.Drawing.Point(345, 261)
+        Me.LblUsrIP.Location = New System.Drawing.Point(345, 240)
         Me.LblUsrIP.Name = "LblUsrIP"
         Me.LblUsrIP.Size = New System.Drawing.Size(235, 20)
         Me.LblUsrIP.TabIndex = 68
@@ -199,7 +185,7 @@ Partial Class Login
         Me.PubVerLbl.BackColor = System.Drawing.Color.Transparent
         Me.PubVerLbl.Font = New System.Drawing.Font("Times New Roman", 9.0!)
         Me.PubVerLbl.ForeColor = System.Drawing.Color.Red
-        Me.PubVerLbl.Location = New System.Drawing.Point(348, 278)
+        Me.PubVerLbl.Location = New System.Drawing.Point(348, 257)
         Me.PubVerLbl.Name = "PubVerLbl"
         Me.PubVerLbl.Size = New System.Drawing.Size(232, 24)
         Me.PubVerLbl.TabIndex = 74
@@ -256,6 +242,7 @@ Partial Class Login
         Me.Cmbo.Name = "Cmbo"
         Me.Cmbo.Size = New System.Drawing.Size(121, 21)
         Me.Cmbo.TabIndex = 77
+        Me.Cmbo.Visible = False
         '
         'Panel1
         '
@@ -326,7 +313,6 @@ Partial Class Login
         Me.Controls.Add(Me.BtnShow)
         Me.Controls.Add(Me.LblUsrPw)
         Me.Controls.Add(Me.LblUsrNm)
-        Me.Controls.Add(Me.MskLbl)
         Me.Controls.Add(Me.TxtUsrNm)
         Me.Controls.Add(Me.LblLogin)
         Me.DoubleBuffered = True
@@ -353,7 +339,6 @@ Partial Class Login
     Friend WithEvents ExitBtn As Button
     Friend WithEvents LblUsrPw As Label
     Friend WithEvents LblUsrNm As Label
-    Friend WithEvents MskLbl As Label
     Friend WithEvents LblUsrIP As Label
     Friend WithEvents PictureBox2 As PictureBox
     Friend WithEvents ToolTip1 As ToolTip

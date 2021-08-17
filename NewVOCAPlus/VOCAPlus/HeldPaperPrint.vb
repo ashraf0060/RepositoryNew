@@ -15,7 +15,6 @@ Public Class HeldPaperPrint
         End Get
     End Property
     Private Sub HeldPaperPrint_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        BtnSub(Me)
         BtnOpen.Text = "الكل"
         Filgrid()
         BtnOpn.Enabled = False

@@ -9,7 +9,6 @@
         End Get
     End Property
     Private Sub ReopnComp_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        BtnSub(Me)
         MyTeam(Usr.PUsrCat, Usr.PUsrID, "TkEmpNm", True)
         BtnGet.Tag = "تحميل"
         BtnGet.Enabled = True

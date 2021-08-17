@@ -24,92 +24,10 @@ Public Class WelcomeScreen
     Dim Grid2 As New DataGridView
     'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
     Private Sub WelcomeScreen_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        TimerOp.Start()
-        LblSrvrNm.Text = ServerNm
-        BtnSub(Me)
-        Me.Size = New Point(screenWidth, screenHeight)
-        If System.Text.Encoding.Default.HeaderName <> "windows-1256" Then
-            GroupBox1.Visible = False
-            GrpCounters.Visible = False
-            Me.BackgroundImage = My.Resources.Language_for_Non_Unicode_Programs
-        Else
-            LblLanguage.Visible = False
-            FlowLayoutPanel1.Visible = False
-            If ServerNm = "Egypt Post Server" Then
-                Me.BackgroundImage = My.Resources.VocaWtr
-                Me.BackgroundImageLayout = ImageLayout.Stretch
-                Me.BackColor = Color.FromArgb(192, 255, 192)
-            ElseIf ServerNm = "My Labtop" Then
-                Me.BackgroundImage = My.Resources.Empty
-                Me.BackColor = Color.White
-            ElseIf ServerNm = "Test Database" Then
-                Me.BackgroundImage = My.Resources.Demo
-                Me.BackgroundImageLayout = ImageLayout.Tile
-                Me.BackColor = Color.White
-            End If
-
-            DbStat.BackgroundImage = My.Resources.DBOn
-            DbStat.Tag = "تم تحميل قواعد البيانات الأساسية بنجـــاح"
-            'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-
-            Dim Signout As New ToolStripMenuItem("Sign Out")  'YYYYYYYYYYY
-            Dim Exit_ As New ToolStripMenuItem("Exit")  'YYYYYYYYYYY
-            CntxtMnuStrp.Items.Add(Signout)  'YYYYYYYYYYY
-            CntxtMnuStrp.Items.Add(Exit_)  'YYYYYYYYYYY
-            AddHandler Signout.Click, AddressOf SnOutBt_Click  'YYYYYYYYYYY
-            AddHandler Exit_.Click, AddressOf ExtBt_Click  'YYYYYYYYYYY
-
-            LblLstSeen.Text = "Last Seen : " & Nw 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-            StatBrPnlEn.Text = "  Online  "
-            StatBrPnlEn.Icon = My.Resources.WSOn032
 
 
 
-            LblClrSys.BackColor = My.Settings.ClrSys
-            LblClrUsr.BackColor = My.Settings.ClrUsr
-            LblClrSamCat.BackColor = My.Settings.ClrSamCat
-            LblClrNotUsr.BackColor = My.Settings.ClrNotUsr
-            LblClrOperation.BackColor = My.Settings.ClrOperation
-            Dim ConterWidt As Integer = 0
-            If Usr.PUsrUCatLvl >= 3 And Usr.PUsrUCatLvl <= 5 Then
-                GrpCounters.Text = "ملخص أرقامي حتى : " & Now
-                GrpCounters.Visible = True
-                LblClsN.Text = Usr.PUsrClsN
-                LblFlN.Text = Usr.PUsrFlN
-                LblClsYDy.Text = Usr.PUsrClsYDy
-                LblEvDy.Text = Usr.PUsrEvDy
-                LblUnRead.Text = Usr.PUsrUnRead
-                LblReadYDy.Text = Usr.PUsrReadYDy
-                LblReOpY.Text = Usr.PUsrReOpY
-                LblRecivDy.Text = Usr.PUsrRecvDy
-                LblClsUpdted.Text = Usr.PUsrClsUpdtd
-                LblFolwDy.Text = Usr.PUsrFolwDay
-                ConterWidt = GrpCounters.Width + GrpCounters.Margin.Left + GrpCounters.Margin.Right
-            Else
-                GrpCounters.Visible = False
-                ConterWidt = 0
-            End If
-
-            'FlowLayoutPanel1.Height = screenHeight - 150
-            'FlowLayoutPanel1.Width = screenWidth - 20
-            DbStat.Margin = New Padding(DbStat.Margin.Left, DbStat.Margin.Top, FlowLayoutPanel1.ClientRectangle.Width - (DbStat.Width + DbStat.Margin.Left), DbStat.Margin.Bottom)
-                       PictureBox1.Margin = New Padding(PictureBox1.Margin.Left, PictureBox1.Margin.Top, FlowLayoutPanel1.ClientRectangle.Width - (GroupBox1.Width + GroupBox1.Margin.Right + GroupBox1.Margin.Left + ConterWidt + PictureBox1.Width + PictureBox1.Margin.Left), PictureBox1.Margin.Bottom)
-                       LblUsrRNm.Margin = New Padding(LblUsrRNm.Margin.Left, LblUsrRNm.Margin.Top, FlowLayoutPanel1.ClientRectangle.Width - (LblUsrRNm.Width + LblUsrRNm.Margin.Left), LblUsrRNm.Margin.Bottom)
-                       LblSrvrNm.Margin = New Padding(LblSrvrNm.Margin.Left, LblSrvrNm.Margin.Top, FlowLayoutPanel1.ClientRectangle.Width - (LblSrvrNm.Width + LblUsrRNm.Margin.Left), LblSrvrNm.Margin.Bottom)
-                       LblLstSeen.Margin = New Padding(LblLstSeen.Margin.Left, LblLstSeen.Margin.Top, FlowLayoutPanel1.ClientRectangle.Width - (LblLstSeen.Width + LblUsrRNm.Margin.Left), LblLstSeen.Margin.Bottom)
-
-            FlowLayoutPanel1.Visible = True
-
-
-            PubVerLbl.Text = "IP: " & OsIP()
-            If Usr.PUsrGndr = "Male" Then
-                LblUsrRNm.Text = "Welcome Back Mr. " & Usr.PUsrRlNm
-            Else
-                LblUsrRNm.Text = "Welcome Back Miss/Mrs. " & Usr.PUsrRlNm
-            End If
-
-            NonEditableLbl(LblUsrRNm)
-            Me.Text = "VOCA Plus - Welcome " & Usr.PUsrRlNm
+        PubVerLbl.Text = "IP: " & OsIP()
             'AssVerLbl.Text = "Assembly Ver. : " & My.Application.Info.Version.ToString
             If Deployment.Application.ApplicationDeployment.IsNetworkDeployed Then
                 LblUsrIP.Text = "Ver. : " + Deployment.Application.ApplicationDeployment.CurrentDeployment.CurrentVersion.ToString(4)
@@ -117,13 +35,10 @@ Public Class WelcomeScreen
                 LblUsrIP.Text = "Publish Ver. : This isn't a Publish version"
             End If
 
-            TimerTikCoun.Start()
-            TimrFlsh.Start()
-            'TimerColctLog.Start()
 
             GC.Collect()
-            StartServer()
-        End If
+        'StartServer()
+
     End Sub
 
     'Exit Button close Welcome Screen And Update Active Status in Int_User Table
@@ -138,6 +53,9 @@ Public Class WelcomeScreen
         End Get
     End Property
     Private Sub TimerTikCoun_Tick(sender As Object, e As EventArgs) Handles TimerTikCoun.Tick
+        ThreadPool.QueueUserWorkItem(AddressOf TikCntrSub)
+    End Sub
+    Private Sub TikCntrSub()
         'Ckeck User Tickets Count And Update It in Int_User Table If Different
         Nw = ServrTime()
         TicTable.Rows.Clear()
@@ -155,12 +73,13 @@ Public Class WelcomeScreen
                         CntxtMnuStrp.Enabled = False
                         CntxtMnuStrp.Enabled = False
                         Login.ShowDialog()
+                        TimerTikCoun.Stop()
                         CntxtMnuStrp.Enabled = True
                         CntxtMnuStrp.Enabled = True
                     End If
                 End If
-                If Math.Abs(DateTime.Parse(Nw).Subtract(DateTime.Parse(TicTable.Rows(0).Item("UsrLastSeen"))).TotalMinutes) > 30 Then
-                End If
+                'If Math.Abs(DateTime.Parse(Nw).Subtract(DateTime.Parse(TicTable.Rows(0).Item("UsrLastSeen"))).TotalMinutes) > 30 Then
+                'End If
 
 #Region "Send Log File If UsrLogSnd is True"
                 If TicTable.Rows(0).Item("UsrLogSnd") = True Then
@@ -266,6 +185,7 @@ Public Class WelcomeScreen
             Opacity += 0.06
         Else
             Login.TimerClose.Stop()
+            TimerCon.Start()
             Me.TimerOp.Stop()
         End If
     End Sub
@@ -295,23 +215,26 @@ Public Class WelcomeScreen
         PublicCode.InsUpd("UPDATE Int_user SET UsrActive = 0" & " WHERE (UsrId = " & Usr.PUsrID & ");", "1006&H")  'Update User Active = false
     End Sub
     Private Sub TimerCon_Tick(sender As Object, e As EventArgs) Handles TimerCon.Tick
-        Dim ConnOff As New Thread(AddressOf Conoff)
-        ConnOff.IsBackground = True
-        If ConnOff.IsAlive = False Then
-            ConnOff.Start()
-        End If
+        ThreadPool.QueueUserWorkItem(AddressOf Conoff)
     End Sub
-
     Private Sub Conoff()
         Try
             If sqlCon.State = ConnectionState.Closed Then
                 sqlCon.Open()
+                StatusBar1.Invoke(Sub() StatBrPnlEn.Text = "Online")
+                StatusBar1.Invoke(Sub() StatBrPnlEn.Icon = My.Resources.WSOn032)
             End If
-            StatBrPnlEn.Text = ""
-            StatusBar1.Invoke(Sub() StatBrPnlEn.Icon = My.Resources.WSOn032)
+
             TimerCon.Stop()
+            sqlCon.Close()
+            SqlConnection.ClearPool(sqlCon)
         Catch ex As Exception
-            StatusBar1.Invoke(Sub() StatBrPnlEn.Icon = My.Resources.WSOff032)
+            Dim frmCollection = Application.OpenForms
+            If frmCollection.OfType(Of WelcomeScreen).Any Then
+                StatusBar1.Invoke(Sub() StatBrPnlEn.Icon = My.Resources.WSOff032)
+                StatusBar1.Invoke(Sub() StatBrPnlEn.Text = "Offline")
+            End If
+
         End Try
     End Sub
     'Declare Function SetProcessWorkingSetSize Lib "kernel32.dll" (ByVal process As IntPtr, ByVal minimumWorkingSetSize As Integer, ByVal maximumWorkingSetSize As Integer) As Integer
@@ -515,5 +438,84 @@ Public Class WelcomeScreen
 
     Private Sub WelcomeScreen_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
         Me.Dispose()
+    End Sub
+
+    Private Sub WelcomeScreen_Activated(sender As Object, e As EventArgs) Handles MyBase.Activated
+        FrmAllSub(Me)
+        TimerOp.Start()
+        LblSrvrNm.Text = ServerNm
+        Me.Size = New Point(screenWidth, screenHeight)
+        If System.Text.Encoding.Default.HeaderName <> "windows-1256" Then
+            GroupBox1.Visible = False
+            GrpCounters.Visible = False
+            Me.BackgroundImage = My.Resources.Language_for_Non_Unicode_Programs
+        Else
+            LblLanguage.Visible = False
+            FlowLayoutPanel1.Visible = False
+            If ServerNm = "Egypt Post Server" Then
+                Me.BackgroundImage = My.Resources.VocaWtr
+                Me.BackgroundImageLayout = ImageLayout.Stretch
+                Me.BackColor = Color.FromArgb(192, 255, 192)
+            ElseIf ServerNm = "My Labtop" Then
+                Me.BackgroundImage = My.Resources.Empty
+                Me.BackColor = Color.White
+            ElseIf ServerNm = "Test Database" Then
+                Me.BackgroundImage = My.Resources.Demo
+                Me.BackgroundImageLayout = ImageLayout.Tile
+                Me.BackColor = Color.White
+            End If
+
+            DbStat.BackgroundImage = My.Resources.DBOn
+            DbStat.Tag = "تم تحميل قواعد البيانات الأساسية بنجـــاح"
+            'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+            Dim Signout As New ToolStripMenuItem("Sign Out")  'YYYYYYYYYYY
+            Dim Exit_ As New ToolStripMenuItem("Exit")  'YYYYYYYYYYY
+            CntxtMnuStrp.Items.Add(Signout)  'YYYYYYYYYYY
+            CntxtMnuStrp.Items.Add(Exit_)  'YYYYYYYYYYY
+
+            RemoveHandler Signout.Click, AddressOf SnOutBt_Click  'YYYYYYYYYYY
+            RemoveHandler Exit_.Click, AddressOf ExtBt_Click  'YYYYYYYYYYY
+
+            AddHandler Signout.Click, AddressOf SnOutBt_Click  'YYYYYYYYYYY
+            AddHandler Exit_.Click, AddressOf ExtBt_Click  'YYYYYYYYYYY
+
+            LblLstSeen.Text = "Last Seen : " & Nw 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+            StatBrPnlEn.Text = "  Online  "
+            StatBrPnlEn.Icon = My.Resources.WSOn032
+
+            LblClrSys.BackColor = My.Settings.ClrSys
+            LblClrUsr.BackColor = My.Settings.ClrUsr
+            LblClrSamCat.BackColor = My.Settings.ClrSamCat
+            LblClrNotUsr.BackColor = My.Settings.ClrNotUsr
+            LblClrOperation.BackColor = My.Settings.ClrOperation
+            Dim ConterWidt As Integer = 0
+            If Usr.PUsrUCatLvl >= 3 And Usr.PUsrUCatLvl <= 5 Then
+                GrpCounters.Text = "ملخص أرقامي حتى : " & Now
+                GrpCounters.Visible = True
+                LblClsN.Text = Usr.PUsrClsN
+                LblFlN.Text = Usr.PUsrFlN
+                LblClsYDy.Text = Usr.PUsrClsYDy
+                LblEvDy.Text = Usr.PUsrEvDy
+                LblUnRead.Text = Usr.PUsrUnRead
+                LblReadYDy.Text = Usr.PUsrReadYDy
+                LblReOpY.Text = Usr.PUsrReOpY
+                LblRecivDy.Text = Usr.PUsrRecvDy
+                LblClsUpdted.Text = Usr.PUsrClsUpdtd
+                LblFolwDy.Text = Usr.PUsrFolwDay
+                ConterWidt = GrpCounters.Width + GrpCounters.Margin.Left + GrpCounters.Margin.Right
+            Else
+                GrpCounters.Visible = False
+                ConterWidt = 0
+            End If
+            DbStat.Margin = New Padding(DbStat.Margin.Left, DbStat.Margin.Top, FlowLayoutPanel1.ClientRectangle.Width - (DbStat.Width + DbStat.Margin.Left), DbStat.Margin.Bottom)
+            PictureBox1.Margin = New Padding(PictureBox1.Margin.Left, PictureBox1.Margin.Top, FlowLayoutPanel1.ClientRectangle.Width - (GroupBox1.Width + GroupBox1.Margin.Right + GroupBox1.Margin.Left + ConterWidt + PictureBox1.Width + PictureBox1.Margin.Left), PictureBox1.Margin.Bottom)
+            LblUsrRNm.Margin = New Padding(LblUsrRNm.Margin.Left, LblUsrRNm.Margin.Top, FlowLayoutPanel1.ClientRectangle.Width - (LblUsrRNm.Width + LblUsrRNm.Margin.Left), LblUsrRNm.Margin.Bottom)
+            LblSrvrNm.Margin = New Padding(LblSrvrNm.Margin.Left, LblSrvrNm.Margin.Top, FlowLayoutPanel1.ClientRectangle.Width - (LblSrvrNm.Width + LblUsrRNm.Margin.Left), LblSrvrNm.Margin.Bottom)
+            LblLstSeen.Margin = New Padding(LblLstSeen.Margin.Left, LblLstSeen.Margin.Top, FlowLayoutPanel1.ClientRectangle.Width - (LblLstSeen.Width + LblUsrRNm.Margin.Left), LblLstSeen.Margin.Bottom)
+            TimerTikCoun.Start()
+            TimrFlsh.Start()
+            FlowLayoutPanel1.Visible = True
+        End If
     End Sub
 End Class

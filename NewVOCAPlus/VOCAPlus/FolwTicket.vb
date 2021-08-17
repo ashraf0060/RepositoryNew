@@ -23,7 +23,6 @@ Public Class FolwTicket
             Beep()
             Me.Close()
         Else
-            BtnSub(Me)
             WelcomeScreen.StatBrPnlAr.Text = ""
             CmbEvent.DataSource = UpdateKTable
             CmbEvent.DisplayMember = "EvNm"

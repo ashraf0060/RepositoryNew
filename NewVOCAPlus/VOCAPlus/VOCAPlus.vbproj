@@ -28,9 +28,9 @@
     <UpdateUrl>http://10.10.26.4:80/</UpdateUrl>
     <ProductName>VOCA Plus</ProductName>
     <PublisherName>Ashaf Farag</PublisherName>
-    <MinimumRequiredVersion>3.0.2.10</MinimumRequiredVersion>
-    <ApplicationRevision>12</ApplicationRevision>
-    <ApplicationVersion>3.0.2.%2a</ApplicationVersion>
+    <MinimumRequiredVersion>4.0.0.1</MinimumRequiredVersion>
+    <ApplicationRevision>6</ApplicationRevision>
+    <ApplicationVersion>4.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
     <PublishWizardCompleted>true</PublishWizardCompleted>
@@ -898,6 +898,7 @@
       <DependentUpon>OfflineDB.mdf</DependentUpon>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <None Include="Resources\Update.png" />
     <Content Include="SqlServerTypes\Loader.cs" />
     <Content Include="SqlServerTypes\readme.htm" />
     <Content Include="SqlServerTypes\x64\msvcr120.dll">

@@ -32,7 +32,6 @@ Public Class ExportAshraf
                        RsetTree.Visible = False
                        UserTree.Visible = False
                        RstUer.Visible = False
-                       BtnSub(Me)
                        Me.Enabled = False
                        Invoke(Sub() WelcomeScreen.StatBrPnlAr.Text = "جاري تحميل البيانات .........................")
                        Invoke(Sub() DateTimeFrom.Value = CStr(Format(Today, "yyyy/MM/dd")))
@@ -437,7 +436,7 @@ PopulCompTree_:
         Prv.StartPosition = FormStartPosition.CenterScreen
         GridTicket.Dock = DockStyle.Bottom
         GridTicket.Size = New Point(Prv.Width - 20, Screen.PrimaryScreen.Bounds.Height - 100)
-        BtnSub(Prv)
+        FrmAllSub(Prv)
         Prv.ShowDialog()
     End Sub
     Private Sub Btn_Click(sender As Object, e As EventArgs)
@@ -451,7 +450,9 @@ PopulCompTree_:
         End With
         D.FileName = "ComplaintsReport" '& GroupBox1.Tag & GroupBox2.Tag & GroupBox3.Tag & GrpDtKnd.Tag
         If D.ShowDialog() = DialogResult.OK Then
-            LoadFrm("جاري استخراج البيانات ...", (screenWidth - LodngFrm.Width) / 2, (screenHeight - LodngFrm.Height) / 2)
+            LoadFrm((screenWidth - LodngFrm.Width) / 2, (screenHeight - LodngFrm.Height) / 2)
+            Invoke(Sub() LodngFrm.LblMsg.Text += vbCrLf & "جاري استخراج البيانات ...")
+            Invoke(Sub() LodngFrm.LblMsg.Refresh())
             Try
                 'ExpDTable.Rows.Add("")
                 Dim Workbook As XLWorkbook = New XLWorkbook()

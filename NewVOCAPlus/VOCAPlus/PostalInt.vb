@@ -44,7 +44,6 @@ Public Class PostalInt
         Return X
     End Function
     Private Sub PostalInt_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        BtnSub(Me)
         dgv1.Rows.Add(5)
         rdoKG.Checked = True
         'strConn = "Data Source=ASHRAF-PC\ASHRAFSQL;Initial Catalog=DBEgyptPost;User ID=sa;Password=Hemonad105046"

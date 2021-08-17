@@ -9,7 +9,6 @@ Public Class PostalExt
     Dim NetCost As Double = 0
     Dim Taax As Double = 0
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        BtnSub(Me)
         dgv1.Columns(8).DefaultCellStyle.WrapMode = DataGridViewTriState.True
         If GetTbl("select * from Postal_Ext order by Country", Maintbl, "0000&H") = Nothing Then
             For ff = 0 To Maintbl.Rows.Count - 1

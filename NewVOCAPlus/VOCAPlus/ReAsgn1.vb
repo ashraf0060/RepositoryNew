@@ -11,7 +11,6 @@
         End Get
     End Property
     Private Sub ReAsgn1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        BtnSub(Me)
         Dim TempNode() As TreeNode
         UserTree.ImageList = ImgLst
         UserTree.Nodes.Add(Usr.PUsrCat.ToString, Usr.PUsrID & " - " & Usr.PUsrCatNm & " - " & Usr.PUsrRlNm, 1, 3)

@@ -2,7 +2,7 @@
     Dim URstTbl As DataTable = New DataTable
     Dim TmpUsrSusp As Boolean
     Private Sub UsrInfo_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        BtnSub(Me)    '     0  ,    1 ,   2      ,    3   ,  4
+        '     0  ,    1 ,   2      ,    3   ,  4
         If PublicCode.GetTbl("SELECT UsrId as [كود الموظف], UsrRealNm as [اسم الموظف], UsrGsm As [رقم الموبايل], UsrSisco As [الرقم الداخلي], UCatNm As [الوظيفة] FROM Int_user INNER JOIN IntUserCat ON Int_user.UsrCat = IntUserCat.UCatId where UsrSusp = 0 order by UCatNm,UsrRealNm", URstTbl, "1046&H") = Nothing Then
             BindingSource1.DataSource = URstTbl
             BindNavigatorUsr.BindingSource = BindingSource1

@@ -102,9 +102,9 @@ Partial Class TikUpdate
         '
         'Label60
         '
-        Me.Label60.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.Label60.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label60.Font = New System.Drawing.Font("Times New Roman", 14.0!)
-        Me.Label60.Location = New System.Drawing.Point(1153, 466)
+        Me.Label60.Location = New System.Drawing.Point(1152, 505)
         Me.Label60.Name = "Label60"
         Me.Label60.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.Label60.Size = New System.Drawing.Size(97, 23)
@@ -113,11 +113,11 @@ Partial Class TikUpdate
         '
         'CmbEvent
         '
-        Me.CmbEvent.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.CmbEvent.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.CmbEvent.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.CmbEvent.Font = New System.Drawing.Font("Times New Roman", 12.0!)
         Me.CmbEvent.FormattingEnabled = True
-        Me.CmbEvent.Location = New System.Drawing.Point(991, 464)
+        Me.CmbEvent.Location = New System.Drawing.Point(990, 503)
         Me.CmbEvent.Name = "CmbEvent"
         Me.CmbEvent.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.CmbEvent.Size = New System.Drawing.Size(164, 27)
@@ -125,9 +125,9 @@ Partial Class TikUpdate
         '
         'TxtUpdt
         '
-        Me.TxtUpdt.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.TxtUpdt.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TxtUpdt.Font = New System.Drawing.Font("Times New Roman", 12.0!)
-        Me.TxtUpdt.Location = New System.Drawing.Point(357, 464)
+        Me.TxtUpdt.Location = New System.Drawing.Point(356, 503)
         Me.TxtUpdt.Multiline = True
         Me.TxtUpdt.Name = "TxtUpdt"
         Me.TxtUpdt.ReadOnly = True
@@ -137,7 +137,7 @@ Partial Class TikUpdate
         '
         'BtnSubmt
         '
-        Me.BtnSubmt.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.BtnSubmt.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.BtnSubmt.BackgroundImage = Global.VOCAPlus.My.Resources.Resources.recgreen
         Me.BtnSubmt.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
         Me.BtnSubmt.FlatAppearance.BorderColor = System.Drawing.Color.White
@@ -145,7 +145,7 @@ Partial Class TikUpdate
         Me.BtnSubmt.FlatAppearance.MouseOverBackColor = System.Drawing.Color.White
         Me.BtnSubmt.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.BtnSubmt.Font = New System.Drawing.Font("Times New Roman", 14.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.BtnSubmt.Location = New System.Drawing.Point(259, 526)
+        Me.BtnSubmt.Location = New System.Drawing.Point(258, 543)
         Me.BtnSubmt.Margin = New System.Windows.Forms.Padding(3, 65, 3, 3)
         Me.BtnSubmt.Name = "BtnSubmt"
         Me.BtnSubmt.Size = New System.Drawing.Size(92, 40)
@@ -155,12 +155,12 @@ Partial Class TikUpdate
         '
         'BtnBrws
         '
-        Me.BtnBrws.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.BtnBrws.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.BtnBrws.BackgroundImage = Global.VOCAPlus.My.Resources.Resources.browse_button_png_th
         Me.BtnBrws.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
         Me.BtnBrws.FlatAppearance.BorderColor = System.Drawing.Color.White
         Me.BtnBrws.FlatStyle = System.Windows.Forms.FlatStyle.Flat
-        Me.BtnBrws.Location = New System.Drawing.Point(284, 465)
+        Me.BtnBrws.Location = New System.Drawing.Point(283, 504)
         Me.BtnBrws.Name = "BtnBrws"
         Me.BtnBrws.Size = New System.Drawing.Size(60, 27)
         Me.BtnBrws.TabIndex = 2158
@@ -168,9 +168,9 @@ Partial Class TikUpdate
         '
         'TxtBrws
         '
-        Me.TxtBrws.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.TxtBrws.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TxtBrws.Font = New System.Drawing.Font("Times New Roman", 12.0!)
-        Me.TxtBrws.Location = New System.Drawing.Point(0, 465)
+        Me.TxtBrws.Location = New System.Drawing.Point(-1, 504)
         Me.TxtBrws.Name = "TxtBrws"
         Me.TxtBrws.ReadOnly = True
         Me.TxtBrws.Size = New System.Drawing.Size(275, 26)
@@ -178,11 +178,11 @@ Partial Class TikUpdate
         '
         'LblMsg
         '
-        Me.LblMsg.Dock = System.Windows.Forms.DockStyle.Bottom
+        Me.LblMsg.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.LblMsg.Font = New System.Drawing.Font("Times New Roman", 14.0!)
         Me.LblMsg.Location = New System.Drawing.Point(0, 586)
         Me.LblMsg.Name = "LblMsg"
-        Me.LblMsg.Size = New System.Drawing.Size(1252, 33)
+        Me.LblMsg.Size = New System.Drawing.Size(350, 33)
         Me.LblMsg.TabIndex = 2160
         Me.LblMsg.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
@@ -196,15 +196,16 @@ Partial Class TikUpdate
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
         Me.ClientSize = New System.Drawing.Size(1252, 619)
+        Me.Controls.Add(Me.TxtUpdt)
         Me.Controls.Add(Me.CmbEvent)
         Me.Controls.Add(Me.LblMsg)
         Me.Controls.Add(Me.BtnBrws)
         Me.Controls.Add(Me.TxtBrws)
         Me.Controls.Add(Me.Label60)
         Me.Controls.Add(Me.GridUpdt)
-        Me.Controls.Add(Me.TxtUpdt)
         Me.Controls.Add(Me.BtnSubmt)
         Me.ForeColor = System.Drawing.SystemColors.ActiveCaptionText
+        Me.Location = New System.Drawing.Point(0, 52)
         Me.Name = "TikUpdate"
         Me.Text = "TikUpdate"
         CType(Me.GridUpdt, System.ComponentModel.ISupportInitialize).EndInit()

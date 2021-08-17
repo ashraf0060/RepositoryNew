@@ -15,7 +15,6 @@
         End Get
     End Property
     Private Sub HeldPhPool_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        BtnSub(Me)
         RdioPaperAll.Checked = True
         tempTable.Rows.Clear()
         tempTable.Columns.Clear()

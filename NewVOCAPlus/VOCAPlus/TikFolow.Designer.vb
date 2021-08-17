@@ -28,9 +28,6 @@ Partial Class TikFolow
         Me.FilterComb = New System.Windows.Forms.ComboBox()
         Me.CloseBtn = New System.Windows.Forms.Button()
         Me.GridTicket = New System.Windows.Forms.DataGridView()
-        Me.ContextMenuStrip1 = New System.Windows.Forms.ContextMenuStrip(Me.components)
-        Me.CopySelectedToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.PreviewToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ContextMenuStrip2 = New System.Windows.Forms.ContextMenuStrip(Me.components)
         Me.CopyToolStripitem = New System.Windows.Forms.ToolStripMenuItem()
         Me.UplodAtchToolStripitem = New System.Windows.Forms.ToolStripMenuItem()
@@ -40,7 +37,6 @@ Partial Class TikFolow
         Me.StatBrPnlEn = New System.Windows.Forms.StatusBarPanel()
         Me.StatBrPnlAr = New System.Windows.Forms.StatusBarPanel()
         Me.BtnRefrsh = New System.Windows.Forms.Button()
-        Me.Label1 = New System.Windows.Forms.Label()
         Me.GroupBox1 = New System.Windows.Forms.GroupBox()
         Me.Lbl6 = New System.Windows.Forms.Label()
         Me.ChckEsc1 = New System.Windows.Forms.RadioButton()
@@ -63,7 +59,6 @@ Partial Class TikFolow
         Me.ChckUpdColeg = New System.Windows.Forms.RadioButton()
         Me.ChckUpdOther = New System.Windows.Forms.RadioButton()
         CType(Me.GridTicket, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.ContextMenuStrip1.SuspendLayout()
         Me.ContextMenuStrip2.SuspendLayout()
         CType(Me.StatBrPnlEn, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.StatBrPnlAr, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -123,37 +118,13 @@ Partial Class TikFolow
         Me.GridTicket.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.GridTicket.BackgroundColor = System.Drawing.Color.White
         Me.GridTicket.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.GridTicket.ContextMenuStrip = Me.ContextMenuStrip1
-        Me.GridTicket.Location = New System.Drawing.Point(12, 87)
+        Me.GridTicket.Location = New System.Drawing.Point(12, 62)
         Me.GridTicket.MultiSelect = False
         Me.GridTicket.Name = "GridTicket"
         Me.GridTicket.ReadOnly = True
         Me.GridTicket.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.CellSelect
-        Me.GridTicket.Size = New System.Drawing.Size(1326, 414)
+        Me.GridTicket.Size = New System.Drawing.Size(1326, 439)
         Me.GridTicket.TabIndex = 123
-        '
-        'ContextMenuStrip1
-        '
-        Me.ContextMenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.CopySelectedToolStripMenuItem, Me.PreviewToolStripMenuItem})
-        Me.ContextMenuStrip1.Name = "ContextMenuStrip1"
-        Me.ContextMenuStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional
-        Me.ContextMenuStrip1.RightToLeft = System.Windows.Forms.RightToLeft.Yes
-        Me.ContextMenuStrip1.Size = New System.Drawing.Size(150, 48)
-        '
-        'CopySelectedToolStripMenuItem
-        '
-        Me.CopySelectedToolStripMenuItem.Image = Global.VOCAPlus.My.Resources.Resources.Copy
-        Me.CopySelectedToolStripMenuItem.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
-        Me.CopySelectedToolStripMenuItem.Name = "CopySelectedToolStripMenuItem"
-        Me.CopySelectedToolStripMenuItem.Size = New System.Drawing.Size(149, 22)
-        Me.CopySelectedToolStripMenuItem.Text = "Copy Selected"
-        '
-        'PreviewToolStripMenuItem
-        '
-        Me.PreviewToolStripMenuItem.Image = Global.VOCAPlus.My.Resources.Resources.Preview
-        Me.PreviewToolStripMenuItem.Name = "PreviewToolStripMenuItem"
-        Me.PreviewToolStripMenuItem.Size = New System.Drawing.Size(149, 22)
-        Me.PreviewToolStripMenuItem.Text = "Preview"
         '
         'ContextMenuStrip2
         '
@@ -216,7 +187,7 @@ Partial Class TikFolow
         Me.StatBrPnlEn.Alignment = System.Windows.Forms.HorizontalAlignment.Center
         Me.StatBrPnlEn.AutoSize = System.Windows.Forms.StatusBarPanelAutoSize.Spring
         Me.StatBrPnlEn.Name = "StatBrPnlEn"
-        Me.StatBrPnlEn.Width = 450
+        Me.StatBrPnlEn.Width = 675
         '
         'StatBrPnlAr
         '
@@ -234,20 +205,6 @@ Partial Class TikFolow
         Me.BtnRefrsh.TabIndex = 2034
         Me.BtnRefrsh.Text = "تحديث"
         Me.BtnRefrsh.UseVisualStyleBackColor = True
-        '
-        'Label1
-        '
-        Me.Label1.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.Label1.Font = New System.Drawing.Font("Times New Roman", 16.0!, System.Drawing.FontStyle.Bold)
-        Me.Label1.ForeColor = System.Drawing.Color.FromArgb(CType(CType(0, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(0, Byte), Integer))
-        Me.Label1.Location = New System.Drawing.Point(484, 283)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(370, 50)
-        Me.Label1.TabIndex = 2035
-        Me.Label1.Text = "جاري تحديث البيانات .........."
-        Me.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'GroupBox1
         '
@@ -543,7 +500,6 @@ Partial Class TikFolow
         Me.Controls.Add(Me.SerchTxt)
         Me.Controls.Add(Me.StatusBar1)
         Me.Controls.Add(Me.FilterComb)
-        Me.Controls.Add(Me.Label1)
         Me.MaximizeBox = False
         Me.MaximumSize = New System.Drawing.Size(1366, 660)
         Me.MinimizeBox = False
@@ -553,7 +509,6 @@ Partial Class TikFolow
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "متابعة الشكاوى"
         CType(Me.GridTicket, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.ContextMenuStrip1.ResumeLayout(False)
         Me.ContextMenuStrip2.ResumeLayout(False)
         CType(Me.StatBrPnlEn, System.ComponentModel.ISupportInitialize).EndInit()
         CType(Me.StatBrPnlAr, System.ComponentModel.ISupportInitialize).EndInit()
@@ -567,8 +522,6 @@ Partial Class TikFolow
     Friend WithEvents SerchTxt As TextBox
     Friend WithEvents FilterComb As ComboBox
     Friend WithEvents ToolTip1 As ToolTip
-    Friend WithEvents ContextMenuStrip1 As ContextMenuStrip
-    Friend WithEvents CopySelectedToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents StatusBar1 As StatusBar
     Friend WithEvents StatBrPnlEn As StatusBarPanel
     Friend WithEvents StatBrPnlAr As StatusBarPanel
@@ -576,10 +529,8 @@ Partial Class TikFolow
     Friend WithEvents CopyToolStripitem As ToolStripMenuItem
     Friend WithEvents UplodAtchToolStripitem As ToolStripMenuItem
     Friend WithEvents DonlodAttchToolStripitem As ToolStripMenuItem
-    Friend WithEvents PreviewToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ProgressBar1 As ProgressBar
     Friend WithEvents BtnRefrsh As Button
-    Friend WithEvents Label1 As Label
     Friend WithEvents GroupBox1 As GroupBox
     Friend WithEvents Lbl6 As Label
     Friend WithEvents ChckEsc1 As RadioButton

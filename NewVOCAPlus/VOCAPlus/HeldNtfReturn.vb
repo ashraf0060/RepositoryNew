@@ -17,7 +17,6 @@ Public Class HeldNtfReturn
         End Get
     End Property
     Private Sub HeldPapeCnt_eciev_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        BtnSub(Me)
         GridHeldUpdt.Columns.Add("م", "م")                                 '0
         GridHeldUpdt.Columns.Add("RsvUpdate_time", "تاريخ التحديث")       '1
         GridHeldUpdt.Columns.Add("RsvUpdateTxt", "نص التحديث")            '2

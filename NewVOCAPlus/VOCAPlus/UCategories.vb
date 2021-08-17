@@ -1,7 +1,6 @@
 ﻿Public Class UCategories
     Private Sub UCategories_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Me.Size = New Point(WelcomeScreen.Width, WelcomeScreen.Height - 110)
-        BtnSub(Me)
         Dim TempNode() As TreeNode
         UserTable.Rows.Clear()
         UserTable.Columns.Clear()

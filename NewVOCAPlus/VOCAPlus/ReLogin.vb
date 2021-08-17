@@ -9,7 +9,6 @@ Public Class ReLogin
         End Get
     End Property
     Private Sub ReLogin_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        BtnSub(Me)
         If Cnt_ = 32107 Then
             ExitBtn.Visible = False
             LblUsrOpass.Visible = False

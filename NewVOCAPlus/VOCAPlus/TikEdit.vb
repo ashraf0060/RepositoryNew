@@ -12,7 +12,6 @@
         End Get
     End Property
     Private Sub TikEdit_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        BtnSub(Me)
         TreeView1.Visible = False
         If PreciFlag = False Then
             Me.Close()

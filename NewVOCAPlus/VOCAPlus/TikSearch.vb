@@ -26,7 +26,6 @@ Public Class TikSearch
         End Get
     End Property
     Private Sub TikSearch_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        BtnSub(Me)
         If PreciFlag = False Then
             Me.Close()
             WelcomeScreen.StatBrPnlAr.Text = "لم يكتمل تحميل جميع البيانات"

@@ -92,7 +92,6 @@
                         <Direction>RTL</Direction>
                       </Style>
                     </Textbox>
-                    <rd:Selected>true</rd:Selected>
                   </CellContents>
                 </TablixCell>
                 <TablixCell>
@@ -2125,13 +2124,13 @@ iif(First(Fields!UsrRealNm.Value, "vocaplusDataSet")&lt;&gt; Fields!UsrRealNm.Va
         </TablixRowHierarchy>
         <LayoutDirection>RTL</LayoutDirection>
         <DataSetName>vocaplusDataSet</DataSetName>
-        <Top>7.07334cm</Top>
-        <Left>16.87951cm</Left>
+        <Top>7.21202cm</Top>
+        <Left>16.90597cm</Left>
         <Height>3.5cm</Height>
         <Width>10.19465cm</Width>
         <ZIndex>4</ZIndex>
         <Visibility>
-          <Hidden>=len(Fields!TkShpNo.Value) &gt;0</Hidden>
+          <Hidden>=Sum(Fields!PrdKind.Value, "vocaplusDataSet") &lt;&gt;"1"</Hidden>
         </Visibility>
         <Style>
           <Border>
@@ -2400,13 +2399,13 @@ iif(First(Fields!UsrRealNm.Value, "vocaplusDataSet")&lt;&gt; Fields!UsrRealNm.Va
         </TablixRowHierarchy>
         <LayoutDirection>RTL</LayoutDirection>
         <DataSetName>vocaplusDataSet</DataSetName>
-        <Top>7.07334cm</Top>
-        <Left>16.87951cm</Left>
+        <Top>7.35313cm</Top>
+        <Left>16.90597cm</Left>
         <Height>2.1cm</Height>
         <Width>10.19465cm</Width>
         <ZIndex>5</ZIndex>
         <Visibility>
-          <Hidden>=len(Fields!TkCardNo.Value) &gt; 0</Hidden>
+          <Hidden>=Sum(Fields!PrdKind.Value, "vocaplusDataSet") &lt;&gt;"2"</Hidden>
         </Visibility>
         <Style>
           <Border>

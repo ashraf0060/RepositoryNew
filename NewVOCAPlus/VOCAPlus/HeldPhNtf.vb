@@ -18,7 +18,6 @@ Public Class HeldPhNtf
         End Get
     End Property
     Private Sub HeldSearch_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        BtnSub(Me)
         TabControl1.TabPages.Remove(TabPage2)
         TabControl1.TabPages.Remove(TabPage3)
 
@@ -48,8 +47,8 @@ Public Class HeldPhNtf
             GridHeld.Columns(12).SortMode = DataGridViewColumnSortMode.NotSortable
             GridPopulte()
         Else
-                MsgErr(My.Resources.ConnErr & vbCrLf & My.Resources.TryAgain)
-            End If
+            MsgErr(My.Resources.ConnErr & vbCrLf & My.Resources.TryAgain)
+        End If
 
         WelcomeScreen.StatBrPnlAr.Text = ""
     End Sub

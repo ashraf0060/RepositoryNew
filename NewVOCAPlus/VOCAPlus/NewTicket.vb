@@ -44,7 +44,6 @@ Public Class NewTicket
             TxtUpdt2.ReadOnly = True
             SerchTxt.Text = "برجاء ادخال كلمات البحث"
             NewTickSub()
-            BtnSub(Me)
             'Me.Width = screenWidth - 200
             Me.Size = New Point(WelcomeScreen.Width, WelcomeScreen.Height - 110)
             FlowLayoutPanel4.Size = New Point((Me.Size.Width * 0.6), Me.Height - 100)
@@ -720,6 +719,7 @@ Popul_:
             MsgErr(My.Resources.ConnErr & vbCrLf & My.Resources.TryAgain)
             Invoke(Sub() LodngFrm.LblMsg.Text = My.Resources.ConnErr & " - " & My.Resources.TryAgain)
             Invoke(Sub() LodngFrm.LblMsg.ForeColor = Color.Red)
+            Invoke(Sub() LodngFrm.LblMsg.Refresh())
         End If
         FltrStr = ""
         Invoke(Sub() RelatedTable.DefaultView.RowFilter = String.Empty)
@@ -746,7 +746,9 @@ Popul_:
             ECnt_Label.Text = "رقم التليفون مكتمل"
             WelcomeScreen.StatBrPnlAr.Text = "جاري تحميل البيانات ..........."
             TreeView1.Visible = True
-            PublicCode.LoadFrm("جاري تحميل بيانات العميل ...", 500, 350)
+            PublicCode.LoadFrm(500, 350)
+            Invoke(Sub() LodngFrm.LblMsg.Text += vbCrLf & "جاري تحميل بيانات العميل ...")
+            Invoke(Sub() LodngFrm.LblMsg.Refresh())
             ClntThrd.Start()
             Me.Enabled = False
         Else
@@ -876,9 +878,9 @@ Popul_:
     Private Sub SubmtOfflineTick()
         Dim TranDt As String
         Dim Trck As String = ""
-        Invoke(Sub() PublicCode.LoadFrm("", 340, 330))
+        Invoke(Sub() PublicCode.LoadFrm(340, 330))
         Invoke(Sub() LodngFrm.LblMsg.Text = "جاري تسجيل البيانات ...")
-
+        Invoke(Sub() LodngFrm.LblMsg.Refresh())
         Dim Transction As SqlTransaction = Nothing             'SQL Transaction
         Dim OfflineCon As New SqlConnection("Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\OfflineDB.mdf;Integrated Security=True")
         For Cnt_ = 1 To TrackMskBx.TextLength
@@ -936,7 +938,7 @@ Popul_:
             sqlComm.Transaction = Transction
 
             Invoke(Sub() LodngFrm.LblMsg.Text += vbCrLf & "Exuting ...")
-
+            Invoke(Sub() LodngFrm.LblMsg.Refresh())
             sqlComminsert1.ExecuteNonQuery()
             sqlComminsert2.ExecuteNonQuery()
             sqlComminsert3.ExecuteNonQuery()
@@ -954,6 +956,7 @@ Popul_:
             Reader_.Close()
             Transction.Commit()
             Invoke(Sub() LodngFrm.LblMsg.Text += vbCrLf & "Done")
+            Invoke(Sub() LodngFrm.LblMsg.Refresh())
             For Each ctrl In TabPage1.Controls
                 If TypeOf ctrl Is TextBox Or TypeOf ctrl Is MaskedTextBox Then
                     ctrl.Enabled = False
@@ -1051,11 +1054,14 @@ Popul_:
             message.Body.BodyType = BodyType.HTML
             message.Importance = 1
             Invoke(Sub() LodngFrm.LblMsg.Text += vbCrLf & "Trying To Sending mail ...")
+            Invoke(Sub() LodngFrm.LblMsg.Refresh())
             Try
                 message.SendAndSaveCopy()
                 Invoke(Sub() LodngFrm.LblMsg.Text += vbCrLf & "Mail has been sent")
+                Invoke(Sub() LodngFrm.LblMsg.Refresh())
             Catch ex As Exception
                 Invoke(Sub() LodngFrm.LblMsg.Text += vbCrLf & "Can't send Mail now")
+                Invoke(Sub() LodngFrm.LblMsg.Refresh())
             End Try
             Invoke(Sub() LodngFrm.Close())
             AppLogTbl(Split("1011&H", "&H")(0), 1,, sqlComminsert1.CommandText & "_" & sqlComminsert2.CommandText & "_" & sqlComminsert3.CommandText & "_" & sqlComminsert4.CommandText)
@@ -1223,7 +1229,9 @@ Popul_:
         TickSubmt.IsBackground = True
         WelcomeScreen.StatBrPnlAr.Text = "جاري تسجيل البيانات ..........."
         TreeView1.Visible = True
-        PublicCode.LoadFrm("جاري تسجيل البيانات ...", 340, 330)
+        PublicCode.LoadFrm(340, 330)
+        Invoke(Sub() LodngFrm.LblMsg.Text += vbCrLf & "جاري تسجيل البيانات ...")
+        Invoke(Sub() LodngFrm.LblMsg.Refresh())
         TickSubmt.Start()
         Me.Enabled = False
     End Sub

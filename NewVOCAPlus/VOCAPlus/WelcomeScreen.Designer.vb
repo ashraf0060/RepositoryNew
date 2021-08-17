@@ -177,7 +177,7 @@ Partial Class WelcomeScreen
         '
         'TimerCon
         '
-        Me.TimerCon.Interval = 31000
+        Me.TimerCon.Interval = 1000
         '
         'LblUsrIP
         '
@@ -213,8 +213,8 @@ Partial Class WelcomeScreen
         '
         Me.LblUsrRNm.BackColor = System.Drawing.Color.Transparent
         Me.FlowLayoutPanel1.SetFlowBreak(Me.LblUsrRNm, True)
-        Me.LblUsrRNm.Font = New System.Drawing.Font("Times New Roman", 9.0!)
-        Me.LblUsrRNm.ForeColor = System.Drawing.Color.Red
+        Me.LblUsrRNm.Font = New System.Drawing.Font("Times New Roman", 14.0!, System.Drawing.FontStyle.Bold)
+        Me.LblUsrRNm.ForeColor = System.Drawing.Color.Blue
         Me.LblUsrRNm.ImageAlign = System.Drawing.ContentAlignment.MiddleLeft
         Me.LblUsrRNm.Location = New System.Drawing.Point(28, 296)
         Me.LblUsrRNm.Margin = New System.Windows.Forms.Padding(3, 3, 1000, 3)

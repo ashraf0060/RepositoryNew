@@ -14,7 +14,6 @@ Public Class DriveMy
     Private ReadOnly SecNODESTHATMATCH As New List(Of TreeNode) 'Tree Search Function
     Private Sub DriveMy_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Dim primaryKey(0) As DataColumn
-        BtnSub(Me)
         FTPTable.Rows.Clear()
         FTPTable.Columns.Clear()
         CheckBox1.Enabled = False

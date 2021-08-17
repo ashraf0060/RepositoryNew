@@ -233,7 +233,6 @@ Public Class UsrCreat
         DataGridView1.DataSource = currTable
     End Sub
     Private Sub UsrCreat_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        BtnSub(Me)
         BtnCheck.Enabled = False
         BtnCreate.Enabled = False
     End Sub

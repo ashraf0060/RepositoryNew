@@ -13,7 +13,6 @@ Public Class MyProfile
         End Get
     End Property
     Private Sub MyProfile_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        BtnSub(Me)
         RadioRght.Checked = False
         RadioWrng.Checked = False
         RadioRght.Enabled = True
