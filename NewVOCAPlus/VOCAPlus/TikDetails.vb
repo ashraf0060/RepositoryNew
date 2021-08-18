@@ -86,12 +86,10 @@
             MsgInf("يرجى إدخال نص التعديل")
         End If
     End Sub
-
     Private Sub TikDetails_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
         TimerVisInvs.Stop()
         Me.Dispose()
     End Sub
-
     Private Sub TimerVisInvs_Tick(sender As Object, e As EventArgs) Handles TimerVisInvs.Tick
         If LblWDays.Text.Length > 0 Then
             If LblWDays.Visible = True Then
@@ -101,11 +99,9 @@
             End If
         End If
     End Sub
-
     Private Sub BtnUpd_Click(sender As Object, e As EventArgs) Handles BtnUpd.Click
         TikUpdate.ShowDialog()
     End Sub
-
     Private Sub BtnClos_Click(sender As Object, e As EventArgs) Handles BtnClos.Click
         Dim Rslt As DialogResult
         Rslt = MessageBox.Show("سيتم إغلاق الشكوى نهائيا" & vbCrLf & "هل تريد الإستمرار؟", "رسالة معلومات", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2, MessageBoxOptions.RtlReading Or MessageBoxOptions.RightAlign)

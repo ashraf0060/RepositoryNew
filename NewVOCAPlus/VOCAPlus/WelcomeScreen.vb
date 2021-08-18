@@ -218,24 +218,28 @@ Public Class WelcomeScreen
         ThreadPool.QueueUserWorkItem(AddressOf Conoff)
     End Sub
     Private Sub Conoff()
-        Try
-            If sqlCon.State = ConnectionState.Closed Then
-                sqlCon.Open()
-                StatusBar1.Invoke(Sub() StatBrPnlEn.Text = "Online")
-                StatusBar1.Invoke(Sub() StatBrPnlEn.Icon = My.Resources.WSOn032)
-            End If
+        If Me.IsHandleCreated Then
 
-            TimerCon.Stop()
-            sqlCon.Close()
-            SqlConnection.ClearPool(sqlCon)
-        Catch ex As Exception
-            Dim frmCollection = Application.OpenForms
-            If frmCollection.OfType(Of WelcomeScreen).Any Then
-                StatusBar1.Invoke(Sub() StatBrPnlEn.Icon = My.Resources.WSOff032)
-                StatusBar1.Invoke(Sub() StatBrPnlEn.Text = "Offline")
-            End If
 
-        End Try
+            Try
+                If sqlCon.State = ConnectionState.Closed Then
+                    sqlCon.Open()
+                    StatusBar1.Invoke(Sub() StatBrPnlEn.Text = "Online")
+                    StatusBar1.Invoke(Sub() StatBrPnlEn.Icon = My.Resources.WSOn032)
+                End If
+
+                TimerCon.Stop()
+                sqlCon.Close()
+                SqlConnection.ClearPool(sqlCon)
+            Catch ex As Exception
+                Dim frmCollection = Application.OpenForms
+                If frmCollection.OfType(Of WelcomeScreen).Any Then
+                    StatusBar1.Invoke(Sub() StatBrPnlEn.Icon = My.Resources.WSOff032)
+                    StatusBar1.Invoke(Sub() StatBrPnlEn.Text = "Offline")
+                End If
+
+            End Try
+        End If
     End Sub
     'Declare Function SetProcessWorkingSetSize Lib "kernel32.dll" (ByVal process As IntPtr, ByVal minimumWorkingSetSize As Integer, ByVal maximumWorkingSetSize As Integer) As Integer
     Private Sub DbStat_MouseHover(sender As Object, e As EventArgs) Handles DbStat.MouseHover

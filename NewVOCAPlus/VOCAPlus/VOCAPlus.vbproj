@@ -167,6 +167,7 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AAAAA.vb" />
     <Compile Include="ApplicationEvents.vb" />
     <Compile Include="AttedBarcd.Designer.vb">
       <DependentUpon>AttedBarcd.vb</DependentUpon>

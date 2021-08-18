@@ -1,14 +1,12 @@
-﻿Imports System.Threading
-Imports System.Drawing.Drawing2D
-Imports System.Reflection
+﻿Imports System.IO
 Imports System.Net
-Imports System.IO
+Imports System.Threading
 
 Public Class Login
     Dim HardTable As DataTable = New DataTable
     Dim VerTbl As DataTable = New DataTable
     Dim NotComplete As String = "لم يتم تحميل"
-    Dim PrTblTsk As Thread
+    Dim ChkAdnTsk As New Thread(AddressOf ChckAdmin)
     Sub Main()
         ' Create new Queue of string.
         Dim CarProductionQueue = New Queue(Of String)
@@ -122,9 +120,11 @@ GoodVer:  '       *****      End Check Ver.
         'Else
         '    Close()
         'End If
+        ChkAdnTsk.IsBackground = True
+
         Invoke(Sub() StatusBarPanel1.Text = "Connecting ...........")
-        'Dim PrTblTsk As New Thread(AddressOf HrdWre)
-        'PrTblTsk.IsBackground = True
+        'PrTblTsk = New Thread(AddressOf HrdWre)
+
         'PrTblTsk.Start()
         ThreadPool.QueueUserWorkItem(AddressOf HrdWre)
 
@@ -146,11 +146,11 @@ Sec2:
         HardTable.Dispose()
         GC.Collect()
 
-        PrTblTsk = New Thread(AddressOf ChckAdmin)
-        PrTblTsk.IsBackground = True
-        PrTblTsk.Start()
+        'PrTblTsk = New Thread(AddressOf ChckAdmin)
+        'PrTblTsk.IsBackground = True
+        ChkAdnTsk.Start()
         'ThreadPool.QueueUserWorkItem(AddressOf ChckAdmin)
-        'Dim PrTblTsk As New Thread(AddressOf ChckAdmin)
+
     End Sub
     Private Sub LogInBtn__Click(sender As Object, e As EventArgs) Handles LogInBtn.Click
         Loginn()
@@ -504,7 +504,6 @@ sec_UsrErr_:
             WelcomeScreen.DbStat.BackgroundImage = My.Resources.DBOn
             WelcomeScreen.DbStat.Tag = "تم تحميل قواعد البيانات الأساسية بنجـــاح"
             LodUsrPic()
-
             If Usr.PUsrGndr = "Male" Then
                 Invoke(Sub() WelcomeScreen.LblUsrRNm.Text = "Welcome Back Mr. " & Usr.PUsrRlNm)
                 Invoke(Sub() WelcomeScreen.Text = "VOCA Plus - " & "Welcome Back Miss/Mrs. " & Usr.PUsrRlNm)
@@ -518,8 +517,10 @@ sec_UsrErr_:
             Invoke(Sub() LodngFrm.Close())
             Invoke(Sub() LodngFrm.Dispose())
             Invoke(Sub() WelcomeScreen.Show())
+            ChkAdnTsk.Abort()
             Invoke(Sub() Me.Close())
         Else
+            ChkAdnTsk.Start()
             MsgErr(My.Resources.ConnErr & vbCrLf & My.Resources.TryAgain)
             MsgErr(NotComplete)
         End If
@@ -605,9 +606,8 @@ sec_UsrErr_:
     End Sub
 
     Private Sub Cmbo_SelectedIndexChanged(sender As Object, e As EventArgs)
-        PrTblTsk = New Thread(AddressOf ChckAdmin)
-        PrTblTsk.IsBackground = True
-        PrTblTsk.Start()
+        ChkAdnTsk = New Thread(AddressOf ChckAdmin)
+        ChkAdnTsk.Start()
     End Sub
     Private Sub ChckAdmin()
         Invoke(Sub() ConStrFn(Cmbo.Text))
@@ -619,38 +619,39 @@ sec_UsrErr_:
             Invoke(Sub() Cmbo.Text = "Test Database")
         End If
 Recon_:
-        Invoke(Sub() StatusBarPanel1.Text = "Connecting ...........")
-        Invoke(Sub() StatusBarPanel1.Icon = My.Resources.WSOff032)
-        Invoke(Sub() LogInBtn.Enabled = False)
-        Invoke(Sub() TxtUsrNm.Enabled = False)
-        Invoke(Sub() TxtUsrPass.Enabled = False)
-        MacTable = New DataTable
-        If GetTbl("select Mac, Admin from AMac where Mac ='" & GetMACAddressNew() & "'", MacTable, "8888&H") = Nothing Then
-            Invoke(Sub() StatusBarPanel1.Text = "")
-            If MacTable.Rows.Count > 0 Then
-                If DBNull.Value.Equals(MacTable.Rows(0).Item("Admin")) = True Then
+        If Me.IsHandleCreated Then
+            Invoke(Sub() StatusBarPanel1.Text = "Connecting ...........")
+            Invoke(Sub() StatusBarPanel1.Icon = My.Resources.WSOff032)
+            Invoke(Sub() LogInBtn.Enabled = False)
+            Invoke(Sub() TxtUsrNm.Enabled = False)
+            Invoke(Sub() TxtUsrPass.Enabled = False)
+            MacTable = New DataTable
+            If GetTbl("select Mac, Admin from AMac where Mac ='" & GetMACAddressNew() & "'", MacTable, "8888&H") = Nothing Then
+                Invoke(Sub() StatusBarPanel1.Text = "")
+                If MacTable.Rows.Count > 0 Then
+                    If DBNull.Value.Equals(MacTable.Rows(0).Item("Admin")) = True Then
+                        Invoke(Sub() Cmbo.Visible = False)
+                    ElseIf MacTable.Rows(0).Item("Admin") = False Or MacTable.Rows(0).Item("Admin") = True Then
+                        Invoke(Sub() Cmbo.Visible = True)
+                    End If
+                    Invoke(Sub() LogInBtn.Enabled = True)
+                    Invoke(Sub() TxtUsrNm.Enabled = True)
+                    Invoke(Sub() TxtUsrPass.Enabled = True)
+                    Invoke(Sub() StatusBarPanel1.Text = "Online")
+                    Invoke(Sub() StatusBarPanel1.Icon = My.Resources.WSOn032)
+                Else
                     Invoke(Sub() Cmbo.Visible = False)
-                ElseIf MacTable.Rows(0).Item("Admin") = False Or MacTable.Rows(0).Item("Admin") = True Then
-                    Invoke(Sub() Cmbo.Visible = True)
+                    MsgBox("Not Allowed" & vbCrLf & "Your Mac Address : " & GetMACAddressNew())
+                    'Invoke(Sub() Close())
+                    'Application.Exit()
                 End If
-                Invoke(Sub() LogInBtn.Enabled = True)
-                Invoke(Sub() TxtUsrNm.Enabled = True)
-                Invoke(Sub() TxtUsrPass.Enabled = True)
-                Invoke(Sub() StatusBarPanel1.Text = "Online")
-                Invoke(Sub() StatusBarPanel1.Icon = My.Resources.WSOn032)
             Else
-                Invoke(Sub() Cmbo.Visible = False)
-                MsgBox("Not Allowed" & vbCrLf & "Your Mac Address : " & GetMACAddressNew())
-                'Invoke(Sub() Close())
-                'Application.Exit()
+                MacTable.Dispose()
             End If
         Else
-            'Invoke(Sub() Cmbo.Visible = False)
-
-            MacTable.Dispose()
             GoTo Recon_
+            MsgBox("dd")
         End If
-
     End Sub
     Private Sub LblUsrIP_Click(sender As Object, e As EventArgs) Handles LblUsrIP.Click
         MsgBox(GetMACAddressNew())
@@ -682,6 +683,7 @@ Recon_:
     End Sub
 
     Private Sub Login_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
+        RemoveHandler Cmbo.SelectedIndexChanged, AddressOf Cmbo_SelectedIndexChanged
         Invoke(Sub() Me.Dispose())
     End Sub
 

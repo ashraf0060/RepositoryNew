@@ -151,11 +151,9 @@ Module PublicCode
             SqlConnection.ClearPool(sqlCon)
             sqlCon.ConnectionString = strConn
         End Try
-
         'Else
         '    sqlCon.ConnectionString = strConn
         'End If
-
         Return strConn
     End Function
     Function OsIP() As String              'Returns the Ip address 
@@ -464,7 +462,6 @@ End_:
     Public Sub MsgErr(MsgBdy As String)
         MessageBox.Show(MsgBdy, "رسالة خطأ", MessageBoxButtons.OK, MessageBoxIcon.Error, MessageBoxDefaultButton.Button2, MessageBoxOptions.RtlReading Or MessageBoxOptions.RightAlign)
     End Sub
-
     Public Function GetTbl(SSqlStr As String, SqlTbl As DataTable, ErrHndl As String) As String
         Dim StW As New Stopwatch
         StW.Start()
@@ -491,16 +488,16 @@ End_:
             Dim TimSpn As TimeSpan = (StW.Elapsed)
             ElapsedTimeSpan = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", TimSpn.Hours, TimSpn.Minutes, TimSpn.Seconds, TimSpn.Milliseconds / 10)
         Catch ex As Exception
-        My.Application.Log.WriteException(ex, TraceEventType.Error, "")
+            My.Application.Log.WriteException(ex, TraceEventType.Error, "")
 
-        Dim frmCollection = Application.OpenForms
-        If frmCollection.OfType(Of WelcomeScreen).Any Then
-            WelcomeScreen.TimerCon.Start()
-            WelcomeScreen.StatBrPnlEn.Icon = My.Resources.WSOff032
-        End If
-        AppLog(ErrHndl, ex.Message, SSqlStr)
-        AppLogTbl(Split(ErrHndl, "&H")(0), 1, ex.Message, SSqlStr, SqlTbl.Rows.Count)
-        Errmsg = ex.Message
+            Dim frmCollection = Application.OpenForms
+            If frmCollection.OfType(Of WelcomeScreen).Any Then
+                WelcomeScreen.TimerCon.Start()
+                WelcomeScreen.StatBrPnlEn.Icon = My.Resources.WSOff032
+            End If
+            AppLog(ErrHndl, ex.Message, SSqlStr)
+            AppLogTbl(Split(ErrHndl, "&H")(0), 1, ex.Message, SSqlStr, SqlTbl.Rows.Count)
+            Errmsg = ex.Message
         End Try
         SqlTbl.Dispose()
         SQLGetAdptr.Dispose()
