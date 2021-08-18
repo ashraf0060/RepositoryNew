@@ -1,0 +1,42 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="My" GeneratedClassName="MySettings" UseMySettingsClassName="true">
+  <Profiles />
+  <Settings>
+    <Setting Name="StmpR" Type="System.String" Scope="User">
+      <Value Profile="(Default)">587</Value>
+    </Setting>
+    <Setting Name="StmpU" Type="System.String" Scope="User">
+      <Value Profile="(Default)">ashraf@jubar.me</Value>
+    </Setting>
+    <Setting Name="StmpP" Type="System.String" Scope="User">
+      <Value Profile="(Default)">AAAA</Value>
+    </Setting>
+    <Setting Name="FEmail" Type="System.String" Scope="User">
+      <Value Profile="(Default)">ashraf@jubar.me</Value>
+    </Setting>
+    <Setting Name="Pass1" Type="System.String" Scope="User">
+      <Value Profile="(Default)">1FD490BFA40B032A147F1FEC29300E1E</Value>
+    </Setting>
+    <Setting Name="ClrSys" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">192, 192, 255</Value>
+    </Setting>
+    <Setting Name="ClrUsr" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">128, 255, 128</Value>
+    </Setting>
+    <Setting Name="ClrNotUsr" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">239, 255, 156</Value>
+    </Setting>
+    <Setting Name="ExportStr" Type="System.String" Scope="User">
+      <Value Profile="(Default)" />
+    </Setting>
+    <Setting Name="ClrSamCat" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">255, 224, 192</Value>
+    </Setting>
+    <Setting Name="ClrOperation" Type="System.Drawing.Color" Scope="User">
+      <Value Profile="(Default)">255, 153, 51</Value>
+    </Setting>
+    <Setting Name="StmpH" Type="System.String" Scope="User">
+      <Value Profile="(Default)">StmpH</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>

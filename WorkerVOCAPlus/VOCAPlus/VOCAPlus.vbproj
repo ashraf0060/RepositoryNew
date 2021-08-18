@@ -1,0 +1,933 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{09983E70-3B30-47AA-B65D-FBEB4BD1BC8C}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <StartupObject>VOCAPlus.My.MyApplication</StartupObject>
+    <RootNamespace>VOCAPlus</RootNamespace>
+    <AssemblyName>VOCAPlus</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <MyType>WindowsForms</MyType>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>D:\Publish\VOCAPlus\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <UpdateUrl>http://10.10.26.4:80/</UpdateUrl>
+    <ProductName>VOCA Plus</ProductName>
+    <PublisherName>Ashaf Farag</PublisherName>
+    <MinimumRequiredVersion>4.0.0.1</MinimumRequiredVersion>
+    <ApplicationRevision>6</ApplicationRevision>
+    <ApplicationVersion>4.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <CreateDesktopShortcut>true</CreateDesktopShortcut>
+    <PublishWizardCompleted>true</PublishWizardCompleted>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+    <BootstrapperComponentsLocation>Absolute</BootstrapperComponentsLocation>
+    <BootstrapperComponentsUrl>ftp://10.10.26.4/callcenter/attch/</BootstrapperComponentsUrl>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <DefineDebug>true</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DocumentationFile>VOCAPlus.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <DefineDebug>false</DefineDebug>
+    <DefineTrace>true</DefineTrace>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DocumentationFile>VOCAPlus.xml</DocumentationFile>
+    <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionExplicit>On</OptionExplicit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionCompare>Binary</OptionCompare>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionStrict>Off</OptionStrict>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionInfer>On</OptionInfer>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>VocaIcon2.ico</ApplicationIcon>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestCertificateThumbprint>4E852A5CF10217D84259DA765A4FB3A6A8433B86</ManifestCertificateThumbprint>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ManifestKeyFile>VOCAPlus_TemporaryKey.pfx</ManifestKeyFile>
+  </PropertyGroup>
+  <PropertyGroup>
+    <GenerateManifests>true</GenerateManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <TargetZone>LocalIntranet</TargetZone>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>My Project\app.manifest</ApplicationManifest>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignManifests>true</SignManifests>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BarcodeLib, Version=1.1.0.0, Culture=neutral, PublicKeyToken=5f09bda868cc39e7, processorArchitecture=MSIL">
+      <HintPath>..\packages\BarcodeLib.1.1.0.0\lib\net20\BarcodeLib.dll</HintPath>
+    </Reference>
+    <Reference Include="ClosedXML, Version=0.95.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ClosedXML.0.95.4\lib\net40\ClosedXML.dll</HintPath>
+    </Reference>
+    <Reference Include="DocumentFormat.OpenXml, Version=2.7.2.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
+      <HintPath>..\packages\DocumentFormat.OpenXml.2.7.2\lib\net40\DocumentFormat.OpenXml.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelDataReader, Version=3.6.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExcelDataReader.3.6.0\lib\net45\ExcelDataReader.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelDataReader.DataSet, Version=3.6.0.0, Culture=neutral, PublicKeyToken=93517dbe6a4012fa, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExcelDataReader.DataSet.3.6.0\lib\net35\ExcelDataReader.DataSet.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelNumberFormat, Version=1.0.10.0, Culture=neutral, PublicKeyToken=23c6f5d73be07eca, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExcelNumberFormat.1.0.10\lib\net20\ExcelNumberFormat.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.Exchange.WebServices, Version=15.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Exchange.WebServices.2.2\lib\40\Microsoft.Exchange.WebServices.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Exchange.WebServices.Auth, Version=15.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Exchange.WebServices.2.2\lib\40\Microsoft.Exchange.WebServices.Auth.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.Common, Version=12.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ReportViewer.Runtime.Common.12.0.2402.15\lib\Microsoft.ReportViewer.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.DataVisualization, Version=12.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ReportViewer.Runtime.Common.12.0.2402.15\lib\Microsoft.ReportViewer.DataVisualization.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.ProcessingObjectModel, Version=12.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ReportViewer.Runtime.Common.12.0.2402.15\lib\Microsoft.ReportViewer.ProcessingObjectModel.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.ReportViewer.WinForms, Version=12.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.ReportViewer.Runtime.WinForms.12.0.2402.15\lib\Microsoft.ReportViewer.WinForms.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.SqlServer.Types, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.SqlServer.Types.14.0.1016.290\lib\net40\Microsoft.SqlServer.Types.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Management" />
+    <Reference Include="System.Web.Services" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Forms.DataVisualization" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Import Include="Microsoft.Reporting.WinForms" />
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Collections.Generic" />
+    <Import Include="System.Data" />
+    <Import Include="System.Data.SqlClient" />
+    <Import Include="System.Drawing" />
+    <Import Include="System.Diagnostics" />
+    <Import Include="System.Windows.Forms" />
+    <Import Include="System.Linq" />
+    <Import Include="System.Xml.Linq" />
+    <Import Include="System.Threading.Tasks" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="AAAAA.vb" />
+    <Compile Include="ApplicationEvents.vb" />
+    <Compile Include="AttedBarcd.Designer.vb">
+      <DependentUpon>AttedBarcd.vb</DependentUpon>
+    </Compile>
+    <Compile Include="AttedBarcd.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Categories.Designer.vb">
+      <DependentUpon>Categories.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Categories.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="CompSetup.Designer.vb">
+      <DependentUpon>CompSetup.vb</DependentUpon>
+    </Compile>
+    <Compile Include="CompSetup.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DataSetRep.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DataSetRep.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="DataSetRepVisible.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>DataSetRepVisible.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="DistribTicket.Designer.vb">
+      <DependentUpon>DistribTicket.vb</DependentUpon>
+    </Compile>
+    <Compile Include="DistribTicket.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="DriveMy.Designer.vb">
+      <DependentUpon>DriveMy.vb</DependentUpon>
+    </Compile>
+    <Compile Include="DriveMy.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="EnDe.vb" />
+    <Compile Include="ExportAshraf.Designer.vb">
+      <DependentUpon>ExportAshraf.vb</DependentUpon>
+    </Compile>
+    <Compile Include="ExportAshraf.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ExportAdmin.Designer.vb">
+      <DependentUpon>ExportAdmin.vb</DependentUpon>
+    </Compile>
+    <Compile Include="ExportAdmin.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TikFolow.Designer.vb">
+      <DependentUpon>TikFolow.vb</DependentUpon>
+    </Compile>
+    <Compile Include="TikFolow.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HeldDlvryRprt.Designer.vb">
+      <DependentUpon>HeldDlvryRprt.vb</DependentUpon>
+    </Compile>
+    <Compile Include="HeldDlvryRprt.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TikDetails.Designer.vb">
+      <DependentUpon>TikDetails.vb</DependentUpon>
+    </Compile>
+    <Compile Include="TikDetails.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TikSearchNew.Designer.vb">
+      <DependentUpon>TikSearchNew.vb</DependentUpon>
+    </Compile>
+    <Compile Include="TikSearchNew.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TikUpdate.Designer.vb">
+      <DependentUpon>TikUpdate.vb</DependentUpon>
+    </Compile>
+    <Compile Include="TikUpdate.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UsrCreat.Designer.vb">
+      <DependentUpon>UsrCreat.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UsrCreat.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TicketBulk.Designer.vb">
+      <DependentUpon>TicketBulk.vb</DependentUpon>
+    </Compile>
+    <Compile Include="TicketBulk.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WFMFrstLog.Designer.vb">
+      <DependentUpon>WFMFrstLog.vb</DependentUpon>
+    </Compile>
+    <Compile Include="WFMFrstLog.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="WFM.Designer.vb">
+      <DependentUpon>WFM.vb</DependentUpon>
+    </Compile>
+    <Compile Include="WFM.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HeldRepFrm.Designer.vb">
+      <DependentUpon>HeldRepFrm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="HeldRepFrm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PostalInt.Designer.vb">
+      <DependentUpon>PostalInt.vb</DependentUpon>
+    </Compile>
+    <Compile Include="PostalInt.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PostOffSearch.designer.vb">
+      <DependentUpon>PostOffSearch.vb</DependentUpon>
+    </Compile>
+    <Compile Include="PostOffSearch.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PostalExt.designer.vb">
+      <DependentUpon>PostalExt.vb</DependentUpon>
+    </Compile>
+    <Compile Include="PostalExt.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TestFlowPanel.Designer.vb">
+      <DependentUpon>TestFlowPanel.vb</DependentUpon>
+    </Compile>
+    <Compile Include="TestFlowPanel.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TicketRAsgnMany.Designer.vb">
+      <DependentUpon>TicketRAsgnMany.vb</DependentUpon>
+    </Compile>
+    <Compile Include="TicketRAsgnMany.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FolwTeam.Designer.vb">
+      <DependentUpon>FolwTeam.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FolwTeam.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FolwTicket.Designer.vb">
+      <DependentUpon>FolwTicket.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FolwTicket.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FolwTicketClsd.Designer.vb">
+      <DependentUpon>FolwTicketClsd.vb</DependentUpon>
+    </Compile>
+    <Compile Include="FolwTicketClsd.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HeldaperPrnt.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>HeldaperPrnt.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="HeldaperPrnt.vb">
+      <DependentUpon>HeldaperPrnt.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="HeldImport.Designer.vb">
+      <DependentUpon>HeldImport.vb</DependentUpon>
+    </Compile>
+    <Compile Include="HeldImport.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HeldNtfReturn.Designer.vb">
+      <DependentUpon>HeldNtfReturn.vb</DependentUpon>
+    </Compile>
+    <Compile Include="HeldNtfReturn.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HeldPaprNtfPrepare.Designer.vb">
+      <DependentUpon>HeldPaprNtfPrepare.vb</DependentUpon>
+    </Compile>
+    <Compile Include="HeldPaprNtfPrepare.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HeldPaprNtfPrint.Designer.vb">
+      <DependentUpon>HeldPaprNtfPrint.vb</DependentUpon>
+    </Compile>
+    <Compile Include="HeldPaprNtfPrint.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HeldPaprNtf.Designer.vb">
+      <DependentUpon>HeldPaprNtf.vb</DependentUpon>
+    </Compile>
+    <Compile Include="HeldPaprNtf.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HeldPhAllUsr.Designer.vb">
+      <DependentUpon>HeldPhAllUsr.vb</DependentUpon>
+    </Compile>
+    <Compile Include="HeldPhAllUsr.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HeldPhPool.Designer.vb">
+      <DependentUpon>HeldPhPool.vb</DependentUpon>
+    </Compile>
+    <Compile Include="HeldPhPool.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HeldPhNtf.Designer.vb">
+      <DependentUpon>HeldPhNtf.vb</DependentUpon>
+    </Compile>
+    <Compile Include="HeldPhNtf.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="Start.Designer.vb">
+      <DependentUpon>Start.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Start.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Test.Designer.vb">
+      <DependentUpon>Test.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Test.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TikFrmRep.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TikFrmRep.Designer.vb">
+      <DependentUpon>TikFrmRep.vb</DependentUpon>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HeldPaperPrint.Designer.vb">
+      <DependentUpon>HeldPaperPrint.vb</DependentUpon>
+    </Compile>
+    <Compile Include="HeldPaperPrint.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HeldPaperReciev.Designer.vb">
+      <DependentUpon>HeldPaperReciev.vb</DependentUpon>
+    </Compile>
+    <Compile Include="HeldPaperReciev.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HeldPaperRePrint.Designer.vb">
+      <DependentUpon>HeldPaperRePrint.vb</DependentUpon>
+    </Compile>
+    <Compile Include="HeldPaperRePrint.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="HeldSearch.Designer.vb">
+      <DependentUpon>HeldSearch.vb</DependentUpon>
+    </Compile>
+    <Compile Include="HeldSearch.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="IntUtly.vb" />
+    <Compile Include="LodngFrm.Designer.vb">
+      <DependentUpon>LodngFrm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="LodngFrm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Login.Designer.vb">
+      <DependentUpon>Login.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Login.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="My Project\AssemblyInfo.vb" />
+    <Compile Include="My Project\Application.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Application.myapp</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="My Project\Settings.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="MyProfile.designer.vb">
+      <DependentUpon>MyProfile.vb</DependentUpon>
+    </Compile>
+    <Compile Include="MyProfile.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NewTicket.Designer.vb">
+      <DependentUpon>NewTicket.vb</DependentUpon>
+    </Compile>
+    <Compile Include="NewTicket.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="PublicCode.vb" />
+    <Compile Include="ReAsgn1.Designer.vb">
+      <DependentUpon>ReAsgn1.vb</DependentUpon>
+    </Compile>
+    <Compile Include="ReAsgn1.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ReLogin.Designer.vb">
+      <DependentUpon>ReLogin.vb</DependentUpon>
+    </Compile>
+    <Compile Include="ReLogin.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ReopnComp.Designer.vb">
+      <DependentUpon>ReopnComp.vb</DependentUpon>
+    </Compile>
+    <Compile Include="ReopnComp.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SecFrm.Designer.vb">
+      <DependentUpon>SecFrm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="SecFrm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="SecFrmSub.Designer.vb">
+      <DependentUpon>SecFrmSub.vb</DependentUpon>
+    </Compile>
+    <Compile Include="SecFrmSub.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Strc.vb" />
+    <Compile Include="SupLog.Designer.vb">
+      <DependentUpon>SupLog.vb</DependentUpon>
+    </Compile>
+    <Compile Include="SupLog.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TikEdit.Designer.vb">
+      <DependentUpon>TikEdit.vb</DependentUpon>
+    </Compile>
+    <Compile Include="TikEdit.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TikSearch.Designer.vb">
+      <DependentUpon>TikSearch.vb</DependentUpon>
+    </Compile>
+    <Compile Include="TikSearch.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TotView.Designer.vb">
+      <DependentUpon>TotView.vb</DependentUpon>
+    </Compile>
+    <Compile Include="TotView.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UCategories.Designer.vb">
+      <DependentUpon>UCategories.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UCategories.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UConfigCtrls.Designer.vb">
+      <DependentUpon>UConfigCtrls.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UConfigCtrls.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UConstr.Designer.vb">
+      <DependentUpon>UConstr.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UConstr.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UCreate.designer.vb">
+      <DependentUpon>UCreate.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UCreate.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UReset.Designer.vb">
+      <DependentUpon>UReset.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UReset.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UsrInfo.Designer.vb">
+      <DependentUpon>UsrInfo.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UsrInfo.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UsrNewFrm.Designer.vb">
+      <DependentUpon>UsrNewFrm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="UsrNewFrm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="VCtheme.vb" />
+    <Compile Include="vocaplusDataSet1.Designer.vb">
+      <DependentUpon>vocaplusDataSet1.xsd</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="vocaplusDataSet.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>vocaplusDataSet.xsd</DependentUpon>
+    </Compile>
+    <Compile Include="WelcomeScreen.Designer.vb">
+      <DependentUpon>WelcomeScreen.vb</DependentUpon>
+    </Compile>
+    <Compile Include="WelcomeScreen.vb">
+      <SubType>Form</SubType>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="AttedBarcd.resx">
+      <DependentUpon>AttedBarcd.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Categories.resx">
+      <DependentUpon>Categories.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="CompSetup.resx">
+      <DependentUpon>CompSetup.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DistribTicket.resx">
+      <DependentUpon>DistribTicket.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DriveMy.resx">
+      <DependentUpon>DriveMy.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ExportAshraf.resx">
+      <DependentUpon>ExportAshraf.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ExportAdmin.resx">
+      <DependentUpon>ExportAdmin.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TikFolow.resx">
+      <DependentUpon>TikFolow.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HeldDlvryRprt.resx">
+      <DependentUpon>HeldDlvryRprt.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TikDetails.resx">
+      <DependentUpon>TikDetails.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TikSearchNew.resx">
+      <DependentUpon>TikSearchNew.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TikUpdate.resx">
+      <DependentUpon>TikUpdate.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UsrCreat.resx">
+      <DependentUpon>UsrCreat.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TicketBulk.resx">
+      <DependentUpon>TicketBulk.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WFMFrstLog.resx">
+      <DependentUpon>WFMFrstLog.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WFM.resx">
+      <DependentUpon>WFM.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HeldRepFrm.resx">
+      <DependentUpon>HeldRepFrm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PostalInt.resx">
+      <DependentUpon>PostalInt.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PostOffSearch.resx">
+      <DependentUpon>PostOffSearch.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="PostalExt.resx">
+      <DependentUpon>PostalExt.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TestFlowPanel.resx">
+      <DependentUpon>TestFlowPanel.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TicketRAsgnMany.resx">
+      <DependentUpon>TicketRAsgnMany.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FolwTeam.resx">
+      <DependentUpon>FolwTeam.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FolwTicket.resx">
+      <DependentUpon>FolwTicket.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FolwTicketClsd.resx">
+      <DependentUpon>FolwTicketClsd.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Held.rdlc" />
+    <EmbeddedResource Include="HeldImport.resx">
+      <DependentUpon>HeldImport.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HeldPaperPrint.resx">
+      <DependentUpon>HeldPaperPrint.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HeldPaperReciev.resx">
+      <DependentUpon>HeldPaperReciev.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HeldNtfReturn.resx">
+      <DependentUpon>HeldNtfReturn.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HeldPaperRePrint.resx">
+      <DependentUpon>HeldPaperRePrint.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HeldPaprNtfPrepare.resx">
+      <DependentUpon>HeldPaprNtfPrepare.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HeldPaprNtfPrint.resx">
+      <DependentUpon>HeldPaprNtfPrint.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HeldPaprNtf.resx">
+      <DependentUpon>HeldPaprNtf.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HeldPhAllUsr.resx">
+      <DependentUpon>HeldPhAllUsr.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HeldPhPool.resx">
+      <DependentUpon>HeldPhPool.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HeldPhNtf.resx">
+      <DependentUpon>HeldPhNtf.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="HeldSearch.resx">
+      <DependentUpon>HeldSearch.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LodngFrm.resx">
+      <DependentUpon>LodngFrm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MyProfile.resx">
+      <DependentUpon>MyProfile.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NewTicket.resx">
+      <DependentUpon>NewTicket.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReAsgn1.resx">
+      <DependentUpon>ReAsgn1.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReopnComp.resx">
+      <DependentUpon>ReopnComp.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ExpReprt.rdlc" />
+    <EmbeddedResource Include="SecFrm.resx">
+      <DependentUpon>SecFrm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SecFrmSub.resx">
+      <DependentUpon>SecFrmSub.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Start.resx">
+      <DependentUpon>Start.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="SupLog.resx">
+      <DependentUpon>SupLog.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Test.resx">
+      <DependentUpon>Test.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TikEdit.resx">
+      <DependentUpon>TikEdit.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TikRep.rdlc" />
+    <EmbeddedResource Include="TikFrmRep.resx">
+      <DependentUpon>TikFrmRep.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Login.resx">
+      <DependentUpon>Login.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ReLogin.resx">
+      <DependentUpon>ReLogin.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TikSearch.resx">
+      <DependentUpon>TikSearch.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="TotView.resx">
+      <DependentUpon>TotView.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UCategories.resx">
+      <DependentUpon>UCategories.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UConfigCtrls.resx">
+      <DependentUpon>UConfigCtrls.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UConstr.resx">
+      <DependentUpon>UConstr.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UCreate.resx">
+      <DependentUpon>UCreate.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UReset.resx">
+      <DependentUpon>UReset.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UsrInfo.resx">
+      <DependentUpon>UsrInfo.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UsrNewFrm.resx">
+      <DependentUpon>UsrNewFrm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="WelcomeScreen.resx">
+      <DependentUpon>WelcomeScreen.vb</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="DataSetRep.xsc">
+      <DependentUpon>DataSetRep.xsd</DependentUpon>
+    </None>
+    <None Include="DataSetRep.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>DataSetRep.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="DataSetRep.xss">
+      <DependentUpon>DataSetRep.xsd</DependentUpon>
+    </None>
+    <None Include="DataSetRepVisible.xsc">
+      <DependentUpon>DataSetRepVisible.xsd</DependentUpon>
+    </None>
+    <None Include="DataSetRepVisible.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>DataSetRepVisible.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="DataSetRepVisible.xss">
+      <DependentUpon>DataSetRepVisible.xsd</DependentUpon>
+    </None>
+    <None Include="HeldaperPrnt.xsc">
+      <DependentUpon>HeldaperPrnt.xsd</DependentUpon>
+    </None>
+    <None Include="HeldaperPrnt.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>HeldaperPrnt.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="HeldaperPrnt.xss">
+      <DependentUpon>HeldaperPrnt.xsd</DependentUpon>
+    </None>
+    <None Include="My Project\app.manifest" />
+    <None Include="My Project\Application.myapp">
+      <Generator>MyApplicationCodeGenerator</Generator>
+      <LastGenOutput>Application.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="My Project\DataSources\DataSet1.datasource" />
+    <None Include="My Project\DataSources\vocaplusDataSet.datasource" />
+    <None Include="My Project\DataSources\vocaplusDataSet.ExportView1DataTable.datasource" />
+    <None Include="My Project\DataSources\vocaplusDataSet.ExportView2DataTable.datasource" />
+    <None Include="My Project\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <CustomToolNamespace>My</CustomToolNamespace>
+      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+    <None Include="vocaplusDataSet1.xsc">
+      <DependentUpon>vocaplusDataSet1.xsd</DependentUpon>
+    </None>
+    <None Include="vocaplusDataSet1.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>vocaplusDataSet1.Designer.vb</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="vocaplusDataSet1.xss">
+      <DependentUpon>vocaplusDataSet1.xsd</DependentUpon>
+    </None>
+    <None Include="vocaplusDataSet.xsc">
+      <DependentUpon>vocaplusDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="vocaplusDataSet.xsd">
+      <SubType>Designer</SubType>
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>vocaplusDataSet.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="vocaplusDataSet.xss">
+      <DependentUpon>vocaplusDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="VOCAPlus_TemporaryKey.pfx" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Exit.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\VOCAIntro.gif" />
+    <None Include="Resources\Phone1.png" />
+    <None Include="Resources\paprNtf.png" />
+    <None Include="Resources\Catch.png" />
+    <None Include="Resources\Catch1.png" />
+    <None Include="Resources\Reset1.png" />
+    <None Include="Resources\Format1.png" />
+    <None Include="Resources\pin1.png" />
+    <None Include="Resources\new1.png" />
+    <None Include="Resources\Paste1.png" />
+    <None Include="Resources\CopyWrite.gif" />
+    <None Include="Resources\VOCAIntro2.gif" />
+    <None Include="Resources\Egyptpost.png" />
+    <None Include="Resources\UPU.jpg" />
+    <None Include="Resources\Egyptpost.jpg" />
+    <None Include="Resources\Preview1.png" />
+    <None Include="Resources\NO.png" />
+    <None Include="Resources\Yes.png" />
+    <None Include="Resources\Collapse.png" />
+    <None Include="Resources\Expand.png" />
+    <None Include="Resources\20200814_211149.jpg" />
+    <None Include="Resources\VOCAIntro3.gif" />
+    <Content Include="OfflineDB.mdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="OfflineDB_log.ldf">
+      <DependentUpon>OfflineDB.mdf</DependentUpon>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="Resources\Update.png" />
+    <Content Include="SqlServerTypes\Loader.cs" />
+    <Content Include="SqlServerTypes\readme.htm" />
+    <Content Include="SqlServerTypes\x64\msvcr120.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SqlServerTypes\x64\SqlServerSpatial140.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SqlServerTypes\x86\msvcr120.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="SqlServerTypes\x86\SqlServerSpatial140.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="VocaIcon2.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include=".NETFramework,Version=v4.5.2">
+      <Visible>False</Visible>
+      <ProductName>Microsoft .NET Framework 4.5.2 %28x86 and x64%29</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
+</Project>
