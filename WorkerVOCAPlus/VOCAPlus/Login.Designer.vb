@@ -45,7 +45,11 @@ Partial Class Login
         Me.Button1 = New System.Windows.Forms.Button()
         Me.ImageList1 = New System.Windows.Forms.ImageList(Me.components)
         Me.TimerClose = New System.Windows.Forms.Timer(Me.components)
-        Me.BackgroundWorker1 = New System.ComponentModel.BackgroundWorker()
+        Me.HrdWrWrkr = New System.ComponentModel.BackgroundWorker()
+        Me.ConStrWrkr = New System.ComponentModel.BackgroundWorker()
+        Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
+        Me.WChckConn = New System.ComponentModel.BackgroundWorker()
+        Me.WrkrLogin = New System.ComponentModel.BackgroundWorker()
         CType(Me.StatusBarPanel1, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.PictureBox2, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.Panel1.SuspendLayout()
@@ -161,7 +165,7 @@ Partial Class Login
         Me.LblUsrIP.BackColor = System.Drawing.Color.Transparent
         Me.LblUsrIP.Font = New System.Drawing.Font("Times New Roman", 9.0!)
         Me.LblUsrIP.ForeColor = System.Drawing.Color.Red
-        Me.LblUsrIP.Location = New System.Drawing.Point(345, 264)
+        Me.LblUsrIP.Location = New System.Drawing.Point(345, 257)
         Me.LblUsrIP.Name = "LblUsrIP"
         Me.LblUsrIP.Size = New System.Drawing.Size(235, 20)
         Me.LblUsrIP.TabIndex = 68
@@ -186,7 +190,7 @@ Partial Class Login
         Me.PubVerLbl.BackColor = System.Drawing.Color.Transparent
         Me.PubVerLbl.Font = New System.Drawing.Font("Times New Roman", 9.0!)
         Me.PubVerLbl.ForeColor = System.Drawing.Color.Red
-        Me.PubVerLbl.Location = New System.Drawing.Point(348, 281)
+        Me.PubVerLbl.Location = New System.Drawing.Point(348, 274)
         Me.PubVerLbl.Name = "PubVerLbl"
         Me.PubVerLbl.Size = New System.Drawing.Size(232, 24)
         Me.PubVerLbl.TabIndex = 74
@@ -292,6 +296,31 @@ Partial Class Login
         '
         Me.TimerClose.Interval = 50
         '
+        'HrdWrWrkr
+        '
+        Me.HrdWrWrkr.WorkerReportsProgress = True
+        Me.HrdWrWrkr.WorkerSupportsCancellation = True
+        '
+        'ConStrWrkr
+        '
+        Me.ConStrWrkr.WorkerReportsProgress = True
+        Me.ConStrWrkr.WorkerSupportsCancellation = True
+        '
+        'Timer1
+        '
+        Me.Timer1.Enabled = True
+        Me.Timer1.Interval = 1000
+        '
+        'WChckConn
+        '
+        Me.WChckConn.WorkerReportsProgress = True
+        Me.WChckConn.WorkerSupportsCancellation = True
+        '
+        'WrkrLogin
+        '
+        Me.WrkrLogin.WorkerReportsProgress = True
+        Me.WrkrLogin.WorkerSupportsCancellation = True
+        '
         'Login
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -353,5 +382,9 @@ Partial Class Login
     Friend WithEvents Button1 As Button
     Friend WithEvents ImageList1 As ImageList
     Friend WithEvents TimerClose As Timer
-    Friend WithEvents BackgroundWorker1 As System.ComponentModel.BackgroundWorker
+    Friend WithEvents HrdWrWrkr As System.ComponentModel.BackgroundWorker
+    Friend WithEvents ConStrWrkr As System.ComponentModel.BackgroundWorker
+    Friend WithEvents Timer1 As Timer
+    Friend WithEvents WChckConn As System.ComponentModel.BackgroundWorker
+    Friend WithEvents WrkrLogin As System.ComponentModel.BackgroundWorker
 End Class

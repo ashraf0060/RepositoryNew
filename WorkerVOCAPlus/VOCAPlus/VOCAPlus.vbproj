@@ -29,7 +29,7 @@
     <ProductName>VOCA Plus</ProductName>
     <PublisherName>Ashaf Farag</PublisherName>
     <MinimumRequiredVersion>4.0.0.1</MinimumRequiredVersion>
-    <ApplicationRevision>6</ApplicationRevision>
+    <ApplicationRevision>8</ApplicationRevision>
     <ApplicationVersion>4.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>
@@ -167,7 +167,7 @@
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AAAAA.vb" />
+    <Compile Include="APblicClss.vb" />
     <Compile Include="ApplicationEvents.vb" />
     <Compile Include="AttedBarcd.Designer.vb">
       <DependentUpon>AttedBarcd.vb</DependentUpon>

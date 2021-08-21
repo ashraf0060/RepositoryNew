@@ -10,8 +10,41 @@ Imports VOCAPlus.Strc
 Imports System.Threading
 Module PublicCode
 
+    'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+    Public Menu_ As New MenuStrip
+    Public CntxMenu As New ContextMenuStrip
+    Public MacStr As String
     Public screenWidth As Integer = Screen.PrimaryScreen.Bounds.Width
     Public screenHeight As Integer = Screen.PrimaryScreen.Bounds.Height
+    Public ServerCD As String = "Eg Server"
+    Public ServerNm As String = "VOCA Server"
+    Public strConn As String = "Data Source=10.10.26.4;Initial Catalog=VOCAPlus;Persist Security Info=True;User ID=vocaplus21;Password=@VocaPlus$21-4"
+    Public sqlCon As New SqlConnection(strConn) ' I Have assigned conn STR here and delete this row from all project
+    Public Bol As Boolean
+
+    Public HardTable As DataTable = New DataTable
+    Public MacTable As New DataTable
+    Public UserTable As DataTable = New DataTable
+    Public tempTable As DataTable = New DataTable
+
+    Public AreaTable As DataTable = New DataTable
+    Public OfficeTable As DataTable = New DataTable
+    Public CompSurceTable As DataTable = New DataTable
+    Public CountryTable As DataTable = New DataTable
+    Public ProdKTable As DataTable = New DataTable
+    Public ProdCompTable As DataTable = New DataTable
+    Public UpdateKTable As DataTable = New DataTable
+    Public FTPTable As New DataTable
+    Public CtrlsTbl As DataTable = New DataTable
+    Public ConTbl As New DataTable
+    Public LogOfflinTbl As New DataTable
+    Public CompfflinTbl As New DataTable
+
+    Public PreciFlag As Boolean = False                 'Load princible tables
+    Public PrciTblCnt As Integer = 0                    'Counter for Thread
+    'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+
+
 
     Public MLXX As String = ""       ' Mail Password From Lib Table
     Public Errmsg As String          ' Handel error message
@@ -39,24 +72,10 @@ Module PublicCode
     Public sqlComminsert_4 As New SqlCommand            'SQL Command
     Public Reader_ As SqlDataReader                     'SQL Reader
     Public SQLTblAdptr As New SqlDataAdapter            'SQL Table Adapter
-    Public tempTable As DataTable = New DataTable
-    Public UserTable As DataTable = New DataTable
-    Public AreaTable As DataTable = New DataTable
-    Public OfficeTable As DataTable = New DataTable
-    Public CompSurceTable As DataTable = New DataTable
-    Public CountryTable As DataTable = New DataTable
-    Public ProdKTable As DataTable = New DataTable
-    Public ProdCompTable As DataTable = New DataTable
-    Public UpdateKTable As DataTable = New DataTable
-    Public FTPTable As New DataTable
-    Public MacTable As New DataTable
-    Public CtrlsTbl As DataTable = New DataTable
-    Public ConTbl As New DataTable
-    Public LogOfflinTbl As New DataTable
-    Public CompfflinTbl As New DataTable
 
-    Public PreciFlag As Boolean = False                 'Load princible tables
-    Public PrciTblCnt As Integer = 0                    'Counter for Thread
+
+
+
     Public ExpDTable As New DataTable                   'Export data Function to use its count every time i use this function
     Public ExpTrFlseTable As New DataTable
     Public ExpStr As String
@@ -69,11 +88,11 @@ Module PublicCode
     Public LblSecLvl_ As String = "" 'FOR SEC fORM
     'Public Const strConn As String = "Data Source=sql5041.site4now.net;Initial Catalog=DB_A49C49_vocaplus;Persist Security Info=True;User ID=DB_A49C49_vocaplus_admin;Password=Hemonad105046"
     'Public Const strConn As String = "Server=tcp:egyptpostazure.database.windows.net,1433;Initial Catalog=vocaplus;Persist Security Info=False;User ID=sw;Password=Hemonad105046;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
-    Public strConn As String = "Data Source=10.10.26.4;Initial Catalog=VOCAPlus;Persist Security Info=True;User ID=vocaplus21;Password=@VocaPlus$21-4"
+
     'Public strConnCssys As String = "Data Source=10.10.26.4;Initial Catalog=CSSYS;Persist Security Info=True;User ID=import;Password=ASD_asd123"
     'Public Const strConn As String = "Data Source=HOSPC\HOSPCSQLSRV;Initial Catalog=VOCAPlus;Persist Security Info=True;User ID=sa;Password=Hemonad105046"
-    Public sqlCon As New SqlConnection(strConn) ' I Have assigned conn STR here and delete this row from all project
-    Public ServerNm As String = "Egypt Post Server"
+
+
     Public Distin As String = ""
     Public StrFileName As String = "X"
     Public Nw As DateTime = ServrTime()
@@ -469,6 +488,8 @@ End_:
         Dim SQLGetAdptr As New SqlDataAdapter            'SQL Table Adapter
         Dim sqlCommW As New SqlCommand
         Try
+            sqlCon = New SqlConnection
+            sqlCon.ConnectionString = strConn
             If sqlCon.State = ConnectionState.Closed Then
                 sqlCon.Open()
             End If

@@ -24,21 +24,18 @@ Public Class WelcomeScreen
     Dim Grid2 As New DataGridView
     'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
     Private Sub WelcomeScreen_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-
-
-
-        PubVerLbl.Text = "IP: " & OsIP()
+        If PreciFlag = True Then
+            PubVerLbl.Text = "IP: " & OsIP()
             'AssVerLbl.Text = "Assembly Ver. : " & My.Application.Info.Version.ToString
             If Deployment.Application.ApplicationDeployment.IsNetworkDeployed Then
                 LblUsrIP.Text = "Ver. : " + Deployment.Application.ApplicationDeployment.CurrentDeployment.CurrentVersion.ToString(4)
             Else
                 LblUsrIP.Text = "Publish Ver. : This isn't a Publish version"
             End If
-
-
-            GC.Collect()
-        'StartServer()
-
+        Else
+            Me.Close()
+        End If
+        GC.Collect()
     End Sub
 
     'Exit Button close Welcome Screen And Update Active Status in Int_User Table
@@ -215,12 +212,19 @@ Public Class WelcomeScreen
         PublicCode.InsUpd("UPDATE Int_user SET UsrActive = 0" & " WHERE (UsrId = " & Usr.PUsrID & ");", "1006&H")  'Update User Active = false
     End Sub
     Private Sub TimerCon_Tick(sender As Object, e As EventArgs) Handles TimerCon.Tick
-        ThreadPool.QueueUserWorkItem(AddressOf Conoff)
+        If IsHandleCreated = True Then
+            Invoke(Sub()
+                       Dim state As New APblicClss.Defntion
+                       WChckConn.CancelAsync()
+                       Dim Cn As New APblicClss.Func
+                       If WChckConn.IsBusy = False Then
+                           Invoke(Sub() WChckConn.RunWorkerAsync(Cn))
+                       End If
+                   End Sub)
+        End If
     End Sub
-    Private Sub Conoff()
+    Private Sub Conofssssssssssssssssf()
         If Me.IsHandleCreated Then
-
-
             Try
                 If sqlCon.State = ConnectionState.Closed Then
                     sqlCon.Open()
@@ -241,13 +245,36 @@ Public Class WelcomeScreen
             End Try
         End If
     End Sub
+#Region "Check Connection"
+    Private Sub WChckConn_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles WChckConn.DoWork
+        Dim worker1 As System.ComponentModel.BackgroundWorker
+        worker1 = CType(sender, System.ComponentModel.BackgroundWorker)
+        Dim WC1 As APblicClss.Func = CType(e.Argument, APblicClss.Func)
+        WC1.Conoff(worker1)
+    End Sub
+    Private Sub WChckConn_ProgressChanged(sender As Object, e As System.ComponentModel.ProgressChangedEventArgs) Handles WChckConn.ProgressChanged
+        If Me.IsHandleCreated = True Then
+            Invoke(Sub()
+                       Dim state As APblicClss.Defntion = CType(e.UserState, APblicClss.Defntion)
+                       If Bol = True Then
+                           StatusBar1.Invoke(Sub() StatBrPnlEn.Text = "Online " & ServerNm)
+                           StatusBar1.Invoke(Sub() StatBrPnlEn.Icon = My.Resources.WSOn032)
+                       ElseIf Bol = False Then
+                           StatusBar1.Invoke(Sub() StatBrPnlEn.Icon = My.Resources.WSOff032)
+                           StatusBar1.Invoke(Sub() StatBrPnlEn.Text = "Offline " & ServerNm)
+                       End If
+                   End Sub)
+        End If
+    End Sub
+#End Region
     'Declare Function SetProcessWorkingSetSize Lib "kernel32.dll" (ByVal process As IntPtr, ByVal minimumWorkingSetSize As Integer, ByVal maximumWorkingSetSize As Integer) As Integer
     Private Sub DbStat_MouseHover(sender As Object, e As EventArgs) Handles DbStat.MouseHover
         ToolTip1.Show(DbStat.Tag, DbStat, 0, 20, 2000)
     End Sub
     Private Sub MenuSw_Click(sender As Object, e As EventArgs) Handles MenuSw.Click
+        Dim Fn As New APblicClss.Func
         If PreciFlag = True Then
-            PublicCode.InsUpd("UPDATE Int_user SET UsrLastSeen = '" & Format(Now, "yyyy/MM/dd h:mm:ss") & "' WHERE (UsrId = " & Usr.PUsrID & ");", "1006&H")  'Update User Active = false
+            Fn.InsUpd("UPDATE Int_user SET UsrLastSeen = '" & Format(Now, "yyyy/MM/dd h:mm:ss") & "' WHERE (UsrId = " & Usr.PUsrID & ");", "1006&H")  'Update User Active = false
         End If
     End Sub
     Private Sub TimrFlsh_Tick(sender As Object, e As EventArgs) Handles TimrFlsh.Tick
@@ -441,58 +468,42 @@ Public Class WelcomeScreen
     End Sub
 
     Private Sub WelcomeScreen_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
+        CntxtMnuStrp.Close()
         Me.Dispose()
     End Sub
 
     Private Sub WelcomeScreen_Activated(sender As Object, e As EventArgs) Handles MyBase.Activated
         FrmAllSub(Me)
         TimerOp.Start()
-        LblSrvrNm.Text = ServerNm
+
         Me.Size = New Point(screenWidth, screenHeight)
         If System.Text.Encoding.Default.HeaderName <> "windows-1256" Then
             GroupBox1.Visible = False
             GrpCounters.Visible = False
             Me.BackgroundImage = My.Resources.Language_for_Non_Unicode_Programs
         Else
-            LblLanguage.Visible = False
-            FlowLayoutPanel1.Visible = False
-            If ServerNm = "Egypt Post Server" Then
-                Me.BackgroundImage = My.Resources.VocaWtr
-                Me.BackgroundImageLayout = ImageLayout.Stretch
-                Me.BackColor = Color.FromArgb(192, 255, 192)
-            ElseIf ServerNm = "My Labtop" Then
-                Me.BackgroundImage = My.Resources.Empty
-                Me.BackColor = Color.White
-            ElseIf ServerNm = "Test Database" Then
-                Me.BackgroundImage = My.Resources.Demo
-                Me.BackgroundImageLayout = ImageLayout.Tile
-                Me.BackColor = Color.White
+            'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+            Dim Ext_ As Boolean = False
+            For Each N As ToolStripMenuItem In CntxtMnuStrp.Items
+                If N.Text = "Sign Out" Then
+                    Ext_ = True
+                    Exit For
+                End If
+            Next
+
+            If Ext_ = False Then
+                Dim Signout As New ToolStripMenuItem("Sign Out")  'YYYYYYYYYYY
+                Dim Exit_ As New ToolStripMenuItem("Exit")  'YYYYYYYYYYY
+                CntxtMnuStrp.Items.Add(Signout)  'YYYYYYYYYYY
+                CntxtMnuStrp.Items.Add(Exit_)  'YYYYYYYYYYY
+
+                RemoveHandler Signout.Click, AddressOf SnOutBt_Click  'YYYYYYYYYYY
+                RemoveHandler Exit_.Click, AddressOf ExtBt_Click  'YYYYYYYYYYY
+
+                AddHandler Signout.Click, AddressOf SnOutBt_Click  'YYYYYYYYYYY
+                AddHandler Exit_.Click, AddressOf ExtBt_Click  'YYYYYYYYYYY
             End If
 
-            DbStat.BackgroundImage = My.Resources.DBOn
-            DbStat.Tag = "تم تحميل قواعد البيانات الأساسية بنجـــاح"
-            'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-
-            Dim Signout As New ToolStripMenuItem("Sign Out")  'YYYYYYYYYYY
-            Dim Exit_ As New ToolStripMenuItem("Exit")  'YYYYYYYYYYY
-            CntxtMnuStrp.Items.Add(Signout)  'YYYYYYYYYYY
-            CntxtMnuStrp.Items.Add(Exit_)  'YYYYYYYYYYY
-
-            RemoveHandler Signout.Click, AddressOf SnOutBt_Click  'YYYYYYYYYYY
-            RemoveHandler Exit_.Click, AddressOf ExtBt_Click  'YYYYYYYYYYY
-
-            AddHandler Signout.Click, AddressOf SnOutBt_Click  'YYYYYYYYYYY
-            AddHandler Exit_.Click, AddressOf ExtBt_Click  'YYYYYYYYYYY
-
-            LblLstSeen.Text = "Last Seen : " & Nw 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-            StatBrPnlEn.Text = "  Online  "
-            StatBrPnlEn.Icon = My.Resources.WSOn032
-
-            LblClrSys.BackColor = My.Settings.ClrSys
-            LblClrUsr.BackColor = My.Settings.ClrUsr
-            LblClrSamCat.BackColor = My.Settings.ClrSamCat
-            LblClrNotUsr.BackColor = My.Settings.ClrNotUsr
-            LblClrOperation.BackColor = My.Settings.ClrOperation
             Dim ConterWidt As Integer = 0
             If Usr.PUsrUCatLvl >= 3 And Usr.PUsrUCatLvl <= 5 Then
                 GrpCounters.Text = "ملخص أرقامي حتى : " & Now
@@ -519,7 +530,8 @@ Public Class WelcomeScreen
             LblLstSeen.Margin = New Padding(LblLstSeen.Margin.Left, LblLstSeen.Margin.Top, FlowLayoutPanel1.ClientRectangle.Width - (LblLstSeen.Width + LblUsrRNm.Margin.Left), LblLstSeen.Margin.Bottom)
             TimerTikCoun.Start()
             TimrFlsh.Start()
-            FlowLayoutPanel1.Visible = True
+
         End If
     End Sub
+
 End Class

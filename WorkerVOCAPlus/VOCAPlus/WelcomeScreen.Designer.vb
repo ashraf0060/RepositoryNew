@@ -80,6 +80,7 @@ Partial Class WelcomeScreen
         Me.Panel1 = New System.Windows.Forms.Panel()
         Me.Panel3 = New System.Windows.Forms.Panel()
         Me.TimerColctLog = New System.Windows.Forms.Timer(Me.components)
+        Me.WChckConn = New System.ComponentModel.BackgroundWorker()
         CType(Me.StatBrPnlEn, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.StatBrPnlAr, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.DbStat, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -103,7 +104,7 @@ Partial Class WelcomeScreen
         Me.StatusBar1.Location = New System.Drawing.Point(0, 639)
         Me.StatusBar1.Name = "StatusBar1"
         Me.StatusBar1.Panels.AddRange(New System.Windows.Forms.StatusBarPanel() {Me.StatBrPnlEn, Me.StatBrPnlAr})
-        Me.StatusBar1.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+        Me.StatusBar1.RightToLeft = System.Windows.Forms.RightToLeft.No
         Me.StatusBar1.ShowPanels = True
         Me.StatusBar1.Size = New System.Drawing.Size(1317, 33)
         Me.StatusBar1.SizingGrip = False
@@ -111,13 +112,13 @@ Partial Class WelcomeScreen
         '
         'StatBrPnlEn
         '
-        Me.StatBrPnlEn.Alignment = System.Windows.Forms.HorizontalAlignment.Right
         Me.StatBrPnlEn.AutoSize = System.Windows.Forms.StatusBarPanelAutoSize.Spring
         Me.StatBrPnlEn.Name = "StatBrPnlEn"
         Me.StatBrPnlEn.Width = 658
         '
         'StatBrPnlAr
         '
+        Me.StatBrPnlAr.Alignment = System.Windows.Forms.HorizontalAlignment.Right
         Me.StatBrPnlAr.AutoSize = System.Windows.Forms.StatusBarPanelAutoSize.Spring
         Me.StatBrPnlAr.Name = "StatBrPnlAr"
         Me.StatBrPnlAr.Width = 658
@@ -177,6 +178,7 @@ Partial Class WelcomeScreen
         '
         'TimerCon
         '
+        Me.TimerCon.Enabled = True
         Me.TimerCon.Interval = 1000
         '
         'LblUsrIP
@@ -761,6 +763,11 @@ Partial Class WelcomeScreen
         '
         Me.TimerColctLog.Interval = 600000
         '
+        'WChckConn
+        '
+        Me.WChckConn.WorkerReportsProgress = True
+        Me.WChckConn.WorkerSupportsCancellation = True
+        '
         'WelcomeScreen
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -850,4 +857,5 @@ Partial Class WelcomeScreen
     Friend WithEvents TimerColctLog As Timer
     Friend WithEvents Panel3 As Panel
     Friend WithEvents Button2 As Button
+    Friend WithEvents WChckConn As System.ComponentModel.BackgroundWorker
 End Class

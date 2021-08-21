@@ -3,6 +3,7 @@ Imports System.Threading
 
 Public Class Start
     Private Sub Start_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        MacStr = GetMACAddressNew()
         Invoke(Sub() LblUsrIP.Text = "IP: " & OsIP())
         If Deployment.Application.ApplicationDeployment.IsNetworkDeployed Then
             Invoke(Sub() PubVerLbl.Text = "Ver. : " + Deployment.Application.ApplicationDeployment.CurrentDeployment.CurrentVersion.ToString(4))

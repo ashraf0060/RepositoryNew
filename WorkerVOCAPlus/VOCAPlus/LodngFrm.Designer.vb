@@ -24,6 +24,7 @@ Partial Class LodngFrm
     Private Sub InitializeComponent()
         Me.PictureBox1 = New System.Windows.Forms.PictureBox()
         Me.LblMsg = New System.Windows.Forms.RichTextBox()
+        Me.BackgroundWorker1 = New System.ComponentModel.BackgroundWorker()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -54,6 +55,11 @@ Partial Class LodngFrm
         Me.LblMsg.TabStop = False
         Me.LblMsg.Text = ""
         '
+        'BackgroundWorker1
+        '
+        Me.BackgroundWorker1.WorkerReportsProgress = True
+        Me.BackgroundWorker1.WorkerSupportsCancellation = True
+        '
         'LodngFrm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -79,4 +85,5 @@ Partial Class LodngFrm
 
     Friend WithEvents PictureBox1 As PictureBox
     Friend WithEvents LblMsg As RichTextBox
+    Friend WithEvents BackgroundWorker1 As System.ComponentModel.BackgroundWorker
 End Class
