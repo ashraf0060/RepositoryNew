@@ -81,6 +81,7 @@ Partial Class WelcomeScreen
         Me.Panel3 = New System.Windows.Forms.Panel()
         Me.TimerColctLog = New System.Windows.Forms.Timer(Me.components)
         Me.WChckConn = New System.ComponentModel.BackgroundWorker()
+        Me.WkrTikCount = New System.ComponentModel.BackgroundWorker()
         CType(Me.StatBrPnlEn, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.StatBrPnlAr, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.DbStat, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -125,7 +126,8 @@ Partial Class WelcomeScreen
         '
         'TimerTikCoun
         '
-        Me.TimerTikCoun.Interval = 60000
+        Me.TimerTikCoun.Enabled = True
+        Me.TimerTikCoun.Interval = 600000
         '
         'MenuSw
         '
@@ -178,7 +180,6 @@ Partial Class WelcomeScreen
         '
         'TimerCon
         '
-        Me.TimerCon.Enabled = True
         Me.TimerCon.Interval = 1000
         '
         'LblUsrIP
@@ -768,6 +769,11 @@ Partial Class WelcomeScreen
         Me.WChckConn.WorkerReportsProgress = True
         Me.WChckConn.WorkerSupportsCancellation = True
         '
+        'WkrTikCount
+        '
+        Me.WkrTikCount.WorkerReportsProgress = True
+        Me.WkrTikCount.WorkerSupportsCancellation = True
+        '
         'WelcomeScreen
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -858,4 +864,5 @@ Partial Class WelcomeScreen
     Friend WithEvents Panel3 As Panel
     Friend WithEvents Button2 As Button
     Friend WithEvents WChckConn As System.ComponentModel.BackgroundWorker
+    Friend WithEvents WkrTikCount As System.ComponentModel.BackgroundWorker
 End Class

@@ -110,6 +110,12 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Test.Designer.vb">
+      <DependentUpon>Test.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Test.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Words.vb" />
   </ItemGroup>
   <ItemGroup>
@@ -127,6 +133,9 @@
       <LastGenOutput>Resources.Designer.vb</LastGenOutput>
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Test.resx">
+      <DependentUpon>Test.vb</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

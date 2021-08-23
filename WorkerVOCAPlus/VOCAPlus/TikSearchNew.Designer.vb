@@ -42,6 +42,7 @@ Partial Class TikSearchNew
         Me.Label2 = New System.Windows.Forms.Label()
         Me.Label32 = New System.Windows.Forms.Label()
         Me.ProgressBar1 = New System.Windows.Forms.ProgressBar()
+        Me.BackgroundWorker1 = New System.ComponentModel.BackgroundWorker()
         Me.GroupBox1.SuspendLayout()
         Me.GroupBox2.SuspendLayout()
         CType(Me.GridTicket, System.ComponentModel.ISupportInitialize).BeginInit()
@@ -289,6 +290,10 @@ Partial Class TikSearchNew
         Me.ProgressBar1.TabIndex = 2167
         Me.ProgressBar1.Visible = False
         '
+        'BackgroundWorker1
+        '
+        Me.BackgroundWorker1.WorkerReportsProgress = True
+        '
         'TikSearchNew
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -343,4 +348,5 @@ Partial Class TikSearchNew
     Friend WithEvents Label2 As Label
     Friend WithEvents Label32 As Label
     Friend WithEvents ProgressBar1 As ProgressBar
+    Friend WithEvents BackgroundWorker1 As System.ComponentModel.BackgroundWorker
 End Class

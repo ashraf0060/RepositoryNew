@@ -13,6 +13,7 @@ Public Class Login
         worker = CType(sender, System.ComponentModel.BackgroundWorker)
         ' Get the Words object and call the main method.
         Dim WC As APblicClss.Func = CType(e.Argument, APblicClss.Func)
+        WC.ConStrFn(worker)
         WC.HrdWre(worker)
     End Sub
     <Obsolete>
@@ -40,8 +41,12 @@ Public Class Login
         Cmbo.Items.Add("Eg Server")
         Cmbo.Items.Add("My Labtop")
         Cmbo.Items.Add("Test Database")
+        Cmbo.Items.Add("OnLine")
         Cmbo.SelectedItem = "Eg Server"
         ServerCD = Cmbo.SelectedItem
+
+        MacStr = GetMACAddressNew()
+
         RemoveHandler Cmbo.SelectedIndexChanged, AddressOf Cmbo_SelectedIndexChanged
         AddHandler Cmbo.SelectedIndexChanged, AddressOf Cmbo_SelectedIndexChanged
         StatusBarPanel1.Icon = My.Resources.WSOff032
@@ -577,18 +582,13 @@ sec_UsrErr_:
         End If
     End Sub
 
-    Private Sub Logininnnn()
-        Invoke(Sub() WelcomeScreen.Show())
-        Invoke(Sub() TimerClose.Start())
-    End Sub
-
     Private Sub Login_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
         RemoveHandler Cmbo.SelectedIndexChanged, AddressOf Cmbo_SelectedIndexChanged
         For Each CTRL In Me.Controls
-            If TypeOf CTRL Is System.ComponentModel.BackgroundWorker Then
-                CTRL.CancelAsync()
-            ElseIf TypeOf CTRL Is Timer Then
+            If TypeOf CTRL Is Timer Then
                 CTRL.stop()
+            ElseIf TypeOf CTRL Is System.ComponentModel.BackgroundWorker Then
+                CTRL.CancelAsync()
             End If
         Next
 
@@ -602,7 +602,7 @@ sec_UsrErr_:
         If IsHandleCreated = True Then
             Invoke(Sub()
                        Dim state As New APblicClss.Defntion
-                       WChckConn.CancelAsync()
+                       'WChckConn.CancelAsync()
                        Dim Cn As New APblicClss.Func
                        If WChckConn.IsBusy = False Then
                            Invoke(Sub() WChckConn.RunWorkerAsync(Cn))
@@ -616,20 +616,19 @@ sec_UsrErr_:
         worker1 = CType(sender, System.ComponentModel.BackgroundWorker)
         Dim WC1 As APblicClss.Func = CType(e.Argument, APblicClss.Func)
         WC1.ConStrFn(worker1)
-        WC1.MacTblSub(worker1)
+        'WC1.Conoff(worker1)
+        'WC1.MacTblSub(worker1)
     End Sub
     Private Sub ConStrWrkr_ProgressChanged(sender As Object, e As System.ComponentModel.ProgressChangedEventArgs) Handles ConStrWrkr.ProgressChanged
         Dim state As APblicClss.Defntion = CType(e.UserState, APblicClss.Defntion)
         If Bol = True Then
             If state.Admn = False Then
-                Cmbo.Visible = False
+                Invoke(Sub() Cmbo.Visible = False)
             ElseIf state.Admn = True Then
-                Cmbo.Visible = True
+                Invoke(Sub() Cmbo.Visible = True)
             End If
         End If
-        If GetMACAddressNew() = "C83DD46AD26D" Or GetMACAddressNew() = "020000000100" Then
-            Cmbo.Visible = True
-        End If
+
     End Sub
 
 
@@ -638,8 +637,8 @@ sec_UsrErr_:
         Dim worker1 As System.ComponentModel.BackgroundWorker
         worker1 = CType(sender, System.ComponentModel.BackgroundWorker)
         Dim WC1 As APblicClss.Func = CType(e.Argument, APblicClss.Func)
-        WC1.ConStrFn(worker1)
-        WC1.MacTblSub(worker1)
+        'WC1.ConStrFn(worker1)
+        'WC1.MacTblSub(worker1)
         WC1.Conoff(worker1)
     End Sub
     Private Sub WChckConn_ProgressChanged(sender As Object, e As System.ComponentModel.ProgressChangedEventArgs) Handles WChckConn.ProgressChanged
@@ -676,14 +675,15 @@ sec_UsrErr_:
         worker = CType(sender, System.ComponentModel.BackgroundWorker)
         Dim WC As APblicClss.Func = CType(e.Argument, APblicClss.Func)
         Invoke(Sub() Timer1.Stop())
-        WC.SwitchBoard(worker)
+        Invoke(Sub() Me.Enabled = False)
+        Invoke(Sub() WC.SwitchBoard(worker))
 
         If PrciTblCnt = 7 Then
             PreciFlag = True
             Invoke(Sub() WelcomeScreen.LblSrvrNm.Text = ServerNm)
 
 
-            If ServerNm = "Egypt Post Server" Then
+            If ServerNm = "VOCA Server" Then
                 Invoke(Sub() WelcomeScreen.BackgroundImage = My.Resources.VocaWtr)
                 Invoke(Sub() WelcomeScreen.BackgroundImageLayout = ImageLayout.Stretch)
                 Invoke(Sub() WelcomeScreen.BackColor = Color.FromArgb(192, 255, 192))
@@ -746,15 +746,18 @@ sec_UsrErr_:
             End If
 
             Invoke(Sub() NonEditableLbl(WelcomeScreen.LblUsrRNm))
+            Invoke(Sub() WelcomeScreen.Show())
+            Invoke(Sub() TimerClose.Start())
         Else
             Invoke(Sub() Timer1.Start())
         End If
-        Logininnnn()
+        Invoke(Sub() Me.Enabled = True)
+
     End Sub
     Private Sub WrkrLogin_ProgressChanged(sender As Object, e As System.ComponentModel.ProgressChangedEventArgs) Handles WrkrLogin.ProgressChanged
         Dim state As APblicClss.Defntion = CType(e.UserState, APblicClss.Defntion)
-        Invoke(Sub() Me.StatusBarPanel1.Text = state.Str)
-        Invoke(Sub() Me.Refresh())
+        Invoke(Sub() Me.StatusBarPanel1.Text = state.StatStr)
+        'Invoke(Sub() Me.Refresh())
 
     End Sub
 #End Region
@@ -766,7 +769,7 @@ sec_UsrErr_:
         'sender.AccessibleName = "False"
         'sender.backcolor = Color.White
         'sender.font = New Font("Times New Roman", 14, FontStyle.Regular)
-        Fn.InsUpd("update Int_user set UsrLevel = SUBSTRING(UsrLevel,1,(select SwID from ASwitchboard where SwNm = '" & sender.text & "')-1) + 'A' + SUBSTRING(UsrLevel,(select SwID from ASwitchboard where SwNm = '" & sender.text & "') + 1,100) where UsrId = " & Usr.PUsrID, "0000&H")
+        'Fn.InsUpd("update Int_user set UsrLevel = SUBSTRING(UsrLevel,1,(select SwID from ASwitchboard where SwNm = '" & sender.text & "')-1) + 'A' + SUBSTRING(UsrLevel,(select SwID from ASwitchboard where SwNm = '" & sender.text & "') + 1,100) where UsrId = " & Usr.PUsrID, "0000&H")
     End Sub
     Public Sub ClkEvntClick(sender As System.Object, e As System.EventArgs)
         Dim Fn As New APblicClss.Func
@@ -776,7 +779,7 @@ sec_UsrErr_:
         'sender.AccessibleName = "False"
         'sender.backcolor = Color.White
         'sender.font = New Font("Times New Roman", 14, FontStyle.Regular)
-        Fn.InsUpd("update Int_user set UsrLevel = SUBSTRING(UsrLevel,1,(select SwID from ASwitchboard where SwObjNm = '" & sender.tag & "')-1) + 'A' + SUBSTRING(UsrLevel,(select SwID from ASwitchboard where SwObjNm = '" & sender.tag & "') + 1,100) where UsrId = " & Usr.PUsrID, "0000&H")
+        'Fn.InsUpd("update Int_user set UsrLevel = SUBSTRING(UsrLevel,1,(select SwID from ASwitchboard where SwObjNm = '" & sender.tag & "')-1) + 'A' + SUBSTRING(UsrLevel,(select SwID from ASwitchboard where SwObjNm = '" & sender.tag & "') + 1,100) where UsrId = " & Usr.PUsrID, "0000&H")
 
         If Application.OpenForms.Count > 2 Then
             MsgInf("لا يمكن فتح أكثر من شاشتين في نفس الوقت" & vbCrLf & "يرجى إغلاق أحد الشاشات المفتوحة وإعادة المحاولة")

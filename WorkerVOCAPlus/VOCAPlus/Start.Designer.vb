@@ -27,6 +27,7 @@ Partial Class Start
         Me.LblUsrIP = New System.Windows.Forms.Label()
         Me.PubVerLbl = New System.Windows.Forms.Label()
         Me.Timer2 = New System.Windows.Forms.Timer(Me.components)
+        Me.MacWrWrkr = New System.ComponentModel.BackgroundWorker()
         CType(Me.PictureBox1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
@@ -69,6 +70,11 @@ Partial Class Start
         '
         Me.Timer2.Interval = 3000
         '
+        'MacWrWrkr
+        '
+        Me.MacWrWrkr.WorkerReportsProgress = True
+        Me.MacWrWrkr.WorkerSupportsCancellation = True
+        '
         'Start
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -95,4 +101,5 @@ Partial Class Start
     Friend WithEvents LblUsrIP As Label
     Friend WithEvents PubVerLbl As Label
     Friend WithEvents Timer2 As Timer
+    Friend WithEvents MacWrWrkr As System.ComponentModel.BackgroundWorker
 End Class

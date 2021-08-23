@@ -39,6 +39,7 @@ Module PublicCode
     Public ConTbl As New DataTable
     Public LogOfflinTbl As New DataTable
     Public CompfflinTbl As New DataTable
+    Public TicTable As DataTable = New DataTable
 
     Public PreciFlag As Boolean = False                 'Load princible tables
     Public PrciTblCnt As Integer = 0                    'Counter for Thread
@@ -485,23 +486,22 @@ End_:
         Dim StW As New Stopwatch
         StW.Start()
         Errmsg = Nothing
-        Dim SQLGetAdptr As New SqlDataAdapter            'SQL Table Adapter
         Dim sqlCommW As New SqlCommand
         Try
-            sqlCon = New SqlConnection
-            sqlCon.ConnectionString = strConn
+            sqlCon = New SqlConnection(strConn)
+            sqlComm = New SqlCommand(SSqlStr, sqlCon)
+            sqlComm.CommandType = CommandType.Text
             If sqlCon.State = ConnectionState.Closed Then
                 sqlCon.Open()
             End If
-            SQLGetAdptr = New SqlDataAdapter            'SQL Table Adapter
-            sqlCommW = New SqlCommand(SSqlStr, sqlCon)
-            SQLGetAdptr.SelectCommand = sqlCommW
+            Dim SQLGetAdptr As New SqlDataAdapter            'SQL Table Adapter
+            SQLGetAdptr.SelectCommand = sqlComm
             SQLGetAdptr.Fill(SqlTbl)
             AppLogTbl(Split(ErrHndl, "&H")(0), 0, "", SSqlStr, SqlTbl.Rows.Count)
             If PreciFlag = True Then
                 If ErrHndl <> "1005&H" And ErrHndl <> "9999&H" And ErrHndl <> "8888&H" Then
                     If PublicCode.InsUpd("UPDATE Int_user SET UsrLastSeen = (Select GetDate()) WHERE (UsrId = " & Usr.PUsrID & ");", "1006&H") = Nothing Then  'Update User Active = false = 
-                        WelcomeScreen.LblLstSeen.Text = "Last Seen : " & ServrTime()
+                        'WelcomeScreen.LblLstSeen.Text = "Last Seen : " & ServrTime()
                     End If
                 End If
             End If
@@ -521,8 +521,6 @@ End_:
             Errmsg = ex.Message
         End Try
         SqlTbl.Dispose()
-        SQLGetAdptr.Dispose()
-        sqlCommW.Dispose()
         sqlCon.Close()
         SqlConnection.ClearPool(sqlCon)
         Return Errmsg

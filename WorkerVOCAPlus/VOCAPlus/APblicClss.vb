@@ -1,6 +1,8 @@
 ﻿Imports System.IO
 Imports System.Management
 Imports System.Net
+Imports Microsoft.Exchange.WebServices.Data
+Imports VOCAPlus.Strc
 
 Public Class APblicClss
 
@@ -24,12 +26,14 @@ Public Class APblicClss
 
         Public BolString As Boolean
         Public Admn As Boolean
+
+        Public CompList As New List(Of String) 'list of tickets to get tickets updates
     End Class
     Public Class Func
-        Public Function ConStrFn(worker As System.ComponentModel.BackgroundWorker) As List(Of String)
-            Dim ConData As New List(Of String)
+        Public Function ConStrFn(worker As System.ComponentModel.BackgroundWorker) As String
             Dim state As New Defntion
             state.Errmsg = Nothing
+            strConn = Nothing
             If ServerCD = "Eg Server" Then
                 strConn = "Data Source=10.10.26.4;Initial Catalog=VOCAPlus;Persist Security Info=True;User ID=vocaplus21;Password=@VocaPlus$21-4"
                 ServerNm = "VOCA Server"
@@ -39,19 +43,19 @@ Public Class APblicClss
             ElseIf ServerCD = "Test Database" Then
                 strConn = "Data Source=10.10.26.4;Initial Catalog=VOCAPlusDemo;Persist Security Info=True;User ID=vocaplus21;Password=@VocaPlus$21-4"
                 ServerNm = "Test Database"
+            ElseIf ServerCD = "OnLine" Then
+                strConn = "Data Source=34.123.217.183;Initial Catalog=vocaplus;Persist Security Info=True;User ID=sqlserver;Password=Hemonad105046"
+                ServerNm = "OnLine"
             End If
             Try
-                sqlCon = New SqlConnection
+                'sqlCon = New SqlConnection
                 sqlCon.ConnectionString = strConn
             Catch ex As Exception
                 state.Errmsg = ex.Message
                 AppLog("0000&H", ex.Message, "Conecting String")
             End Try
-            ConData.Add(Errmsg)
-            ConData.Add(strConn)
-            ConData.Add(ServerNm)
             worker.ReportProgress(0, state)
-            Return ConData
+            Return strConn
         End Function
         Public Sub MacTblSub(worker As System.ComponentModel.BackgroundWorker)
             Dim Def As New APblicClss.Defntion
@@ -82,83 +86,77 @@ Public Class APblicClss
             Try
                 state.StatStr = " ..."
                 worker.ReportProgress(0, state)
-                sqlCon = New SqlConnection
-                sqlCon.ConnectionString = strConn
-                sqlComm.CommandTimeout = 5
-                sqlComm.Connection = sqlCon
-                SQLGetAdptr.SelectCommand = sqlComm
-                sqlComm.CommandType = CommandType.Text
-                sqlComm.CommandText = "Select GetDate() as Now_"
-                SQLGetAdptr.Fill(TimeTble)
+                'sqlCon = New SqlConnection
+                If sqlCon.State = ConnectionState.Closed Then
+                    sqlCon.Open()
+                End If
+                'sqlComm = New SqlCommand("Select GetDate() as Now_", sqlCon)
+                'sqlComm.CommandTimeout = 5
+                'sqlComm.Connection = sqlCon
+                'SQLGetAdptr.SelectCommand = sqlComm
+                'sqlComm.CommandType = CommandType.Text
+                'SQLGetAdptr.Fill(TimeTble)
+
                 state.BolString = True
-                'sqlCon.Close()
-                'SqlConnection.ClearPool(sqlCon)
+                worker.ReportProgress(0, state)
             Catch ex As Exception
                 state.StatStr = "Error"
-                worker.ReportProgress(0, state)
                 state.BolString = False
+                worker.ReportProgress(0, state)
                 AppLog("0000&H", ex.Message, "Select GetDate() as Now_")
             End Try
+            'sqlCon.Close()
+            'sqlCon.Dispose()
+            'SqlConnection.ClearPool(sqlCon)
             Bol = state.BolString
             sqlComm.CommandTimeout = 30
         End Sub
         Public Function GetTbl(SSqlStr As String, SqlTbl As DataTable, ErrHndl As String, worker As System.ComponentModel.BackgroundWorker) As String
             Dim state As New Defntion
             state.StatStr = Nothing
-            worker.ReportProgress(0, state)
             Dim StW As New Stopwatch
             StW.Start()
-            Dim SQLGetAdptr As New SqlDataAdapter            'SQL Table Adapter
-            Dim sqlCommW As New SqlCommand
             Try
-                sqlCon = New SqlConnection
-                sqlCon.ConnectionString = strConn
-                If sqlCon.State = ConnectionState.Closed Then
+                If sqlCon.State = ConnectionState.Closed Or sqlCon.State = ConnectionState.Broken Then
                     sqlCon.Open()
                 End If
-                SQLGetAdptr = New SqlDataAdapter            'SQL Table Adapter
+                Dim sqlCommW As New SqlCommand
                 sqlCommW = New SqlCommand(SSqlStr, sqlCon)
-                SQLGetAdptr.SelectCommand = sqlCommW
-                SQLGetAdptr.Fill(SqlTbl)
+                Dim reader As SqlDataReader = sqlCommW.ExecuteReader
+                SqlTbl.Load(reader)
                 StW.Stop()
                 Dim TimSpn As TimeSpan = (StW.Elapsed)
+                ElapsedTimeSpan = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", TimSpn.Hours, TimSpn.Minutes, TimSpn.Seconds, TimSpn.Milliseconds / 10)
             Catch ex As Exception
-                state.StatStr = state.StatStr
+                If ex.Message.Contains("The connection is broken and recovery is not possible") Then
+                    sqlCon.Close()
+                    SqlConnection.ClearPool(sqlCon)
+                End If
                 state.StatStr = ex.Message
-                AppLog(ErrHndl, ex.Message, SSqlStr)
                 worker.ReportProgress(0, state)
+                AppLog(ErrHndl, ex.Message, SSqlStr)
             End Try
             SqlTbl.Dispose()
-            SQLGetAdptr.Dispose()
-            sqlCommW.Dispose()
-            sqlCon.Close()
-            SqlConnection.ClearPool(sqlCon)
-
             Return state.StatStr
         End Function
-        Public Function InsUpd(SSqlStr As String, ErrHndl As String) As String
-            Dim Def As New APblicClss.Defntion
-            Def.StatStr = Nothing
-            Def.sqlComm.Connection = sqlCon
-            Def.sqlComm.CommandType = CommandType.Text
-            Def.sqlComm.CommandText = SSqlStr
+        Public Function InsUpd(SSqlStr As String, ErrHndl As String, worker As System.ComponentModel.BackgroundWorker) As String
+            Errmsg = Nothing
+            'sqlCon = New SqlConnection(strConn)
+            sqlComm = New SqlCommand(SSqlStr, sqlCon)
+            sqlComm.Connection = sqlCon
+            sqlComm.CommandType = CommandType.Text
             Try
                 If sqlCon.State = ConnectionState.Closed Then
                     sqlCon.Open()
                 End If
-                Def.sqlComm.ExecuteNonQuery()
+                sqlComm.ExecuteNonQuery()
             Catch ex As Exception
-                Dim frmCollection = Application.OpenForms
-                If frmCollection.OfType(Of WelcomeScreen).Any Then
-                    WelcomeScreen.TimerCon.Start()
-                    WelcomeScreen.StatBrPnlEn.Icon = My.Resources.WSOff032
-                End If
-                Def.StatStr = ex.Message
+                Errmsg = ex.Message
                 AppLog(ErrHndl, ex.Message, SSqlStr)
             End Try
             'sqlCon.Close()
             'SqlConnection.ClearPool(sqlCon)
-            Return Def.StatStr
+            Return Errmsg
         End Function
         Public Function InsTrans(TranStr1 As String, TranStr2 As String, ErrHndl As String) As String
             Dim Def As New APblicClss.Defntion
@@ -312,12 +310,12 @@ Public Class APblicClss
             If (Fn.GetTbl("select IpId, IpStime FROM SdHardCollc WHERE ((IpId= '" & OsIP() & "'));", HardTable, "1000&H", worker)) = Nothing Then
                 If HardTable.Rows.Count = 0 Then 'insert new computer hardware information if not founded into Hardware Table
                     Fn.HrdCol()
-                    Fn.InsUpd("insert into SdHardCollc (IpId, IpLocation, IpProsseccor, IpRam, IpNetwork, IpSerialNo, IpCollect) values ('" & Fn.OsIP() & "','" & "Location" & "','" & Fn.HrdCol.HProcc & "','" & Fn.HrdCol.HRam & "','" & Fn.HrdCol.HNetwrk & "','" & Fn.HrdCol.HSerNo & "','" & True & "');", "1000&H") 'Append access Record
+                    Fn.InsUpd("insert into SdHardCollc (IpId, IpLocation, IpProsseccor, IpRam, IpNetwork, IpSerialNo, IpCollect) values ('" & Fn.OsIP() & "','" & "Location" & "','" & Fn.HrdCol.HProcc & "','" & Fn.HrdCol.HRam & "','" & Fn.HrdCol.HNetwrk & "','" & Fn.HrdCol.HSerNo & "','" & True & "');", "1000&H", worker) 'Append access Record
                     Def.StatStr = "Inserted"
                     worker.ReportProgress(0, Def)
                 ElseIf Math.Abs(DateTime.Parse(Today).Subtract(DateTime.Parse(HardTable.Rows(0).Item(1))).TotalDays) > 30 Then
                     Fn.HrdCol()
-                    Fn.InsUpd("UPDATE SdHardCollc SET IpProsseccor ='" & Fn.HrdCol.HProcc & "', IpRam ='" & Fn.HrdCol.HRam & "', IpNetwork ='" & Fn.HrdCol.HNetwrk & "', IpSerialNo ='" & Fn.HrdCol.HSerNo & "', IpStime ='" & Format(Fn.ServrTime(worker), "yyyy-MM-dd") & "' where IpId='" & Fn.OsIP() & "';", "1000&H")
+                    Fn.InsUpd("UPDATE SdHardCollc SET IpProsseccor ='" & Fn.HrdCol.HProcc & "', IpRam ='" & Fn.HrdCol.HRam & "', IpNetwork ='" & Fn.HrdCol.HNetwrk & "', IpSerialNo ='" & Fn.HrdCol.HSerNo & "', IpStime ='" & Format(Fn.ServrTime(worker), "yyyy-MM-dd") & "' where IpId='" & Fn.OsIP() & "';", "1000&H", worker)
                     Def.StatStr = "Updated"
                     worker.ReportProgress(0, Def)
                 End If
@@ -335,9 +333,184 @@ Sec2:
             Menu_ = New MenuStrip
             CntxMenu = New ContextMenuStrip
 
+            If (Fn.GetTbl("SELECT SwNm, SwSer, SwID, SwObjNew,SwObjNm, SwObjImg, SwType FROM ASwitchboard ORDER BY SwID", SwichTabTable, "1002&H", worker)) = Nothing Then
+                Def.Str = " Building Main Menu ..."
+                worker.ReportProgress(0, Def)
+                SwichButTable = SwichTabTable.Copy
+                SwichTabTable.DefaultView.RowFilter = "(SwType = 'Tab') AND (SwNm <> 'NA')"
+                For Cnt_ = 0 To SwichTabTable.DefaultView.Count - 1
+                    Dim NewTab As New ToolStripMenuItem(SwichTabTable.DefaultView(Cnt_).Item("SwNm").ToString)
+                    Dim NewTabCx As New ToolStripMenuItem(SwichTabTable.DefaultView(Cnt_).Item("SwNm").ToString)  'YYYYYYYYYYY
+
+                    If Mid(Usr.PUsrLvl, SwichTabTable.DefaultView(Cnt_).Item("SwID").ToString, 1) = "A" Or
+                        Mid(Usr.PUsrLvl, SwichTabTable.DefaultView(Cnt_).Item("SwID").ToString, 1) = "H" Then
+                        Menu_.Items.Add(NewTab)
+                        CntxMenu.Items.Add(NewTabCx)                     'YYYYYYYYYYY
+
+                        Def.Str = " Adding Menu " & NewTab.Text
+                        worker.ReportProgress(0, Def)
+                        Def.Str = " Building Menu " & NewTab.Text
+                        worker.ReportProgress(0, Def)
+                        Dim Filtr_ As String = SwichTabTable.DefaultView(Cnt_).Item("SwSer").ToString
+                        SwichButTable.DefaultView.RowFilter = "(([SwType] <> '" & "Tab" & "') AND ([SwNm] <> '" & "NA" & "') AND ([SwSer] ='" & Filtr_ & "'))"
+                        For Cnt_1 = 0 To SwichButTable.DefaultView.Count - 1
+                            Dim subItem As New ToolStripMenuItem(SwichButTable.DefaultView(Cnt_1).Item("SwNm").ToString)
+                            Dim subItemCx As New ToolStripMenuItem(SwichButTable.DefaultView(Cnt_1).Item("SwNm").ToString)  'YYYYYYYYYYY
+                            If Mid(Usr.PUsrLvl, SwichButTable.DefaultView(Cnt_1).Item("SwID").ToString, 1) = "A" Or
+                                   Mid(Usr.PUsrLvl, SwichButTable.DefaultView(Cnt_1).Item("SwID").ToString, 1) = "H" Then
+
+                                Def.Str = " Adding Button " & NewTab.Text
+                                worker.ReportProgress(0, Def)
+                                subItem.Tag = SwichButTable.DefaultView(Cnt_1).Item("SwObjNm").ToString
+                                If Mid(Usr.PUsrLvl, SwichButTable.DefaultView(Cnt_1).Item("SwID").ToString, 1) = "H" Then
+                                    subItem.AccessibleName = "True"
+                                    subItemCx.AccessibleName = "True"
+                                End If
+                                If DBNull.Value.Equals(SwichButTable.DefaultView(Cnt_1).Item("SwObjImg")) = False Then
+                                    Dim imglst As New ImageList
+                                    Dim Cnt_ = imglst.Images(SwichButTable.DefaultView(Cnt_1).Item("SwObjImg"))
+                                    Dim dd = My.Resources.ResourceManager.GetObject(SwichButTable.DefaultView(Cnt_1).Item("SwObjImg"))
+                                    NewTab.Image = Cnt_
+                                End If
+                                subItemCx.Tag = SwichButTable.DefaultView(Cnt_1).Item("SwObjNm").ToString  'YYYYYYYYYYY
+                                NewTab.DropDownItems.Add(subItem)
+                                NewTabCx.DropDownItems.Add(subItemCx)    'YYYYYYYYYYY
+                            End If
+                            If Mid(Usr.PUsrLvl, SwichTabTable.DefaultView(Cnt_).Item(2).ToString, 1) = "H" Then
+                                NewTab.AccessibleName = "True"
+                                NewTabCx.AccessibleName = "True"
+                            End If
+                        Next Cnt_1
+                    End If
+                    NewTab = Nothing
+                Next Cnt_
+                PrciTblCnt = 0
+                SwichTabTable.Dispose()
+                SwichButTable.Dispose()
+                Def.Str = " Menu has been builded  "
+                worker.ReportProgress(0, Def)
+                Def.Str = "جاري تحميل البيانات ..."
+                worker.ReportProgress(0, Def)
+                If Def.Str = "جاري تحميل البيانات ..." Then
+                    Dim primaryKey(0) As DataColumn
+                    AreaTable = New DataTable
+                    OfficeTable = New DataTable
+                    CompSurceTable = New DataTable
+                    CountryTable = New DataTable
+                    ProdKTable = New DataTable
+                    ProdCompTable = New DataTable
+                    UpdateKTable = New DataTable
+                    Def.Str = "جاري تحميل أسماء المناطق ..."
+                    worker.ReportProgress(0, Def)
+                    If (Fn.GetTbl("SELECT OffArea FROM PostOff GROUP BY OffArea ORDER BY OffArea;", AreaTable, "1012&H", worker)) = Nothing Then
+                        PrciTblCnt += 1
+                    Else
+                        Def.Str = "لم يتم تحميل  أسماء المناطق "
+                        worker.ReportProgress(0, Def)
+                    End If
+
+                    Def.Str = "جاري تحميل أسماء المكاتب ..."
+                    worker.ReportProgress(0, Def)
+
+                    If (Fn.GetTbl("select OffNm1, OffFinCd, OffArea from PostOff ORDER BY OffNm1;", OfficeTable, "1012&H", worker)) = Nothing Then
+                        PrciTblCnt += 1
+                    Else
+                        Def.Str = "لم يتم تحميل  أسماء المكاتب  "
+                        worker.ReportProgress(0, Def)
+                    End If
+
+                    Dim SrcStr As String = ""
+                    If Usr.PUsrUCatLvl = 7 Then
+                        SrcStr = "select SrcCd, SrcNm from CDSrc where SrcSusp=0 and srcCd = 1"
+                    Else
+                        SrcStr = "select SrcCd, SrcNm from CDSrc where SrcSusp=0 and srcCd > 1 ORDER BY SrcNm"
+                    End If
+                    Def.Str = "جاري تحميل مصادر الشكوى ..."
+                    worker.ReportProgress(0, Def)
+
+                    If (Fn.GetTbl(SrcStr, CompSurceTable, "1012&H", worker)) = Nothing Then
+                        PrciTblCnt += 1
+                    Else
+                        Def.Str = "لم يتم تحميل  مصادر الشكوى  "
+                        worker.ReportProgress(0, Def)
+                    End If
+
+
+                    Def.Str = "جاري تحميل أسماء الدول ..."
+                    worker.ReportProgress(0, Def)
+
+                    If (Fn.GetTbl("select CounCd,CounNm from CDCountry order by CounNm", CountryTable, "1012&H", worker)) = Nothing Then
+                        primaryKey(0) = CountryTable.Columns("CounCd")
+                        CountryTable.PrimaryKey = primaryKey
+                        PrciTblCnt += 1
+                    Else
+                        Def.Str = "لم يتم تحميل  أسماء الدول  "
+                        worker.ReportProgress(0, Def)
+                    End If
+
+
+                    Def.Str = "جاري تحميل أنواع الخدمات ..."
+                    worker.ReportProgress(0, Def)
+
+                    If (Fn.GetTbl("select ProdKCd, ProdKNm, ProdKClr from CDProdK where ProdKSusp = 0 order by ProdKCd", ProdKTable, "1012&H", worker)) = Nothing Then
+                        primaryKey(0) = ProdKTable.Columns("ProdKNm")
+                        ProdKTable.PrimaryKey = primaryKey
+                        PrciTblCnt += 1
+                    Else
+                        Def.Str = "لم يتم تحميل  أنواع الخدمات "
+                        worker.ReportProgress(0, Def)
+                    End If
+
+
+                    Def.Str = "جاري تحميل أنواع المنتجات ..."
+                    worker.ReportProgress(0, Def)
+
+                    If (Fn.GetTbl("SELECT FnSQL, PrdKind, FnProdCd, PrdNm, FnCompCd, CompNm, FnMend, PrdRef, FnMngr, Prd3, FnSusp,CompHlp FROM VwFnProd where FnSusp = 0 ORDER BY PrdKind, PrdNm, CompNm", ProdCompTable, "1012&H", worker)) = Nothing Then
+                        primaryKey(0) = ProdCompTable.Columns("FnSQL")
+                        ProdCompTable.PrimaryKey = primaryKey
+                        PrciTblCnt += 1
+                    Else
+                        Def.Str = "لم يتم تحميل أنواع المنتجات  "
+                        worker.ReportProgress(0, Def)
+                    End If
+
+                    Def.Str = "جاري تحميل أنواع التحديثات ..."
+                    worker.ReportProgress(0, Def)
+                    If Usr.PUsrUCatLvl >= 3 And Usr.PUsrUCatLvl <= 5 Then
+                        If (Fn.GetTbl("SELECT EvId, EvNm FROM CDEvent where EvSusp = 0 and EvBkOfic = 1 ORDER BY EvNm", UpdateKTable, "1012&H", worker)) = Nothing Then
+                            PrciTblCnt += 1
+                        Else
+                            Def.Str = "لم يتم تحميل  أنواع التحديثات "
+                            worker.ReportProgress(0, Def)
+                        End If
+                    Else
+                        If (Fn.GetTbl("SELECT EvId, EvNm FROM CDEvent where EvSusp = 0 and EvBkOfic = 0 ORDER BY EvNm", UpdateKTable, "1012&H", worker)) = Nothing Then
+                            PrciTblCnt += 1
+                        Else
+                            Def.Str = " أنواع التحديثات / "
+                            worker.ReportProgress(0, Def)
+                        End If
+                    End If
+                End If
+
+                'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+            Else
+                worker.ReportProgress(0, Def)
+                Fn.MsgErr(My.Resources.ConnErr & vbCrLf & My.Resources.TryAgain & vbCrLf)
+            End If
+        End Sub
+        Public Sub SwitchBoardXXXXXXXXXXXXXXXXXXXX(worker As System.ComponentModel.BackgroundWorker)
+            Dim SwichTabTable As DataTable = New DataTable
+            Dim SwichButTable As DataTable = New DataTable
+            Dim Def As New APblicClss.Defntion
+            Dim Fn As New APblicClss.Func
+
+            Menu_ = New MenuStrip
+            CntxMenu = New ContextMenuStrip
+
             If (Fn.GetTbl("SELECT SwNm, SwSer, SwID, SwObjNew FROM ASwitchboard WHERE (SwType = N'Tab') AND (SwNm <> N'NA') ORDER BY SwID", SwichTabTable, "1002&H", worker)) = Nothing Then
                 Def.Str = " Building Main Menu ..."
-                If Def.Str.Length > 0 Then worker.ReportProgress(0, Def)
+                worker.ReportProgress(0, Def)
                 For Cnt_ = 0 To SwichTabTable.Rows.Count - 1
                     Dim NewTab As New ToolStripMenuItem(SwichTabTable.Rows(Cnt_).Item(0).ToString)
                     Dim NewTabCx As New ToolStripMenuItem(SwichTabTable.Rows(Cnt_).Item(0).ToString)  'YYYYYYYYYYY
@@ -348,11 +521,11 @@ Sec2:
                         CntxMenu.Items.Add(NewTabCx)                     'YYYYYYYYYYY
 
                         Def.Str = " Adding Menu " & NewTab.Text
-                        If Def.Str.Length > 0 Then worker.ReportProgress(0, Def)
+                        worker.ReportProgress(0, Def)
                         SwichButTable.Rows.Clear()
                         If (Fn.GetTbl("SELECT SwNm, SwSer, SwID, SwObjNm, SwObjImg, SwObjNew FROM ASwitchboard WHERE (SwType <> N'Tab') AND (SwNm <> N'NA') AND (SwSer ='" & SwichTabTable.Rows(Cnt_).Item(1).ToString & "') ORDER BY SwID;", SwichButTable, "1002&H", worker)) = Nothing Then
                             Def.Str = " Building Menu " & NewTab.Text
-                            If Def.Str.Length > 0 Then worker.ReportProgress(0, Def)
+                            worker.ReportProgress(0, Def)
                             For Cnt_1 = 0 To SwichButTable.Rows.Count - 1
                                 Dim subItem As New ToolStripMenuItem(SwichButTable.Rows(Cnt_1).Item(0).ToString)
                                 Dim subItemCx As New ToolStripMenuItem(SwichButTable.Rows(Cnt_1).Item(0).ToString)  'YYYYYYYYYYY
@@ -360,7 +533,7 @@ Sec2:
                                    Mid(Usr.PUsrLvl, SwichButTable.Rows(Cnt_1).Item(2).ToString, 1) = "H" Then
 
                                     Def.Str = " Adding Button " & NewTab.Text
-                                    If Def.Str.Length > 0 Then worker.ReportProgress(0, Def)
+                                    worker.ReportProgress(0, Def)
                                     subItem.Tag = SwichButTable.Rows(Cnt_1).Item(3).ToString
                                     If Mid(Usr.PUsrLvl, SwichButTable.Rows(Cnt_1).Item(2).ToString, 1) = "H" Then
                                         subItem.AccessibleName = "True"
@@ -382,7 +555,7 @@ Sec2:
                                 End If
                             Next Cnt_1
                         Else
-                            MsgErr(My.Resources.ConnErr & vbCrLf & My.Resources.TryAgain & vbCrLf & Def.StatStr.ToString)
+                            MsgErr(My.Resources.ConnErr & vbCrLf & My.Resources.TryAgain)
                         End If
                     End If
                     NewTab = Nothing
@@ -391,9 +564,9 @@ Sec2:
                 SwichTabTable.Dispose()
                 SwichButTable.Dispose()
                 Def.Str = " Menu has been builded  "
-                If Def.Str.Length > 0 Then worker.ReportProgress(0, Def)
+                worker.ReportProgress(0, Def)
                 Def.Str = "جاري تحميل البيانات ..."
-                If Def.Str.Length > 0 Then worker.ReportProgress(0, Def)
+                worker.ReportProgress(0, Def)
                 If Def.Str = "جاري تحميل البيانات ..." Then
                     Dim primaryKey(0) As DataColumn
                     AreaTable = New DataTable
@@ -404,22 +577,22 @@ Sec2:
                     ProdCompTable = New DataTable
                     UpdateKTable = New DataTable
                     Def.Str = "جاري تحميل أسماء المناطق ..."
-                    If Def.Str.Length > 0 Then worker.ReportProgress(0, Def)
+                    worker.ReportProgress(0, Def)
                     If (Fn.GetTbl("SELECT OffArea FROM PostOff GROUP BY OffArea ORDER BY OffArea;", AreaTable, "1012&H", worker)) = Nothing Then
                         PrciTblCnt += 1
                     Else
                         Def.Str = "لم يتم تحميل  أسماء المناطق "
-                        If Def.Str.Length > 0 Then worker.ReportProgress(0, Def)
+                        worker.ReportProgress(0, Def)
                     End If
 
                     Def.Str = "جاري تحميل أسماء المكاتب ..."
-                    If Def.Str.Length > 0 Then worker.ReportProgress(0, Def)
+                    worker.ReportProgress(0, Def)
 
                     If (Fn.GetTbl("select OffNm1, OffFinCd, OffArea from PostOff ORDER BY OffNm1;", OfficeTable, "1012&H", worker)) = Nothing Then
                         PrciTblCnt += 1
                     Else
                         Def.Str = "لم يتم تحميل  أسماء المكاتب  "
-                        If Def.Str.Length > 0 Then worker.ReportProgress(0, Def)
+                        worker.ReportProgress(0, Def)
                     End If
 
                     Dim SrcStr As String = ""
@@ -429,18 +602,18 @@ Sec2:
                         SrcStr = "select SrcCd, SrcNm from CDSrc where SrcSusp=0 and srcCd > 1 ORDER BY SrcNm"
                     End If
                     Def.Str = "جاري تحميل مصادر الشكوى ..."
-                    If Def.Str.Length > 0 Then worker.ReportProgress(0, Def)
+                    worker.ReportProgress(0, Def)
 
                     If (Fn.GetTbl(SrcStr, CompSurceTable, "1012&H", worker)) = Nothing Then
                         PrciTblCnt += 1
                     Else
                         Def.Str = "لم يتم تحميل  مصادر الشكوى  "
-                        If Def.Str.Length > 0 Then worker.ReportProgress(0, Def)
+                        worker.ReportProgress(0, Def)
                     End If
 
 
                     Def.Str = "جاري تحميل أسماء الدول ..."
-                    If Def.Str.Length > 0 Then worker.ReportProgress(0, Def)
+                    worker.ReportProgress(0, Def)
 
                     If (Fn.GetTbl("select CounCd,CounNm from CDCountry order by CounNm", CountryTable, "1012&H", worker)) = Nothing Then
                         primaryKey(0) = CountryTable.Columns("CounCd")
@@ -448,12 +621,12 @@ Sec2:
                         PrciTblCnt += 1
                     Else
                         Def.Str = "لم يتم تحميل  أسماء الدول  "
-                        If Def.Str.Length > 0 Then worker.ReportProgress(0, Def)
+                        worker.ReportProgress(0, Def)
                     End If
 
 
                     Def.Str = "جاري تحميل أنواع الخدمات ..."
-                    If Def.Str.Length > 0 Then worker.ReportProgress(0, Def)
+                    worker.ReportProgress(0, Def)
 
                     If (Fn.GetTbl("select ProdKCd, ProdKNm, ProdKClr from CDProdK where ProdKSusp = 0 order by ProdKCd", ProdKTable, "1012&H", worker)) = Nothing Then
                         primaryKey(0) = ProdKTable.Columns("ProdKNm")
@@ -461,12 +634,12 @@ Sec2:
                         PrciTblCnt += 1
                     Else
                         Def.Str = "لم يتم تحميل  أنواع الخدمات "
-                        If Def.Str.Length > 0 Then worker.ReportProgress(0, Def)
+                        worker.ReportProgress(0, Def)
                     End If
 
 
                     Def.Str = "جاري تحميل أنواع المنتجات ..."
-                    If Def.Str.Length > 0 Then worker.ReportProgress(0, Def)
+                    worker.ReportProgress(0, Def)
 
                     If (Fn.GetTbl("SELECT FnSQL, PrdKind, FnProdCd, PrdNm, FnCompCd, CompNm, FnMend, PrdRef, FnMngr, Prd3, FnSusp,CompHlp FROM VwFnProd where FnSusp = 0 ORDER BY PrdKind, PrdNm, CompNm", ProdCompTable, "1012&H", worker)) = Nothing Then
                         primaryKey(0) = ProdCompTable.Columns("FnSQL")
@@ -474,31 +647,31 @@ Sec2:
                         PrciTblCnt += 1
                     Else
                         Def.Str = "لم يتم تحميل أنواع المنتجات  "
-                        If Def.Str.Length > 0 Then worker.ReportProgress(0, Def)
+                        worker.ReportProgress(0, Def)
                     End If
 
                     Def.Str = "جاري تحميل أنواع التحديثات ..."
-                    If Def.Str.Length > 0 Then worker.ReportProgress(0, Def)
+                    worker.ReportProgress(0, Def)
                     If Usr.PUsrUCatLvl >= 3 And Usr.PUsrUCatLvl <= 5 Then
                         If (Fn.GetTbl("SELECT EvId, EvNm FROM CDEvent where EvSusp = 0 and EvBkOfic = 1 ORDER BY EvNm", UpdateKTable, "1012&H", worker)) = Nothing Then
                             PrciTblCnt += 1
                         Else
                             Def.Str = "لم يتم تحميل  أنواع التحديثات "
-                            If Def.Str.Length > 0 Then worker.ReportProgress(0, Def)
+                            worker.ReportProgress(0, Def)
                         End If
                     Else
                         If (Fn.GetTbl("SELECT EvId, EvNm FROM CDEvent where EvSusp = 0 and EvBkOfic = 0 ORDER BY EvNm", UpdateKTable, "1012&H", worker)) = Nothing Then
                             PrciTblCnt += 1
                         Else
                             Def.Str = " أنواع التحديثات / "
-                            If Def.Str.Length > 0 Then worker.ReportProgress(0, Def)
+                            worker.ReportProgress(0, Def)
                         End If
                     End If
                 End If
 
                 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
             Else
-                If Def.Str.Length > 0 Then worker.ReportProgress(0, Def)
+                worker.ReportProgress(0, Def)
                 Fn.MsgErr(My.Resources.ConnErr & vbCrLf & My.Resources.TryAgain & vbCrLf)
             End If
         End Sub
@@ -533,5 +706,242 @@ Sec2:
                 WelcomeScreen.PictureBox1.BorderStyle = BorderStyle.None
             End Try
         End Sub
+        Public Sub TikCntrSub(worker As System.ComponentModel.BackgroundWorker)
+            Dim state As New APblicClss.Defntion
+            Dim Fn As New APblicClss.Func
+            'Ckeck User Tickets Count And Update It in Int_User Table If Different
+            state.Nw = ServrTime(worker)
+            TicTable = New DataTable
+            If Fn.GetTbl("select UsrClsN, UsrFlN, UsrReOpY, UsrUnRead, UsrEvDy, UsrClsYDy, UsrReadYDy, UsrRecevDy, UsrClsUpdtd, UsrLastSeen, UsrTikFlowDy, UsrActive,UsrLogSnd from Int_user where UsrId = " & Usr.PUsrID & ";", TicTable, "1005&H", worker) = Nothing Then
+                If TicTable.Rows.Count > 0 Then
+                    If TicTable.Rows(0).Item("UsrActive") = False Then
+                        'Login.ExitBtn.Enabled = False
+                        Login.TxtUsrNm.Text = Usr.PUsrNm
+                        'Login.ExitBtn.Enabled = False
+                        Login.TxtUsrNm.Enabled = False
+                        Dim frmCollection = Application.OpenForms
+                        If frmCollection.OfType(Of Login).Any Then
+                            Login.TxtUsrPass.Focus()
+                        Else
+                            WelcomeScreen.CntxtMnuStrp.Enabled = False
+                            WelcomeScreen.CntxtMnuStrp.Enabled = False
+                            Login.ShowDialog()
+                            WelcomeScreen.TimerTikCoun.Stop()
+                            WelcomeScreen.CntxtMnuStrp.Enabled = True
+                            WelcomeScreen.CntxtMnuStrp.Enabled = True
+                        End If
+                    End If
+                    'If Math.Abs(DateTime.Parse(Nw).Subtract(DateTime.Parse(TicTable.Rows(0).Item("UsrLastSeen"))).TotalMinutes) > 30 Then
+                    'End If
+
+#Region "Send Log File If UsrLogSnd is True"
+                    If TicTable.Rows(0).Item("UsrLogSnd") = True Then
+                        'TimerColctLog.Interval = 5000
+                        tempTable = New DataTable
+                        Fn.GetTbl("Select Mlxx from Alib", tempTable, "0000&H", worker)
+                        Dim exchange As ExchangeService
+                        exchange = New ExchangeService(ExchangeVersion.Exchange2007_SP1)
+                        exchange.Credentials = New WebCredentials("egyptpost\voca-support", tempTable.Rows(0).Item(0).ToString)
+                        exchange.Url() = New Uri("https://mail.egyptpost.org/ews/exchange.asmx")
+                        Dim message As New EmailMessage(exchange)
+                        'message.ToRecipients.Add("voca-support@egyptpost.org")
+                        message.CcRecipients.Add("a.farag@egyptpost.org")
+                        message.Subject = "VOCA Log Of " & Usr.PUsrRlNm & "," & Usr.PUsrID & "," & OsIP()
+                        message.Body = "VOCA Log File"
+                        Dim fileAttachment As String = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) & "\" & "VOCALog" & Format(Now, "yyyyMM") & ".Vlg"
+                        message.Attachments.AddFileAttachment(fileAttachment)
+                        message.Attachments(0).ContentId = "VOCALog" & Format(Now, "yyyyMM")
+                        message.Importance = 1
+                        Try
+                            message.SendAndSaveCopy()
+                            If Fn.InsUpd("UPDATE Int_user SET UsrLogSnd = 0  WHERE (UsrId = " & Usr.PUsrID & ");", "1006&H", worker) = Nothing Then
+                            End If
+                        Catch ex As Exception
+                            MsgInf(ex.Message)
+                        End Try
+                    End If
+
+#End Region
+
+                End If
+            End If
+            If Usr.PUsrUCatLvl >= 3 And Usr.PUsrUCatLvl <= 5 Then
+                Dim Notif As String = ""
+                WelcomeScreen.GrpCounters.Text = "ملخص أرقامي حتى : " & Now
+                'If Now.Subtract(TicTable.Rows(0).Item("UsrLastSeen")) Then
+                If TicTable.Rows.Count > 0 Then
+                    Notif = "جديد :"
+                    Dim ss As Integer = TicTable.Rows(0).Item("UsrClsN")
+                    If Usr.PUsrClsN < TicTable.Rows(0).Item("UsrClsN") Then
+                        Notif &= vbCrLf & "شكاوى مفتوحه : " & TicTable.Rows(0).Item("UsrClsN") - Usr.PUsrClsN
+                        Usr.PUsrClsN = TicTable.Rows(0).Item("UsrClsN")
+                        WelcomeScreen.LblClsN.Text = Usr.PUsrClsN
+                    End If
+                    If Usr.PUsrFlN < TicTable.Rows(0).Item("UsrFlN") Then
+                        Notif &= vbCrLf & "لم يتم التعامل : " & TicTable.Rows(0).Item("UsrFlN") - Usr.PUsrFlN
+                        Usr.PUsrFlN = TicTable.Rows(0).Item("UsrFlN")
+                        WelcomeScreen.LblFlN.Text = Usr.PUsrFlN
+                    End If
+                    If Usr.PUsrReOpY < TicTable.Rows(0).Item("UsrReOpY") Then
+                        Notif &= vbCrLf & "معاد فتحها اليوم : " & TicTable.Rows(0).Item("UsrReOpY") - Usr.PUsrReOpY
+                        Usr.PUsrReOpY = TicTable.Rows(0).Item("UsrReOpY")
+                        WelcomeScreen.LblReOpY.Text = Usr.PUsrReOpY
+                    End If
+                    If Usr.PUsrUnRead < TicTable.Rows(0).Item("UsrUnRead") Then
+                        Notif &= vbCrLf & "تحديثات غير مقروءه : " & TicTable.Rows(0).Item("UsrUnRead")
+                        Usr.PUsrUnRead = TicTable.Rows(0).Item("UsrUnRead")
+                        WelcomeScreen.LblUnRead.Text = Usr.PUsrUnRead
+                    End If
+                    If Usr.PUsrEvDy < TicTable.Rows(0).Item("UsrEvDy") Then
+                        Notif &= vbCrLf & "عدد تحديثات اليوم : " & TicTable.Rows(0).Item("UsrEvDy")
+                        Usr.PUsrEvDy = TicTable.Rows(0).Item("UsrEvDy")
+                        WelcomeScreen.LblEvDy.Text = Usr.PUsrEvDy
+                    End If
+                    If Usr.PUsrClsYDy < TicTable.Rows(0).Item("UsrClsYDy") Then
+                        Notif &= vbCrLf & "تم إغلاقها اليوم : " & TicTable.Rows(0).Item("UsrClsYDy")
+                        Usr.PUsrClsYDy = TicTable.Rows(0).Item("UsrClsYDy")
+                        WelcomeScreen.LblClsYDy.Text = Usr.PUsrClsYDy
+                    End If
+                    If Usr.PUsrReadYDy < TicTable.Rows(0).Item("UsrReadYDy") Then
+                        Notif &= vbCrLf & "تحديثات مقروءه اليوم : " & TicTable.Rows(0).Item("UsrReadYDy") - Usr.PUsrReadYDy
+                        Usr.PUsrReadYDy = TicTable.Rows(0).Item("UsrReadYDy")
+                        WelcomeScreen.LblReadYDy.Text = Usr.PUsrReadYDy
+                    End If
+                    If Usr.PUsrRecvDy < TicTable.Rows(0).Item("UsrRecevDy") Then
+                        Notif &= vbCrLf & "استلام اليوم : " & TicTable.Rows(0).Item("UsrRecevDy") - Usr.PUsrRecvDy
+                        Usr.PUsrRecvDy = TicTable.Rows(0).Item("UsrRecevDy")
+                        WelcomeScreen.LblRecivDy.Text = Usr.PUsrRecvDy
+                    End If
+                    If Usr.PUsrClsUpdtd < TicTable.Rows(0).Item("UsrClsUpdtd") Then
+                        Notif &= vbCrLf & "تحديثات شكاوى مغلقة : " & TicTable.Rows(0).Item("UsrClsUpdtd") - Usr.PUsrRecvDy
+                        Usr.PUsrClsUpdtd = TicTable.Rows(0).Item("UsrClsUpdtd")
+                        WelcomeScreen.LblClsUpdted.Text = Usr.PUsrClsUpdtd
+                    End If
+                    If Usr.PUsrFolwDay < TicTable.Rows(0).Item("UsrTikFlowDy") Then
+                        Notif &= vbCrLf & "تم التعامل اليوم : " & TicTable.Rows(0).Item("UsrTikFlowDy") - Usr.PUsrFolwDay
+                        Usr.PUsrFolwDay = TicTable.Rows(0).Item("UsrTikFlowDy")
+                        WelcomeScreen.LblFolwDy.Text = Usr.PUsrFolwDay
+                    End If
+                    If Notif.Length > 6 Then
+                        WelcomeScreen.NotifyIcon1.ShowBalloonTip(0, "", Notif, ToolTipIcon.Info)
+                    End If
+                End If
+            End If
+        End Sub
+#Region "Tik"
+        Public Sub GetUpdtEvnt_(worker As System.ComponentModel.BackgroundWorker)
+            Dim Fn As New APblicClss.Func
+            UpdtCurrTbl = New DataTable
+            '                                 0        1         2         3         4        5        6         7         8         9
+            If Fn.GetTbl("SELECT TkupSTime, TkupTxt, UsrRealNm,TkupReDt, TkupUser,TkupSQL,TkupTkSql,TkupEvtId, EvSusp, UCatLvl,TkupUnread FROM TkEvent INNER JOIN Int_user ON TkupUser = UsrId INNER JOIN CDEvent ON TkupEvtId = EvId INNER JOIN IntUserCat ON Int_user.UsrCat = IntUserCat.UCatId Where ( " & CompIds & ") ORDER BY TkupTkSql,TkupSQL DESC", UpdtCurrTbl, "1019&H", worker) = Nothing Then
+                UpdtCurrTbl.Columns.Add("File")        ' Add files Columns 
+            Else
+                MsgErr(My.Resources.ConnErr & vbCrLf & My.Resources.TryAgain & vbCrLf & Errmsg)
+            End If
+        End Sub
+        Public Function CompGrdTikFill(GrdTick As DataGridView, Tbl As DataTable, ProgBar As ProgressBar, worker As System.ComponentModel.BackgroundWorker) As String
+            Dim Def As New APblicClss.Defntion
+            Dim Fn As New APblicClss.Func
+            Def.Errmsg = Nothing
+            worker.ReportProgress(0, Def)
+            Try
+                GrdTick.DataSource = Tbl.DefaultView
+                Def.CompList = New List(Of String)
+                ProgBar.Visible = True
+                ProgBar.Maximum = Tbl.Columns.Count
+                For HH = 0 To Tbl.Columns.Count - 1
+                    ProgBar.Value = HH + 1
+                    ProgBar.Refresh()
+                    If Tbl.Columns(HH).ColumnName = "TkDtStart" Then
+                        GrdTick.Columns(HH).HeaderText = "تاريخ الشكوى"
+                    ElseIf Tbl.Columns(HH).ColumnName = "TkID" Then
+                        GrdTick.Columns(HH).HeaderText = "رقم الشكوى"
+                    ElseIf Tbl.Columns(HH).ColumnName = "SrcNm" Then
+                        GrdTick.Columns(HH).HeaderText = "مصدر الشكوى"
+                    ElseIf Tbl.Columns(HH).ColumnName = "TkClNm" Then
+                        GrdTick.Columns(HH).HeaderText = "اسم العميل"
+                    ElseIf Tbl.Columns(HH).ColumnName = "TkClPh" Then
+                        GrdTick.Columns(HH).HeaderText = "تليفون العميل1"
+                    ElseIf Tbl.Columns(HH).ColumnName = "TkClPh1" Then
+                        GrdTick.Columns(HH).HeaderText = "تليفون العميل2"
+                    ElseIf Tbl.Columns(HH).ColumnName = "PrdNm" Then
+                        GrdTick.Columns(HH).HeaderText = "اسم المنتج"
+                    ElseIf Tbl.Columns(HH).ColumnName = "CompNm" Then
+                        GrdTick.Columns(HH).HeaderText = "نوع الشكوى"
+                    ElseIf Tbl.Columns(HH).ColumnName = "UsrRealNm" Then
+                        GrdTick.Columns(HH).HeaderText = "متابع الشكوى"
+                    Else
+                        GrdTick.Columns(HH).HeaderText = "unknown"
+                        GrdTick.Columns(HH).Visible = False
+                    End If
+                Next
+                ProgBar.Maximum = GrdTick.Rows.Count
+                For GG = 0 To GrdTick.Rows.Count - 1
+                    ProgBar.Value = GG + 1
+                    ProgBar.Refresh()
+                    Def.CompList.Add("TkupTkSql = " & GrdTick.Rows(GG).Cells("TkSQL").Value)
+                Next
+                CompIds = String.Join(" OR ", Def.CompList)
+                Tbl.Columns.Add("تاريخ آخر تحديث")
+                Tbl.Columns.Add("نص آخر تحديث")
+                Tbl.Columns.Add("محرر آخر تحديث")
+                Tbl.Columns.Add("TkupReDt")
+                Tbl.Columns.Add("TkupUser")
+                Tbl.Columns.Add("LastUpdateID")
+                Tbl.Columns.Add("EvSusp")
+                Tbl.Columns.Add("UCatLvl")
+                Tbl.Columns.Add("TkupUnread")
+
+            Catch ex As Exception
+                Def.Errmsg = ex.Message
+                worker.ReportProgress(0, Def)
+            End Try
+            ProgBar.Visible = False
+            Return Errmsg
+        End Function
+        Public Function TikFormat(TblTicket As DataTable, TblUpdt As DataTable, ProgBar As ProgressBar, worker As System.ComponentModel.BackgroundWorker) As TickInfo ' Function to Adjust Ticket Gridview
+            GridCuntRtrn = New TickInfo
+            ProgBar.Visible = True
+            For Rws = 0 To TblTicket.Rows.Count - 1
+                GridCuntRtrn.TickCount += 1                                          'Grid record count
+                ProgBar.Maximum = TblTicket.Rows.Count
+                ProgBar.Value = GridCuntRtrn.TickCount
+                ProgBar.Refresh()
+                Try
+                    TblUpdt.DefaultView.RowFilter = "[TkupTkSql]" & " = " & TblTicket.Rows(Rws).Item("TkSQL")
+                    TblTicket.Rows(Rws).Item("تاريخ آخر تحديث") = TblUpdt.DefaultView(0).Item("TkupSTime")
+                    TblTicket.Rows(Rws).Item("نص آخر تحديث") = TblUpdt.DefaultView(0).Item("TkupTxt")
+                    TblTicket.Rows(Rws).Item("محرر آخر تحديث") = TblUpdt.DefaultView(0).Item("UsrRealNm")
+                    TblTicket.Rows(Rws).Item("TkupReDt") = TblUpdt.DefaultView(0).Item("TkupReDt")
+                    TblTicket.Rows(Rws).Item("TkupUser") = TblUpdt.DefaultView(0).Item("TkupUser")
+                    TblTicket.Rows(Rws).Item("LastUpdateID") = TblUpdt.DefaultView(0).Item("TkupEvtId")
+                    TblTicket.Rows(Rws).Item("EvSusp") = TblUpdt.DefaultView(0).Item("EvSusp")
+                    TblTicket.Rows(Rws).Item("UCatLvl") = TblUpdt.DefaultView(0).Item("UCatLvl")
+                    TblTicket.Rows(Rws).Item("TkupUnread") = TblUpdt.DefaultView(0).Item("TkupUnread")
+
+                    StruGrdTk.LstUpDt = TblUpdt.DefaultView(0).Item("TkupSTime")
+                    StruGrdTk.LstUpTxt = TblUpdt.DefaultView(0).Item("TkupTxt")
+                    StruGrdTk.LstUpUsrNm = TblUpdt.DefaultView(0).Item("UsrRealNm")
+                    StruGrdTk.LstUpEvId = TblUpdt.DefaultView(0).Item("TkupEvtId")
+                Catch ex As Exception
+                    TblTicket.Rows(Rws).Delete()
+                End Try
+            Next Rws
+            GridCuntRtrn.CompCount = Convert.ToInt32(TblTicket.Compute("count(TkSQL)", String.Empty))
+            GridCuntRtrn.NoFlwCount = Convert.ToInt32(TblTicket.Compute("count(TkFolw)", "TkFolw = 'False'"))
+            GridCuntRtrn.Recved = Convert.ToInt32(TblTicket.Compute("count(TkRecieveDt)", "TkRecieveDt = '" & Format(Nw, "yyyy/MM/dd").ToString & "'"))
+            GridCuntRtrn.ClsCount = Convert.ToInt32(TblTicket.Compute("count(TkClsStatus)", "TkClsStatus = 'True' And TkKind = 'True'"))
+            GridCuntRtrn.UpdtFollow = Convert.ToInt32(TblTicket.Compute("count(UsrRealNm)", "[محرر آخر تحديث] = UsrRealNm"))
+            GridCuntRtrn.UpdtColleg = Convert.ToInt32(TblTicket.Compute("count(UsrRealNm)", "[محرر آخر تحديث] <> UsrRealNm AND UCatLvl >= 3 And UCatLvl <= 5"))
+            GridCuntRtrn.UpdtOthrs = Convert.ToInt32(TblTicket.Compute("count(UsrRealNm)", "[محرر آخر تحديث] <> UsrRealNm AND UCatLvl < 3 And UCatLvl > 5"))
+            GridCuntRtrn.UnReadCount = Convert.ToInt32(TblTicket.Compute("count(TkupUnread)", "TkupUnread = 'False'"))
+            GridCuntRtrn.Esc1 = Convert.ToInt32(TblTicket.Compute("count(LastUpdateID)", "LastUpdateID = 902"))
+            GridCuntRtrn.Esc2 = Convert.ToInt32(TblTicket.Compute("count(LastUpdateID)", "LastUpdateID = 903"))
+            GridCuntRtrn.Esc3 = Convert.ToInt32(TblTicket.Compute("count(LastUpdateID)", "LastUpdateID = 904"))
+            ProgBar.Visible = False
+            Return GridCuntRtrn 'Return Counters Structure
+        End Function
+#End Region
+
     End Class
 End Class
