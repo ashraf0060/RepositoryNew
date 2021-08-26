@@ -233,6 +233,10 @@
             If RadioButton1.Checked = True Then
                 RadioButton1.Font = New Font("Times New Roman", 12, FontStyle.Bold)
                 RadioButton2.Font = New Font("Times New Roman", 12, FontStyle.Regular)
+
+                'Convert.ToInt32(TickSrchTable.Compute("count(TkFolw)", "TkFolw = 'False'"))
+
+
                 DataGridView1.Rows(SabelCnt).Cells(TT).Value = (From row As DataGridViewRow In DataGridView1.Rows
                                                                 Where row.Cells(TT).FormattedValue.ToString() <> String.Empty And
                                                              row.Cells(TT).FormattedValue.ToString() = "Sabeel"

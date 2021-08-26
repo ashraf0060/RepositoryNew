@@ -532,12 +532,6 @@
     <Compile Include="UCategories.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UConfigCtrls.Designer.vb">
-      <DependentUpon>UConfigCtrls.vb</DependentUpon>
-    </Compile>
-    <Compile Include="UConfigCtrls.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="UConstr.Designer.vb">
       <DependentUpon>UConstr.vb</DependentUpon>
     </Compile>
@@ -765,9 +759,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UCategories.resx">
       <DependentUpon>UCategories.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UConfigCtrls.resx">
-      <DependentUpon>UConfigCtrls.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UConstr.resx">
       <DependentUpon>UConstr.vb</DependentUpon>

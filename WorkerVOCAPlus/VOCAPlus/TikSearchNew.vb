@@ -3,6 +3,7 @@ Imports System.Threading
 
 Public Class TikSearchNew
     Dim Def As New APblicClss.Defntion
+    Dim Fn As New APblicClss.Func
     Dim SerchItmTable As DataTable = New DataTable()
     Dim PrdItmTable As DataTable = New DataTable()
     Dim CurrRw As Integer
@@ -131,6 +132,7 @@ Public Class TikSearchNew
     Private Sub Filtr()
         Dim Fn As New APblicClss.Func
         Dim primaryKey(0) As DataColumn
+        GridCuntRtrn = New TickInfo
         TickSrchTable = New DataTable
         StruGrdTk.Sql = 0
         Invoke(Sub() BtnSerch.Enabled = False)
@@ -201,7 +203,7 @@ Public Class TikSearchNew
                         End If
 
 
-                        GridCuntRtrn = New TickInfo
+
                         Invoke(Sub() ProgressBar1.Visible = True)
                         For Rws = 0 To TickSrchTable.Rows.Count - 1
                             GridCuntRtrn.TickCount += 1                                          'Grid record count
@@ -244,6 +246,13 @@ Public Class TikSearchNew
                         Invoke(Sub() LblMsg.Text = ("نتيجة البحث : إجمالي عدد " & GridCuntRtrn.TickCount & " -- عدد الشكاوى : " & GridCuntRtrn.CompCount & " -- عدد الاستفسارات : " & GridCuntRtrn.TickCount - GridCuntRtrn.CompCount & " -- شكاوى مغلقة : " & GridCuntRtrn.ClsCount & " -- شكاوى مفتوحة : " & GridCuntRtrn.CompCount - GridCuntRtrn.ClsCount & " -- لم يتم المتابعة : " & GridCuntRtrn.NoFlwCount))
                         Invoke(Sub() LblMsg.ForeColor = Color.Green)
                         Invoke(Sub() GridTicket.ClearSelection())
+                        Invoke(Sub() GridTicket.ColumnHeadersDefaultCellStyle.Font = New Font("Times New Roman", 12, FontStyle.Bold))
+                        Invoke(Sub() GridTicket.ColumnHeadersDefaultCellStyle.WrapMode = DataGridViewTriState.False)
+                        Invoke(Sub() GridTicket.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter)
+                        Invoke(Sub() GridTicket.DefaultCellStyle.Font = New Font("Times New Roman", 12, FontStyle.Regular))
+                        Invoke(Sub() GridTicket.AutoResizeColumns())
+                        Invoke(Sub() GridTicket.Columns("نص آخر تحديث").Width = 250)
+
                     Else
                         Invoke(Sub() LblMsg.Text = ("لا توجد نتيجة للبحث بـ" & FilterComb.Text))
                         Invoke(Sub() LblMsg.ForeColor = Color.Red)
@@ -285,7 +294,7 @@ Public Class TikSearchNew
         If (GridTicket.SelectedCells.Count) > 0 Then
             If GridTicket.CurrentRow.Index <> -1 Then
                 CurrRw = GridTicket.CurrentRow.Index
-                If TikGVDblClck(GridTicket) = Nothing Then
+                If Fn.TikGVDblClck(GridTicket) = Nothing Then
                     TikDetails.Text = "شكوى رقم " & StruGrdTk.Sql
                     TikDetails.ShowDialog()
                 Else
@@ -304,8 +313,6 @@ Public Class TikSearchNew
         Me.Close()
     End Sub
 #End Region
-
-#Region "Tool Strip GridUpdate"
     Private Sub SerchTxt_KeyPress(sender As Object, e As KeyPressEventArgs) Handles SerchTxt.KeyPress
         If Asc(e.KeyChar) = Keys.Enter Then
             Def.Thread_ = New Thread(AddressOf Filtr)
@@ -319,7 +326,6 @@ Public Class TikSearchNew
     Private Sub TikSearchNew_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
         Me.Dispose()
     End Sub
-#End Region
     Private Sub BtnCncl_Click(sender As Object, e As EventArgs) Handles BtnCncl.Click
         Def.Thread_.Abort()
         Invoke(Sub() GroupBox1.Enabled = True)

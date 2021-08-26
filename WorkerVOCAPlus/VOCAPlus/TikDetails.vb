@@ -1,4 +1,7 @@
-﻿Public Class TikDetails
+﻿
+Public Class TikDetails
+    Dim Def As New APblicClss.Defntion
+    Dim Fn As New APblicClss.Func
     Private Sub TikDetails_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         If StruGrdTk.FlwStat = True Then
             TcktImg.BackgroundImage = My.Resources.Tckoff
@@ -77,7 +80,7 @@
                 TxtDetails.Text &= vbCrLf & "تعديل : بواسطة  " & Usr.PUsrRlNm & " في " & ServrTime() & " من خلال IP : " & OsIP() & vbCrLf & TxtDetailsAdd.Text
                 SelctSerchTxt(TxtDetails, "تعديل : بواسطة")
                 StruGrdTk.Detls = TxtDetails.Text
-                GetPrntrFrm(frm__, gridview_)
+                Fn.GetPrntrFrm(frm__, gridview_)
                 TxtDetailsAdd.Text = ""
             Else
                 MsgInf(My.Resources.ConnErr & vbCrLf & My.Resources.TryAgain)
@@ -107,7 +110,7 @@
         Rslt = MessageBox.Show("سيتم إغلاق الشكوى نهائيا" & vbCrLf & "هل تريد الإستمرار؟", "رسالة معلومات", MessageBoxButtons.YesNo, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2, MessageBoxOptions.RtlReading Or MessageBoxOptions.RightAlign)
         If Rslt = DialogResult.Yes Then
             BtnClos.Enabled = False
-            If InsTrans("update Tickets set TkDtClose = (Select GetDate())" & ", TkDuration = " & CalDate(StruGrdTk.DtStrt, Nw, "1036&H") & ", TkClsStatus = 1" & ", TkFolw = 1" & " where (TkSQL = " & StruGrdTk.Sql & ");",
+            If Fn.InsTrans("update Tickets set TkDtClose = (Select GetDate())" & ", TkDuration = " & CalDate(StruGrdTk.DtStrt, Nw, "1036&H") & ", TkClsStatus = 1" & ", TkFolw = 1" & " where (TkSQL = " & StruGrdTk.Sql & ");",
                     "insert into TkEvent (TkupTkSql, TkupTxt, TkupUnread, TkupEvtId, TkupUserIP, TkupUser) VALUES ('" &
                     StruGrdTk.Sql & "','" & "The Complaint has been closed" & "','" & "1" & "','" & "900" & "','" & OsIP() & "','" & Usr.PUsrID & "')", "1037&H") = Nothing Then
                 TcktImg.BackgroundImage = My.Resources.Tckoff
@@ -124,7 +127,7 @@
                     End If
                 Next
                 If UpSql.Count > 0 Then
-                    If PublicCode.InsUpd("update TkEvent set TkupUnread = 1, TkupReDt = (Select GetDate())" & " where  " & String.Join(" OR ", UpSql) & ";", "1035&H") = Nothing Then
+                    If Fn.InsUpdate("update TkEvent set TkupUnread = 1, TkupReDt = (Select GetDate())" & " where  " & String.Join(" OR ", UpSql) & ";", "1035&H") = Nothing Then
 
                     Else
                         MsgErr(My.Resources.ConnErr & vbCrLf & My.Resources.TryAgain & vbCrLf & Errmsg)
@@ -134,7 +137,7 @@
                 BtnUpd.Visible = False
 
                 Usr.PUsrClsN -= 1   'to don't recieve notification with Ticket count trnasfered to 
-                GetPrntrFrm(frm__, gridview_)
+                Fn.GetPrntrFrm(frm__, gridview_)
                 TikFormat(TickTblMain, UpdtCurrTbl, ProgBar)
                 BtnAddEdt.Enabled = False
                 TxtDetailsAdd.Enabled = False

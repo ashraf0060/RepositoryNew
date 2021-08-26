@@ -6,6 +6,8 @@ Public Class TikUpdate
     Dim FileName As String
     Dim EscTable As New DataTable
     Dim UpSQlMax_ As Integer = 0
+    Dim Def As New APblicClss.Defntion
+    Dim Fn As New APblicClss.Func
     Private Sub TikUpdate_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Me.Size = New Point(screenWidth, screenHeight - 120)
         GridUpdt.Size = New Point(Me.Size.Width, Me.Size.Height - 185)
@@ -49,7 +51,7 @@ Public Class TikUpdate
                 End If
             Next
             If UpSql.Count > 0 Then
-                If PublicCode.InsUpd("update TkEvent set TkupUnread = 1, TkupReDt = (Select GetDate())" & " where  " & String.Join(" OR ", UpSql) & ";", "1035&H") = Nothing Then
+                If Fn.InsUpdate("update TkEvent set TkupUnread = 1, TkupReDt = (Select GetDate())" & " where  " & String.Join(" OR ", UpSql) & ";", "1035&H") = Nothing Then
 
                 Else
                     MsgErr(My.Resources.ConnErr & vbCrLf & My.Resources.TryAgain & vbCrLf & Errmsg)
@@ -137,7 +139,7 @@ Public Class TikUpdate
                         CmbEvent.Enabled = True
                         TimerEscOpen.Stop()
                     End If
-                    GetPrntrFrm(frm__, gridview_)
+                    Fn.GetPrntrFrm(frm__, gridview_)
                 Else
                     MsgErr("Error : " & Errmsg)
                 End If

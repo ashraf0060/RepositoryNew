@@ -11,97 +11,7 @@ Imports System.Threading
 Module PublicCode
 
     'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-    Public Menu_ As New MenuStrip
-    Public CntxMenu As New ContextMenuStrip
-    Public MacStr As String
-    Public FltrStr As String = ""
-    Public screenWidth As Integer = Screen.PrimaryScreen.Bounds.Width
-    Public screenHeight As Integer = Screen.PrimaryScreen.Bounds.Height
-    Public ServerCD As String = "Eg Server"
-    Public ServerNm As String = "VOCA Server"
-    Public strConn As String = "Data Source=10.10.26.4;Initial Catalog=VOCAPlus;Persist Security Info=True;User ID=vocaplus21;Password=@VocaPlus$21-4"
-    Public sqlCon As New SqlConnection(strConn) ' I Have assigned conn STR here and delete this row from all project
-    Public Bol As Boolean
 
-    Public HardTable As DataTable = New DataTable
-
-    Public UserTable As DataTable = New DataTable
-    Public tempTable As DataTable = New DataTable
-
-    Public AreaTable As DataTable = New DataTable
-    Public OfficeTable As DataTable = New DataTable
-    Public CompSurceTable As DataTable = New DataTable
-    Public CountryTable As DataTable = New DataTable
-    Public ProdKTable As DataTable = New DataTable
-    Public ProdCompTable As DataTable = New DataTable
-    Public UpdateKTable As DataTable = New DataTable
-    Public FTPTable As New DataTable
-    Public CtrlsTbl As DataTable = New DataTable
-    Public ConTbl As New DataTable
-    Public LogOfflinTbl As New DataTable
-    Public CompfflinTbl As New DataTable
-    Public TicTable As DataTable = New DataTable
-
-    Public TickSrchTable As New DataTable
-    Public PreciFlag As Boolean = False                 'Load princible tables
-    Public PrciTblCnt As Integer = 0                    'Counter for Thread
-    'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-
-
-
-    Public MLXX As String = ""       ' Mail Password From Lib Table
-    Public Errmsg As String          ' Handel error message
-    Public Esc As String = ""
-    Public EscCnt As Integer = 0
-    Public EscID As Integer = 0
-    Public EnglishInput As InputLanguage
-    Public ArabicInput As InputLanguage
-    Public GenSaltKey As String = "754A8DBBBE83563B7A724710FCF14FAD"
-    ' CAPS LOACK
-    Public Declare Sub keybd_event Lib "user32" (ByVal bVk As Byte, ByVal bScan As Byte, ByVal dwFlags As Integer, ByVal dwExtraInfo As Integer)
-    Public Const VK_CAPITAL As Integer = &H14               ' CAPS LOACK
-    Public Const KEYEVENTF_EXTENDEDKEY As Integer = &H1     ' CAPS LOACK
-    Public Const KEYEVENTF_KEYUP As Integer = &H2           ' CAPS LOACK
-    Public Usr As New Strc.CurrentUser
-    Public SQLSTR As String
-    Public Cnt_ As Integer                              'Counter
-    Public EncDecTxt As String                          'Encoding decoding string
-    Public Tran As SqlTransaction = Nothing             'SQL Transaction
-    Public sqlComm As New SqlCommand                    'SQL Command
-    Public sqlCommUpddate_ As New SqlCommand            'SQL Command
-    Public sqlComminsert_1 As New SqlCommand            'SQL Command
-    Public sqlComminsert_2 As New SqlCommand            'SQL Command
-    Public sqlComminsert_3 As New SqlCommand            'SQL Command
-    Public sqlComminsert_4 As New SqlCommand            'SQL Command
-    Public Reader_ As SqlDataReader                     'SQL Reader
-    Public SQLTblAdptr As New SqlDataAdapter            'SQL Table Adapter
-
-
-
-
-    Public ExpDTable As New DataTable                   'Export data Function to use its count every time i use this function
-    Public ExpTrFlseTable As New DataTable
-    Public ExpStr As String
-    Public Rws As Integer
-    Public Col As Integer
-    Public DataExprRtrn As Strc.ExprXlsx                     'Return Counters Structure of Export Function
-    Public GridCuntRtrn As Strc.TickInfo                     'Return Counters Structure of Gridview Function
-    Public StruGrdTk As Strc.TickFld                     'Return Fields Structure of Tickets Gridview Function
-    Public Msg As String
-    Public LblSecLvl_ As String = "" 'FOR SEC fORM
-    'Public Const strConn As String = "Data Source=sql5041.site4now.net;Initial Catalog=DB_A49C49_vocaplus;Persist Security Info=True;User ID=DB_A49C49_vocaplus_admin;Password=Hemonad105046"
-    'Public Const strConn As String = "Server=tcp:egyptpostazure.database.windows.net,1433;Initial Catalog=vocaplus;Persist Security Info=False;User ID=sw;Password=Hemonad105046;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
-
-    'Public strConnCssys As String = "Data Source=10.10.26.4;Initial Catalog=CSSYS;Persist Security Info=True;User ID=import;Password=ASD_asd123"
-    'Public Const strConn As String = "Data Source=HOSPC\HOSPCSQLSRV;Initial Catalog=VOCAPlus;Persist Security Info=True;User ID=sa;Password=Hemonad105046"
-
-
-    Public Distin As String = ""
-    Public StrFileName As String = "X"
-    Public Nw As DateTime = ServrTime()
-    Public TikIDRep_ As Integer
-    Public Rslt As DialogResult
-    Public Property MousePosition As Object
 
 #Region "Form Adjust"
     Dim Form_ As Form
@@ -124,29 +34,13 @@ Module PublicCode
     Dim CmstripItemTmp3 As New ToolStripMenuItem
 #End Region
 
-    Dim MyPen As Pen = New Pen(Drawing.Color.Blue, 5)
-    Dim myGraphics As Graphics
-
-    Dim CmstripTmpTmp3 As New ToolStripMenuItem
-    Dim UsrCnrlTbl As DataTable
-    Dim Drow As DataRow
-    Dim primaryKey(0) As DataColumn
-    Public CtlCnt As Integer = 0
+    Dim CtlCnt As Integer = 0
     Dim CTTTRL As Control
     Dim BacCtrl As Control
     Dim Slctd As Boolean = False
     Dim bolyy As Boolean = False
     Dim CompList As New List(Of String) 'list of tickets to get tickets updates
-    Public CompIds As String ' tickets to get tickets updates
-    Public TickTblMain As New DataTable
-    Public UpdtCurrTbl As DataTable
-    Public UpGetSql As New DataTable
-    Public ProgBar As ProgressBar
-    Public frm__ As Form
-    Public gridview_ As DataGridView
-    Public ElapsedTimeSpan As String
-    Public NewElapsedTimeSpan As String
-    Public TreadQueue As Queue(Of Thread)
+
     Public Sub Frm_Activated(sender As Object, e As EventArgs)
         FrmAllSub(sender)
     End Sub
@@ -642,71 +536,7 @@ End_:
         ProgBar.Visible = False
         Return Errmsg
     End Function
-    Public Function TikGVDblClck(GrdTick As DataGridView) As String
-        Errmsg = Nothing
 
-        Try
-            StruGrdTk.Tick = GrdTick.CurrentRow.Cells("TkKind").Value
-            StruGrdTk.FlwStat = GrdTick.CurrentRow.Cells("TkClsStatus").Value
-            StruGrdTk.Sql = GrdTick.CurrentRow.Cells("TkSQL").Value
-            StruGrdTk.Ph1 = GrdTick.CurrentRow.Cells("TkClPh").Value
-            StruGrdTk.Ph2 = GrdTick.CurrentRow.Cells("TkClPh1").Value.ToString
-            StruGrdTk.DtStrt = GrdTick.CurrentRow.Cells("TkDtStart").Value
-            StruGrdTk.ClNm = GrdTick.CurrentRow.Cells("TkClNm").Value
-            StruGrdTk.Adress = GrdTick.CurrentRow.Cells("TkClAdr").Value.ToString
-            StruGrdTk.Email = GrdTick.CurrentRow.Cells("TkMail").Value.ToString
-            StruGrdTk.Detls = GrdTick.CurrentRow.Cells("TkDetails").Value.ToString
-            StruGrdTk.Area = GrdTick.CurrentRow.Cells("OffArea").Value.ToString
-            StruGrdTk.Offic = GrdTick.CurrentRow.Cells("OffNm1").Value.ToString
-            StruGrdTk.ProdNm = GrdTick.CurrentRow.Cells("PrdNm").Value
-            StruGrdTk.CompNm = GrdTick.CurrentRow.Cells("CompNm").Value
-            StruGrdTk.Src = GrdTick.CurrentRow.Cells("SrcNm").Value
-            StruGrdTk.Trck = GrdTick.CurrentRow.Cells("TkShpNo").Value.ToString
-            StruGrdTk.Orig = GrdTick.CurrentRow.Cells("CounNmSender").Value.ToString
-            StruGrdTk.Dist = GrdTick.CurrentRow.Cells("CounNmConsign").Value.ToString
-            StruGrdTk.Card = GrdTick.CurrentRow.Cells("TkCardNo").Value.ToString
-            StruGrdTk.Gp = GrdTick.CurrentRow.Cells("TkGBNo").Value.ToString
-            StruGrdTk.NID = GrdTick.CurrentRow.Cells("TkClNtID").Value.ToString
-            StruGrdTk.Amnt = GrdTick.CurrentRow.Cells("TkAmount").Value
-            If DBNull.Value.Equals(GrdTick.CurrentRow.Cells("TkTransDate").Value) = False Then StruGrdTk.TransDt = GrdTick.CurrentRow.Cells("TkTransDate").Value
-            StruGrdTk.UsrNm = GrdTick.CurrentRow.Cells("UsrRealNm").Value
-            StruGrdTk.Help_ = GrdTick.CurrentRow.Cells("CompHelp").Value.ToString
-            StruGrdTk.ProdK = GrdTick.CurrentRow.Cells("PrdKind").Value
-            StruGrdTk.UserId = GrdTick.CurrentRow.Cells("TkEmpNm").Value
-
-            StruGrdTk.LstUpDt = GrdTick.CurrentRow.Cells("تاريخ آخر تحديث").Value
-            StruGrdTk.LstUpTxt = GrdTick.CurrentRow.Cells("نص آخر تحديث").Value
-            StruGrdTk.LstUpUsrNm = GrdTick.CurrentRow.Cells("محرر آخر تحديث").Value
-            StruGrdTk.LstUpEvId = GrdTick.CurrentRow.Cells("LastUpdateID").Value
-
-            frm__ = GrdTick.FindForm
-            gridview_ = GrdTick
-        Catch ex As Exception
-            Errmsg = ex.Message
-        End Try
-        Return Errmsg
-    End Function
-    Public Function GetPrntrFrm(Frm As Form, GV As DataGridView) As String
-        Errmsg = Nothing
-        Try
-            Dim GrivVw_ As DataGridView = Frm.Controls(GV.Name)
-            GrivVw_.CurrentRow.Cells("TkDetails").Value = StruGrdTk.Detls
-            GrivVw_.CurrentRow.Cells("تاريخ آخر تحديث").Value = StruGrdTk.LstUpDt
-            GrivVw_.CurrentRow.Cells("نص آخر تحديث").Value = StruGrdTk.LstUpTxt
-            GrivVw_.CurrentRow.Cells("محرر آخر تحديث").Value = StruGrdTk.LstUpUsrNm
-            GrivVw_.CurrentRow.Cells("LastUpdateID").Value = StruGrdTk.LstUpEvId
-            GrivVw_.CurrentRow.Cells("TkClsStatus").Value = StruGrdTk.ClsStat
-
-            If Frm.Name = "TikFolow" Then
-                If StruGrdTk.ClsStat = True Then
-                    GrivVw_.Rows.RemoveAt(GrivVw_.CurrentRow.Index)
-                End If
-            End If
-        Catch ex As Exception
-            Errmsg = ex.Message
-        End Try
-        Return Errmsg
-    End Function
     Public Function UpdateFormt(GridUpd As DataGridView, Optional StrTick As String = "") As String
         Errmsg = Nothing
 
@@ -1418,11 +1248,12 @@ End_:
     End Sub
     Private Sub PreviewUpdt_Click(sender As Object, e As EventArgs)
         'Dim hit As DataGridView.HitTestInfo = GridTicket.HitTest()
+        Dim Fn As New APblicClss.Func
         Dim sms As DataGridView = sender.GetCurrentParent().SourceControl
         Dim smss = sms.Parent
         If sms.SelectedCells.Count > 0 Then
 
-            If TikGVDblClck(sms) = Nothing Then
+            If Fn.TikGVDblClck(sms) = Nothing Then
                 TikUpdate.Text = "تحديثات شكوى رقم " & StruGrdTk.Sql
                 TikUpdate.ShowDialog()
             Else

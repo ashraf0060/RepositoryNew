@@ -1,14 +1,16 @@
 ﻿Imports System.Net
 Imports System.IO
 Imports System.Threading
+Imports VOCAPlus.Strc
 
 Public Class TikFolow
+    Dim Def As New APblicClss.Defntion
+    Dim Fn As New APblicClss.Func
     Dim SerchTable As DataTable = New DataTable()
     Dim TempData As DataView
     Private Const CP_NOCLOSE_BUTTON As Integer = &H200      ' Disable close button
     Dim CurrRw As Integer
     Dim FrmErr As String = Nothing
-    Dim PrTblTsk As Thread
     Protected Overloads Overrides ReadOnly Property CreateParams() As CreateParams
         Get
             Dim myCp As CreateParams = MyBase.CreateParams
@@ -17,6 +19,10 @@ Public Class TikFolow
         End Get
     End Property
     Private Sub FolwTicket_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Me.Size = New Point(screenWidth, screenHeight - 120)
+        Me.GridTicket.Width = screenWidth - 30
+        Me.GridTicket.Height = Me.Height - 200
+        GroupBox1.Location = New Point((Me.Size.Width - GroupBox1.Size.Width) / 2, GroupBox1.Location.Y)
         If PreciFlag = False Then
             Beep()
             Me.Close()
@@ -48,21 +54,9 @@ Public Class TikFolow
             GroupBox1.Visible = False
             BtnRefrsh.Enabled = False
             Me.Refresh()
-
-            'TreadQueue = New Queue(Of Thread)
-            'PrTblTsk = New Thread(AddressOf FilGrdTbl)
-            'TreadQueue(0).Start()
-            'ThreadPool.QueueUserWorkItem(AddressOf Load_)
-            'Thread.Sleep(1000)
-
-            'Thread.Sleep(1000)
-            Invoke(Sub() PublicCode.LoadFrm(350, 500))
-            Invoke(Sub() LodngFrm.LblMsg.Text = "جاري تحميل البيانات .............")
-            Invoke(Sub() ClorTxt(LodngFrm.LblMsg, "جاري تحميل البيانات .............", Color.Blue))
-            Invoke(Sub() LodngFrm.LblMsg.Refresh())
-            PrTblTsk = New Thread(AddressOf FilGrdTbl)
-            PrTblTsk.IsBackground = True
-            PrTblTsk.Start()
+            Def.Thread_ = New Thread(AddressOf NewFill_)
+            Def.Thread_.IsBackground = True
+            Def.Thread_.Start()
         End If
     End Sub
     Public Sub NumberOnly(ByVal e As KeyPressEventArgs)
@@ -83,79 +77,133 @@ Public Class TikFolow
             ToolTip1.Show("Allow Arabic, English Characters and Number From 0 to 9 Only", ActiveControl, 0, 20, 1000)
         End If
     End Sub
-    Private Sub CloseBtn_Click(sender As Object, e As EventArgs) Handles CloseBtn.Click
-        Me.Close()
+    Private Sub SerchTxt_Enter(sender As Object, e As EventArgs) Handles SerchTxt.Enter
+        If SerchTxt.Text = "برجاء ادخال كلمات البحث" Then
+            SerchTxt.Text = ""
+            SerchTxt.ForeColor = Color.Black
+        End If
     End Sub
-    Private Sub FilGrdTbl()
-        Invoke(Sub() GridTicket.Visible = False)
-        Invoke(Sub() GroupBox1.Visible = False)
-        Invoke(Sub() BtnRefrsh.Enabled = False)
-        Invoke(Sub() Me.Refresh())
+    Private Sub SerchTxt_KeyPress(sender As Object, e As KeyPressEventArgs) Handles SerchTxt.KeyPress
+        If FilterComb.SelectedValue = "Int" Then
+            NumberOnly(e)
+        Else
+            AESpaceNumberOnly(e)
+        End If
+    End Sub
+    Private Sub SerchTxt_Leave(sender As Object, e As EventArgs) Handles SerchTxt.Leave
+        If SerchTxt.TextLength = 0 Then
+            SerchTxt.Text = "برجاء ادخال كلمات البحث"
+            SerchTxt.ForeColor = Color.FromArgb(224, 224, 224)
+        End If
+    End Sub
+    Private Sub NewFill_()
+        Dim Fn As New APblicClss.Func
+        Dim primaryKey(0) As DataColumn
+        GridCuntRtrn = New TickInfo
+        TickTblMain = New DataTable
+        StruGrdTk.Sql = 0
         RemoveHandler GridTicket.SelectionChanged, AddressOf GridTicket_SelectionChanged
         RemoveHandler FilterComb.SelectedIndexChanged, (AddressOf FilterComb_SelectedIndexChanged)
         RemoveHandler SerchTxt.TextChanged, (AddressOf SerchTxt_TextChanged)
-        FrmErr = Nothing
-        TickTblMain = New DataTable
-        'GridTicket.DataSource = ""
-        '  Table                                               0                     1       2       3         4     5       6      7        8       9      10         11       12       13       14        15        16         17      18      19        20            21          22        23       24          25        26       27                  28              29              30                  31        32          33       34     35       36       37                          38                                            39                                    40                                                      41                                                                                 **********
-        '  Grid                                                0                     1       2       3         4     5       6      7        8       9      10         11       12       13       14        15        16         17      18      19        20            21          22        23       24          25        26       27                  28              29               30                 31        32          33       34     35       36       37                          38                                            39                                    40                                                      41                                                 42                              ***********
-        If PublicCode.GetTbl("SELECT TkSQL, TkKind, TkDtStart, TkID, SrcNm, TkClNm, TkClPh, TkClPh1, TkMail, TkClAdr, TkCardNo, TkShpNo, TkGBNo, TkClNtID, TkAmount, TkTransDate, PrdKind, PrdNm, CompNm, CounNmSender, CounNmConsign, OffNm1, OffArea, TkDetails, TkClsStatus, TkFolw, TkEmpNm, UsrRealNm,  TkReOp, format(TkRecieveDt,'yyyy/MM/dd') As TkRecieveDt, TkEscTyp, ProdKNm, CompHelp FROM dbo.TicketsAll WHERE (TkClsStatus = 0)  and TkEmpNm = " & Usr.PUsrID & "  ORDER BY TkSQL;", TickTblMain, "1028&H") = Nothing Then
-            Try
-                Invoke(Sub() Me.Text = "متابعة الشكاوى" & "_" & ElapsedTimeSpan)
-                If TickTblMain.Rows.Count > 0 Then
-                    Invoke(Sub() LodngFrm.LblMsg.Text += vbCrLf & "جاري تنسيق البيانات .............")
-                    Invoke(Sub() ClorTxt(LodngFrm.LblMsg, "جاري تنسيق البيانات .............", Color.Blue))
-                    CompGrdTikFill(GridTicket, TickTblMain, ProgBar)  'Adjust Fill Table and assign Grid Data source of Ticket Gridview
-                    Invoke(Sub() LodngFrm.LblMsg.Refresh())
+        Invoke(Sub() BtnRefrsh.Enabled = False)
+        Invoke(Sub() GroupBox1.Enabled = False)
+        Invoke(Sub() FilterComb.Enabled = False)
+        Invoke(Sub() StatBrPnlAr.Text = "جاري تحميل البيانات ...........")
 
-                    PrTblTsk = New Thread(AddressOf GetUpdtEvnt_)
-                    PrTblTsk.Start()
-                Else
-                    Invoke(Sub() StatBrPnlAr.Text = ("لا توجد شكاوى للمتابعة"))
-                    Beep()
+        Invoke(Sub() BtnCncl.Enabled = True)
+        Invoke(Sub() CloseBtn.Enabled = True)
+
+        primaryKey(0) = TickTblMain.Columns("TkSQL")
+        TickTblMain.PrimaryKey = primaryKey
+        FltrStr = " Where " & " (TkClsStatus = 0)  and TkEmpNm = " & Usr.PUsrID
+        Invoke(Sub() GridTicket.Visible = False)
+        If Fn.GetTblXX("SELECT TkSQL, TkKind, TkDtStart, TkID, SrcNm, TkClNm, TkClPh, TkClPh1, TkMail, TkClAdr, TkCardNo, TkShpNo, TkGBNo, TkClNtID, TkAmount, TkTransDate, PrdKind, PrdNm, CompNm, CounNmSender, CounNmConsign, OffNm1, OffArea, TkDetails, TkClsStatus, TkFolw, TkEmpNm, UsrRealNm,  TkReOp, format(TkRecieveDt,'yyyy/MM/dd') As TkRecieveDt, TkEscTyp, ProdKNm, CompHelp FROM dbo.TicketsAll " & FltrStr & "  ORDER BY TkSQL;", TickTblMain, "1028&H") = Nothing Then
+            Invoke(Sub() Me.Text = "متابعة الشكاوى" & "_" & ElapsedTimeSpan)
+            If TickTblMain.Rows.Count > 0 Then
+                Invoke(Sub() StatBrPnlAr.Text = "جاري تحميل التحديثات ...........")
+
+                Invoke(Sub() Fn.CompGrdTikFill1(GridTicket, TickTblMain, ProgressBar1)) 'Adjust Fill Table and assign Grid Data source of Ticket Gridview
+                Invoke(Sub() Fn.GetUpdtEvnt_1())
+                If Me.IsHandleCreated = True Then
+                    Invoke(Sub() Me.Text += " _ التحديثات" & "_" & ElapsedTimeSpan)
+                    Invoke(Sub() StatBrPnlAr.Text = "جاري تنسيق البيانات ...........")
+                    'Invoke(Sub() StatBrPnlAr.Refresh())
+                    Invoke(Sub() GridTicket.Columns("TkupReDt").Visible = False)
+                    Invoke(Sub() GridTicket.Columns("TkupUser").Visible = False)
+                    Invoke(Sub() GridTicket.Columns("LastUpdateID").Visible = False)
+                    Invoke(Sub() GridTicket.Columns("EvSusp").Visible = False)
+                    Invoke(Sub() GridTicket.Columns("UCatLvl").Visible = False)
+                    Invoke(Sub() GridTicket.Columns("TkupUnread").Visible = False)
                 End If
-            Catch ex As Exception
-                MsgErr(My.Resources.ConnErr & vbCrLf & My.Resources.TryAgain & vbCrLf & Errmsg)
-            End Try
-        Else
-            Invoke(Sub() BtnRefrsh.Enabled = True)
-            MsgErr(My.Resources.ConnErr & vbCrLf & My.Resources.TryAgain & vbCrLf & Errmsg)
-        End If
-    End Sub
-    Private Sub GetUpdtEvnt_()
-        FrmErr = Nothing
-        UpdtCurrTbl = New DataTable
-        Invoke(Sub() LodngFrm.LblMsg.Text += vbCrLf & "جاري تحميل التحديثات .............")
-        Invoke(Sub() ClorTxt(LodngFrm.LblMsg, "جاري تحميل التحديثات .............", Color.Blue))
-        Invoke(Sub() LodngFrm.LblMsg.Refresh())
-        '                                 0        1         2         3         4        5        6         7         8         9
-        If PublicCode.GetTbl("Select TkupSTime, TkupTxt, UsrRealNm,TkupReDt, TkupUser,TkupSQL,TkupTkSql,TkupEvtId, EvSusp, UCatLvl,TkupUnread FROM TkEvent INNER JOIN Int_user On TkupUser = UsrId INNER JOIN CDEvent On TkupEvtId = EvId INNER JOIN IntUserCat On Int_user.UsrCat = IntUserCat.UCatId Where ( " & CompIds & ") ORDER BY TkupTkSql,TkupSQL DESC", UpdtCurrTbl, "1019&H") = Nothing Then
-            UpdtCurrTbl.Columns.Add("File")        ' Add files Columns 
-            Invoke(Sub() LodngFrm.LblMsg.Text += vbCrLf & "جاري تنسيق التحديثات .............")
-            Invoke(Sub() ClorTxt(LodngFrm.LblMsg, "جاري تنسيق التحديثات .............", Color.Blue))
-            Invoke(Sub() LodngFrm.LblMsg.Refresh())
-            Invoke(Sub() TikFormat(TickTblMain, UpdtCurrTbl, ProgressBar1))
-            Invoke(Sub() GridTicket.Columns("TkupReDt").Visible = False)
-            Invoke(Sub() GridTicket.Columns("TkupUser").Visible = False)
-            Invoke(Sub() GridTicket.Columns("LastUpdateID").Visible = False)
-            Invoke(Sub() GridTicket.Columns("EvSusp").Visible = False)
-            Invoke(Sub() GridTicket.Columns("UCatLvl").Visible = False)
-            Invoke(Sub() GridTicket.Columns("TkupUnread").Visible = False)
-            Invoke(Sub() Filtr())
-            AddHandler GridTicket.SelectionChanged, AddressOf GridTicket_SelectionChanged
-            AddHandler FilterComb.SelectedIndexChanged, (AddressOf FilterComb_SelectedIndexChanged)
-            AddHandler SerchTxt.TextChanged, (AddressOf SerchTxt_TextChanged)
-            Invoke(Sub() GroupBox1.Visible = True)
-            Invoke(Sub() GridTicket.Visible = True)
-            Invoke(Sub() BtnRefrsh.Enabled = True)
-            Invoke(Sub() Me.Refresh())
-            Invoke(Sub() LodngFrm.Close())
-        Else
-            Invoke(Sub() BtnRefrsh.Enabled = True)
-            Invoke(Sub() LodngFrm.Close())
-            MsgErr(My.Resources.ConnErr & vbCrLf & My.Resources.TryAgain & vbCrLf & Errmsg)
-        End If
 
+
+
+                Invoke(Sub() ProgressBar1.Visible = True)
+                For Rws = 0 To TickTblMain.Rows.Count - 1
+                    GridCuntRtrn.TickCount += 1                                          'Grid record count
+                    Invoke(Sub() StatBrPnlAr.Text = Rws + 1 & " من " & TickTblMain.Rows.Count)
+                    ProgressBar1.Maximum = TickTblMain.Rows.Count
+                    Invoke(Sub() ProgressBar1.Value = GridCuntRtrn.TickCount)
+                    Try
+                        UpdtCurrTbl.DefaultView.RowFilter = "[TkupTkSql]" & " = " & TickTblMain.Rows(Rws).Item("TkSQL")
+                        TickTblMain.Rows(Rws).Item("تاريخ آخر تحديث") = UpdtCurrTbl.DefaultView(0).Item("TkupSTime")
+                        TickTblMain.Rows(Rws).Item("نص آخر تحديث") = UpdtCurrTbl.DefaultView(0).Item("TkupTxt")
+                        TickTblMain.Rows(Rws).Item("محرر آخر تحديث") = UpdtCurrTbl.DefaultView(0).Item("UsrRealNm")
+                        TickTblMain.Rows(Rws).Item("TkupReDt") = UpdtCurrTbl.DefaultView(0).Item("TkupReDt")
+                        TickTblMain.Rows(Rws).Item("TkupUser") = UpdtCurrTbl.DefaultView(0).Item("TkupUser")
+                        TickTblMain.Rows(Rws).Item("LastUpdateID") = UpdtCurrTbl.DefaultView(0).Item("TkupEvtId")
+                        TickTblMain.Rows(Rws).Item("EvSusp") = UpdtCurrTbl.DefaultView(0).Item("EvSusp")
+                        TickTblMain.Rows(Rws).Item("UCatLvl") = UpdtCurrTbl.DefaultView(0).Item("UCatLvl")
+                        TickTblMain.Rows(Rws).Item("TkupUnread") = UpdtCurrTbl.DefaultView(0).Item("TkupUnread")
+
+                        StruGrdTk.LstUpDt = UpdtCurrTbl.DefaultView(0).Item("TkupSTime")
+                        StruGrdTk.LstUpTxt = UpdtCurrTbl.DefaultView(0).Item("TkupTxt")
+                        StruGrdTk.LstUpUsrNm = UpdtCurrTbl.DefaultView(0).Item("UsrRealNm")
+                        StruGrdTk.LstUpEvId = UpdtCurrTbl.DefaultView(0).Item("TkupEvtId")
+
+                    Catch ex As Exception
+                        MsgBox("Error :" & ex.Message)
+                    End Try
+                Next Rws
+                Invoke(Sub() ProgressBar1.Visible = False)
+
+                GridCuntRtrn.CompCount = Convert.ToInt32(TickTblMain.Compute("count(TkSQL) ", String.Empty))
+                GridCuntRtrn.NoFlwCount = Convert.ToInt32(TickTblMain.Compute("count(TkFolw)", "TkFolw = 'False'"))
+                GridCuntRtrn.Recved = Convert.ToInt32(TickTblMain.Compute("count(TkRecieveDt)", "TkRecieveDt = '" & Format(Nw, "yyyy/MM/dd").ToString & "'"))
+                GridCuntRtrn.ClsCount = Convert.ToInt32(TickTblMain.Compute("count(TkClsStatus)", "TkClsStatus = 'True' And TkKind = 'True'"))
+                GridCuntRtrn.UpdtFollow = Convert.ToInt32(TickTblMain.Compute("count(UsrRealNm)", "[محرر آخر تحديث] = UsrRealNm"))
+                GridCuntRtrn.UpdtColleg = Convert.ToInt32(TickTblMain.Compute("count(UsrRealNm)", "[محرر آخر تحديث] <> UsrRealNm AND UCatLvl >= 3 And UCatLvl <= 5"))
+                GridCuntRtrn.UpdtOthrs = Convert.ToInt32(TickTblMain.Compute("count(UsrRealNm)", "[محرر آخر تحديث] <> UsrRealNm AND UCatLvl < 3 And UCatLvl > 5"))
+                GridCuntRtrn.UnReadCount = Convert.ToInt32(TickTblMain.Compute("count(TkupUnread)", "TkupUnread = 'False'"))
+                GridCuntRtrn.Esc1 = Convert.ToInt32(TickTblMain.Compute("count(LastUpdateID)", "LastUpdateID = 902"))
+                GridCuntRtrn.Esc2 = Convert.ToInt32(TickTblMain.Compute("count(LastUpdateID)", "LastUpdateID = 903"))
+                GridCuntRtrn.Esc3 = Convert.ToInt32(TickTblMain.Compute("count(LastUpdateID)", "LastUpdateID = 904"))
+                Invoke(Sub() GridTicket.ClearSelection())
+                Invoke(Sub() GridTicket.ColumnHeadersDefaultCellStyle.Font = New Font("Times New Roman", 12, FontStyle.Bold))
+                Invoke(Sub() GridTicket.ColumnHeadersDefaultCellStyle.WrapMode = DataGridViewTriState.False)
+                Invoke(Sub() GridTicket.ColumnHeadersDefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter)
+                Invoke(Sub() GridTicket.DefaultCellStyle.Font = New Font("Times New Roman", 12, FontStyle.Regular))
+                Invoke(Sub() GridTicket.AutoResizeColumns())
+                Invoke(Sub() GridTicket.Columns("نص آخر تحديث").Width = 250)
+                AddHandler GridTicket.SelectionChanged, AddressOf GridTicket_SelectionChanged
+                AddHandler FilterComb.SelectedIndexChanged, (AddressOf FilterComb_SelectedIndexChanged)
+                AddHandler SerchTxt.TextChanged, (AddressOf SerchTxt_TextChanged)
+                Invoke(Sub() StatBrPnlAr.Text = "")
+                Invoke(Sub() Filtr())
+                Invoke(Sub() GroupBox1.Visible = True)
+            Else
+                Invoke(Sub() StatBrPnlAr.Text = "لا توجد شكاوى للمتابعة")
+            End If
+            Invoke(Sub() GridTicket.Visible = True)
+        Else
+            Invoke(Sub() StatBrPnlAr.Text = "لم ينجح البحث - يرجى المحاولة مرة أخرى")
+            Invoke(Sub() Beep())
+        End If
+            FltrStr = Nothing
+            Invoke(Sub() BtnRefrsh.Enabled = True)
+        Invoke(Sub() BtnCncl.Enabled = False)
+        Invoke(Sub() GroupBox1.Enabled = True)
+        Invoke(Sub() FilterComb.Enabled = True)
     End Sub
     Private Sub Filtr()
         FrmErr = Nothing
@@ -170,8 +218,8 @@ Public Class TikFolow
                             If FilterComb.Text = GridTicket.Columns(Cnt_).HeaderText Then
                                 FltrStr = "[" & GridTicket.Columns(Cnt_).Name & "]" & " = '" & SerchTxt.Text & "'"
                                 Exit For
-        End If
-        Next
+                            End If
+                        Next
                     Else
                         For Cnt_ = 0 To GridTicket.Columns.Count - 1
                             If FilterComb.Text = GridTicket.Columns(Cnt_).HeaderText Then
@@ -285,36 +333,16 @@ Public Class TikFolow
         SerchTxt.ForeColor = Color.Black
     End Sub
     Private Sub GridTicket_DoubleClick(sender As Object, e As EventArgs) Handles GridTicket.DoubleClick
-
         If (GridTicket.SelectedCells.Count) > 0 Then
             If GridTicket.CurrentRow.Index <> -1 Then
                 CurrRw = GridTicket.CurrentRow.Index
-                If TikGVDblClck(GridTicket) = Nothing Then
+                If Fn.TikGVDblClck(GridTicket) = Nothing Then
                     TikDetails.Text = "شكوى رقم " & StruGrdTk.Sql
                     TikDetails.ShowDialog()
                 Else
                     MsgErr(My.Resources.ConnErr & vbCrLf & My.Resources.TryAgain & vbCrLf & Errmsg)
                 End If
             End If
-        End If
-    End Sub
-    Private Sub SerchTxt_Enter(sender As Object, e As EventArgs) Handles SerchTxt.Enter
-        If SerchTxt.Text = "برجاء ادخال كلمات البحث" Then
-            SerchTxt.Text = ""
-            SerchTxt.ForeColor = Color.Black
-        End If
-    End Sub
-    Private Sub SerchTxt_KeyPress(sender As Object, e As KeyPressEventArgs) Handles SerchTxt.KeyPress
-        If FilterComb.SelectedValue = "Int" Then
-            NumberOnly(e)
-        Else
-            AESpaceNumberOnly(e)
-        End If
-    End Sub
-    Private Sub SerchTxt_Leave(sender As Object, e As EventArgs) Handles SerchTxt.Leave
-        If SerchTxt.TextLength = 0 Then
-            SerchTxt.Text = "برجاء ادخال كلمات البحث"
-            SerchTxt.ForeColor = Color.FromArgb(224, 224, 224)
         End If
     End Sub
     Private Sub Chck_Click(sender As Object, e As EventArgs) Handles ChckUpdOther.Click, ChckUpdMe.Click, ChckUpdColeg.Click, ChckUpdAll.Click, ChckTrnsDy.Click, ChckRead.Click, ChckFlN.Click, ChckEsc3.Click, ChckEsc2.Click, ChckEsc1.Click
@@ -352,12 +380,9 @@ Public Class TikFolow
             FrmErr = "X"
         End Try
     End Sub
-    Private Sub ChckRead_CheckedChanged(sender As Object, e As EventArgs)
-        Filtr()
-    End Sub
     Private Sub GridTicket_SelectionChanged(sender As Object, e As EventArgs)
         If GridTicket.SelectedCells.Count > 0 Then
-            StatBrPnlEn.Text = GridTicket.CurrentRow.Index + 1 & " Of " & GridTicket.Rows.Count.ToString("N0")
+            StatBrPnlEn.Text = GridTicket.CurrentRow.Index + 1 & " من " & GridTicket.Rows.Count.ToString("N0")
         Else
             StatBrPnlEn.Text = ""
         End If
@@ -367,10 +392,21 @@ Public Class TikFolow
         StruGrdTk.Sql = 0
     End Sub
     Private Sub BtnRefrsh_Click(sender As Object, e As EventArgs) Handles BtnRefrsh.Click
-        Invoke(Sub() PublicCode.LoadFrm(350, 500))
-        Invoke(Sub() LodngFrm.LblMsg.Text = "جاري تحميل البيانات .............")
-        Invoke(Sub() ClorTxt(LodngFrm.LblMsg, "جاري تحميل البيانات .............", Color.Blue))
-        Invoke(Sub() LodngFrm.LblMsg.Refresh())
-        ThreadPool.QueueUserWorkItem(AddressOf FilGrdTbl)
+        Def.Thread_ = New Thread(AddressOf NewFill_)
+        Def.Thread_.IsBackground = True
+        Def.Thread_.Start()
+    End Sub
+    Private Sub BtnCncl_Click(sender As Object, e As EventArgs) Handles BtnCncl.Click
+        Def.Thread_.Abort()
+        Invoke(Sub() GroupBox1.Enabled = True)
+        ProgressBar1.Value = 0
+        ProgressBar1.Visible = False
+        BtnRefrsh.Enabled = True
+        GridTicket.Visible = False
+        StatBrPnlAr.Text = ""
+    End Sub
+    Private Sub CloseBtn_Click(sender As Object, e As EventArgs) Handles CloseBtn.Click
+        Def.Thread_.Abort()
+        Me.Close()
     End Sub
 End Class
