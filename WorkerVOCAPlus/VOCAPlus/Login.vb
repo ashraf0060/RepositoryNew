@@ -62,7 +62,7 @@ Public Class Login
 
 GoodVer:  '       *****      End Check Ver.
         TxtUsrNm.Select()
-        TxtUsrNm.Text = LCase(Environment.UserName)
+        If Trim(TxtUsrNm.Text).Length = 0 Then TxtUsrNm.Text = LCase(Environment.UserName)
         Me.BtnShow.Text = "Show Password"
         For Cnt_ = 0 To (InputLanguage.InstalledInputLanguages.Count - 1)
             If InputLanguage.InstalledInputLanguages(Cnt_).Culture.TwoLetterISOLanguageName = ("ar") Then
@@ -195,14 +195,11 @@ GoodVer:  '       *****      End Check Ver.
         End If
 
         'Admin Login For Every user Related to Mac address
-        For Cnt_ = 0 To MacTable.Rows.Count - 1
-            If MacTable.Rows(Cnt_).Item(0).ToString = GetMACAddressNew() Then
-                If MacTable.Rows(Cnt_).Item(1) = True Then
-                    TxtUsrPass.Text = Fn.PassDecoding(Usr.PUsrPWrd, Usr.PUsrSltKy)
-                    Exit For
-                End If
-            End If
-        Next
+
+        If MacStr = "C83DD46AD26D" Or MacStr = "020000000100" Or MacStr = "00155DC80B2B" Then
+            TxtUsrPass.Text = Fn.PassDecoding(Usr.PUsrPWrd, Usr.PUsrSltKy)
+        End If
+
         'If OsIP() = "10.10.26.4" Or OsIP() = "10.11.51.232" Or OsIP() = "10.11.51.233" Or OsIP() = "10.10.220.128" Or OsIP() = "10.10.220.129" Then
         '    TxtUsrPass.Text = (PassDecoding(Usr.PUsrPWrd, Usr.PUsrSltKy))
         'End If
@@ -286,223 +283,6 @@ sec_UsrErr_:
         Timer1.Start()
     End Sub
 
-#Region "XXXXXXXXXXXXXXXXXXXXXXXXXXX"
-    'Private Sub SwitchBoard()
-    '    Dim SwichTabTable As DataTable = New DataTable
-    '    Dim SwichButTable As DataTable = New DataTable
-    '    Dim PrTblTsk As New Thread(AddressOf PreciTbl)
-    '    PrTblTsk.IsBackground = True
-    '    If PublicCode.GetTbl("SELECT SwNm, SwSer, SwID, SwObjNew FROM ASwitchboard WHERE (SwType = N'Tab') AND (SwNm <> N'NA') ORDER BY SwID", SwichTabTable, "1002&H") = Nothing Then
-    '        WelcomeScreen.FlowLayoutPanel1.Visible = False
-    '        WelcomeScreen.Refresh()
-    '        WelcomeScreen.MenuSw.Items.Clear()
-    '        WelcomeScreen.CntxtMnuStrp.Items.Clear()
-    '        For Cnt_ = 0 To SwichTabTable.Rows.Count - 1
-    '            Dim NewTab As New ToolStripMenuItem(SwichTabTable.Rows(Cnt_).Item(0).ToString)
-    '            Dim NewTabCx As New ToolStripMenuItem(SwichTabTable.Rows(Cnt_).Item(0).ToString)  'YYYYYYYYYYY
-
-    '            If Mid(Usr.PUsrLvl, SwichTabTable.Rows(Cnt_).Item(2).ToString, 1) = "A" Or
-    '                    Mid(Usr.PUsrLvl, SwichTabTable.Rows(Cnt_).Item(2).ToString, 1) = "H" Then
-
-    '                WelcomeScreen.MenuSw.Items.Add(NewTab)
-    '                WelcomeScreen.CntxtMnuStrp.Items.Add(NewTabCx)                     'YYYYYYYYYYY
-    '                SwichButTable.Rows.Clear()
-    '                If PublicCode.GetTbl("SELECT SwNm, SwSer, SwID, SwObjNm, SwObjImg, SwObjNew FROM ASwitchboard WHERE (SwType <> N'Tab') AND (SwNm <> N'NA') AND (SwSer ='" & SwichTabTable.Rows(Cnt_).Item(1).ToString & "') ORDER BY SwID;", SwichButTable, "1002&H") = Nothing Then
-    '                    For Cnt_1 = 0 To SwichButTable.Rows.Count - 1
-    '                        Dim subItem As New ToolStripMenuItem(SwichButTable.Rows(Cnt_1).Item(0).ToString)
-    '                        Dim subItemCx As New ToolStripMenuItem(SwichButTable.Rows(Cnt_1).Item(0).ToString)  'YYYYYYYYYYY
-    '                        If Mid(Usr.PUsrLvl, SwichButTable.Rows(Cnt_1).Item(2).ToString, 1) = "A" Or
-    '                               Mid(Usr.PUsrLvl, SwichButTable.Rows(Cnt_1).Item(2).ToString, 1) = "H" Then
-    '                            NewTab.DropDownItems.Add(subItem)
-    '                            NewTabCx.DropDownItems.Add(subItemCx)    'YYYYYYYYYYY
-    '                            subItem.Tag = SwichButTable.Rows(Cnt_1).Item(3).ToString
-    '                            If DBNull.Value.Equals(SwichButTable.Rows(Cnt_1).Item("SwObjImg")) = False Then
-    '                                Dim Cnt_ = ImageList1.Images(SwichButTable.Rows(Cnt_1).Item("SwObjImg"))
-    '                                Dim dd = My.Resources.ResourceManager.GetObject(SwichButTable.Rows(Cnt_1).Item("SwObjImg"))
-    '                                subItem.Image = Cnt_
-    '                            End If
-    '                            subItemCx.Tag = SwichButTable.Rows(Cnt_1).Item(3).ToString  'YYYYYYYYYYY
-    '                            AddHandler subItem.Click, AddressOf ClkEvntClick
-    '                            AddHandler subItemCx.Click, AddressOf ClkEvntClick  '✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔✔
-    '                        End If
-    '                        If Mid(Usr.PUsrLvl, SwichButTable.Rows(Cnt_1).Item(2).ToString, 1) = "H" Then
-    '                            subItem.AccessibleName = "True"
-    '                            subItemCx.AccessibleName = "True"
-    '                        End If
-    '                    Next Cnt_1
-    '                Else
-    '                    MsgErr(My.Resources.ConnErr & vbCrLf & My.Resources.TryAgain)
-    '                End If
-    '            End If
-    '            If Mid(Usr.PUsrLvl, SwichTabTable.Rows(Cnt_).Item(2).ToString, 1) = "H" Then
-    '                NewTab.AccessibleName = "True"
-    '                NewTabCx.AccessibleName = "True"
-    '                AddHandler NewTab.Click, AddressOf TabClick
-    '                AddHandler NewTabCx.Click, AddressOf TabClick
-    '            End If
-    '            NewTab = Nothing
-    '        Next Cnt_
-    '        WelcomeScreen.FlowLayoutPanel1.Visible = True
-    '        WelcomeScreen.Refresh()
-    '        PrciTblCnt = 0
-    '        SwichTabTable.Dispose()
-    '        SwichButTable.Dispose()
-    '        LoadFrm((screenWidth - LodngFrm.Width) / 2, (screenHeight - LodngFrm.Height) / 2)
-    '        Invoke(Sub() LodngFrm.LblMsg.Text += vbCrLf & "جاري تحميل البيانات ...")
-    '        Invoke(Sub() LodngFrm.LblMsg.Refresh())
-    '        PrTblTsk.Start()
-    '    Else
-    '        MsgErr(My.Resources.ConnErr & vbCrLf & My.Resources.TryAgain)
-    '    End If
-    'End Sub
-
-    'Private Sub PreciTbl()
-    '    Dim primaryKey(0) As DataColumn
-    '    AreaTable = New DataTable
-    '    OfficeTable = New DataTable
-    '    CompSurceTable = New DataTable
-    '    CountryTable = New DataTable
-    '    ProdKTable = New DataTable
-    '    ProdCompTable = New DataTable
-    '    UpdateKTable = New DataTable
-    '    Invoke(Sub() PublicCode.LoadFrm(350, 500))
-    '    Invoke(Sub() LodngFrm.LblMsg.Text = "جاري تحميل أسماء المناطق ...")
-    '    Invoke(Sub() LodngFrm.LblMsg.Refresh())
-
-    '    If PublicCode.GetTbl("SELECT OffArea FROM PostOff GROUP BY OffArea ORDER BY OffArea;", AreaTable, "1012&H") = Nothing Then
-    '        PrciTblCnt += 1
-    '    Else
-    '        NotComplete += " أسماء المناطق / "
-    '    End If
-
-    '    Invoke(Sub() LodngFrm.LblMsg.Text += vbCrLf & "جاري تحميل أسماء المكاتب ...")
-    '    Invoke(Sub() LodngFrm.LblMsg.Refresh())
-    '    If PublicCode.GetTbl("select OffNm1, OffFinCd, OffArea from PostOff ORDER BY OffNm1;", OfficeTable, "1012&H") = Nothing Then
-    '        PrciTblCnt += 1
-    '    Else
-    '        NotComplete += " أسماء المكاتب / "
-    '    End If
-
-    '    Dim SrcStr As String = ""
-    '    If Usr.PUsrUCatLvl = 7 Then
-    '        SrcStr = "select SrcCd, SrcNm from CDSrc where SrcSusp=0 and srcCd = 1"
-    '    Else
-    '        SrcStr = "select SrcCd, SrcNm from CDSrc where SrcSusp=0 and srcCd > 1 ORDER BY SrcNm"
-    '    End If
-    '    Invoke(Sub() LodngFrm.LblMsg.Text += vbCrLf & "جاري تحميل مصادر الشكوى ...")
-    '    Invoke(Sub() LodngFrm.LblMsg.Refresh())
-    '    If PublicCode.GetTbl(SrcStr, CompSurceTable, "1012&H") = Nothing Then
-    '        PrciTblCnt += 1
-    '    Else
-    '        NotComplete += " مصادر الشكوى / "
-    '    End If
-
-
-    '    Invoke(Sub() LodngFrm.LblMsg.Text += vbCrLf & "جاري تحميل أسماء الدول ...")
-    '    Invoke(Sub() LodngFrm.LblMsg.Refresh())
-    '    If PublicCode.GetTbl("select CounCd,CounNm from CDCountry order by CounNm", CountryTable, "1012&H") = Nothing Then
-    '        primaryKey(0) = CountryTable.Columns("CounCd")
-    '        CountryTable.PrimaryKey = primaryKey
-    '        PrciTblCnt += 1
-    '    Else
-    '        NotComplete += " أسماء الدول / "
-    '    End If
-
-
-    '    Invoke(Sub() LodngFrm.LblMsg.Text += vbCrLf & "جاري تحميل أنواع الخدمات ...")
-    '    Invoke(Sub() LodngFrm.LblMsg.Refresh())
-    '    If PublicCode.GetTbl("select ProdKCd, ProdKNm, ProdKClr from CDProdK where ProdKSusp = 0 order by ProdKCd", ProdKTable, "1012&H") = Nothing Then
-    '        primaryKey(0) = ProdKTable.Columns("ProdKNm")
-    '        ProdKTable.PrimaryKey = primaryKey
-    '        PrciTblCnt += 1
-    '    Else
-    '        NotComplete += " أنواع الخدمات / "
-    '    End If
-
-
-    '    Invoke(Sub() LodngFrm.LblMsg.Text += vbCrLf & "جاري تحميل أنواع المنتجات ...")
-    '    Invoke(Sub() LodngFrm.LblMsg.Refresh())
-    '    If PublicCode.GetTbl("SELECT FnSQL, PrdKind, FnProdCd, PrdNm, FnCompCd, CompNm, FnMend, PrdRef, FnMngr, Prd3, FnSusp,CompHlp FROM VwFnProd where FnSusp = 0 ORDER BY PrdKind, PrdNm, CompNm", ProdCompTable, "1012&H") = Nothing Then
-    '        primaryKey(0) = ProdCompTable.Columns("FnSQL")
-    '        ProdCompTable.PrimaryKey = primaryKey
-    '        PrciTblCnt += 1
-    '    Else
-    '        NotComplete += " أنواع المنتجات / "
-    '    End If
-
-    '    Invoke(Sub() LodngFrm.LblMsg.Text += vbCrLf & "جاري تحميل أنواع التحديثات ...")
-    '    Invoke(Sub() LodngFrm.LblMsg.Refresh())
-    '    If Usr.PUsrUCatLvl >= 3 And Usr.PUsrUCatLvl <= 5 Then
-    '        If PublicCode.GetTbl("SELECT EvId, EvNm FROM CDEvent where EvSusp = 0 and EvBkOfic = 1 ORDER BY EvNm", UpdateKTable, "1012&H") = Nothing Then
-    '            PrciTblCnt += 1
-    '        Else
-    '            NotComplete += " أنواع التحديثات / "
-    '        End If
-    '    Else
-    '        If PublicCode.GetTbl("SELECT EvId, EvNm FROM CDEvent where EvSusp = 0 and EvBkOfic = 0 ORDER BY EvNm", UpdateKTable, "1012&H") = Nothing Then
-    '            PrciTblCnt += 1
-    '        Else
-    '            NotComplete += " أنواع التحديثات / "
-    '        End If
-    '    End If
-    '    If PrciTblCnt = 7 Then
-    '        PreciFlag = True
-    '        WelcomeScreen.DbStat.BackgroundImage = My.Resources.DBOn
-    '        WelcomeScreen.DbStat.Tag = "تم تحميل قواعد البيانات الأساسية بنجـــاح"
-    '        LodUsrPic()
-    '        If Usr.PUsrGndr = "Male" Then
-    '            Invoke(Sub() WelcomeScreen.LblUsrRNm.Text = "Welcome Back Mr. " & Usr.PUsrRlNm)
-    '            Invoke(Sub() WelcomeScreen.Text = "VOCA Plus - " & "Welcome Back Miss/Mrs. " & Usr.PUsrRlNm)
-    '        Else
-    '            Invoke(Sub() WelcomeScreen.LblUsrRNm.Text = "Welcome Back Miss/Mrs. " & Usr.PUsrRlNm)
-    '            Invoke(Sub() WelcomeScreen.Text = "VOCA Plus - " & "Welcome Back Miss/Mrs. " & Usr.PUsrRlNm)
-    '        End If
-
-    '        NonEditableLbl(WelcomeScreen.LblUsrRNm)
-    '        TimerClose.Start()
-    '        Invoke(Sub() LodngFrm.Close())
-    '        Invoke(Sub() LodngFrm.Dispose())
-    '        Invoke(Sub() WelcomeScreen.Show())
-    '        Invoke(Sub() Me.Close())
-    '    Else
-    '        MsgErr(My.Resources.ConnErr & vbCrLf & My.Resources.TryAgain)
-    '        MsgErr(NotComplete)
-    '    End If
-
-    '    'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-    'End Sub
-    'Private Sub LodUsrPic()
-    '    Dim request As FtpWebRequest = WebRequest.Create("ftp://10.10.26.4/UserPic/" & Usr.PUsrID & " " & Usr.PUsrNm & ".jpg")
-    '    request.Credentials = New NetworkCredential("administrator", "Hemonad105046")
-    '    request.Method = WebRequestMethods.Ftp.DownloadFile
-    '    request.Timeout = 10000
-    '    Invoke(Sub() LodngFrm.LblMsg.Text += vbCrLf & "جاري تحميل الصورة الشخصية ..................")
-    '    Invoke(Sub() LodngFrm.LblMsg.Refresh())
-    '    Try
-    '        Dim ftpStream As Stream = request.GetResponse().GetResponseStream()
-    '        Dim buffer As Byte() = New Byte(10240 - 1) {}
-    '        WelcomeScreen.PictureBox1.Image = Image.FromStream(ftpStream) 'Image.FromFile(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile.MyDocuments) & "\" & Usr.PUsrID & ".jpg")
-    '        WelcomeScreen.PictureBox1.Refresh()
-    '        WelcomeScreen.PictureBox1.SizeMode = PictureBoxSizeMode.StretchImage
-    '        WelcomeScreen.PictureBox1.BorderStyle = BorderStyle.None
-    '        request.Abort()
-    '        ftpStream.Close()
-    '        ftpStream.Dispose()
-    '        WelcomeScreen.StatBrPnlAr.Text = ""
-    '    Catch ex As Exception
-    '        Invoke(Sub() LodngFrm.LblMsg.Text += vbCrLf & "لم يتم تحميل الصورة الشخصية")
-    '        Invoke(Sub() LodngFrm.LblMsg.Refresh())
-    '        WelcomeScreen.PictureBox1.Image = My.Resources.UsrResm
-    '        WelcomeScreen.PictureBox1.Refresh()
-    '        WelcomeScreen.PictureBox1.SizeMode = PictureBoxSizeMode.StretchImage
-    '        WelcomeScreen.PictureBox1.BorderStyle = BorderStyle.None
-    '    End Try
-    '    If NotComplete = "لم يتم تحميل" Then
-    '        NotComplete = ""
-    '    End If
-    '    Invoke(Sub() WelcomeScreen.StatBrPnlAr.Text = NotComplete)
-    'End Sub
-#End Region
 
     Private Sub ExitBtn_Click(sender As Object, e As EventArgs) Handles ExitBtn.Click  ', Me.FormClosing
 
@@ -726,8 +506,8 @@ sec_UsrErr_:
                     subItem12.Tag = K.Tag
                     subItem1.AccessibleName = K.AccessibleName
                     subItem12.AccessibleName = K.AccessibleName
-                    subItem.DropDownItems.Add(subItem1)
-                    subItem2.DropDownItems.Add(subItem12)
+                    Invoke(Sub() subItem.DropDownItems.Add(subItem1))
+                    Invoke(Sub() subItem2.DropDownItems.Add(subItem12))
                     Invoke(Sub() AddHandler subItem1.Click, AddressOf ClkEvntClick)
                     Invoke(Sub() AddHandler subItem12.Click, AddressOf ClkEvntClick)
                 Next
@@ -739,7 +519,7 @@ sec_UsrErr_:
             Invoke(Sub() WelcomeScreen.DbStat.Tag = "تم تحميل قواعد البيانات الأساسية بنجـــاح")
             If Usr.PUsrGndr = "Male" Then
                 Invoke(Sub() WelcomeScreen.LblUsrRNm.Text = "Welcome Back Mr. " & Usr.PUsrRlNm)
-                Invoke(Sub() WelcomeScreen.Text = "VOCA Plus - " & "Welcome Back Miss/Mrs. " & Usr.PUsrRlNm)
+                Invoke(Sub() WelcomeScreen.Text = "VOCA Plus - " & "Welcome Back Mr. " & Usr.PUsrRlNm)
             Else
                 Invoke(Sub() WelcomeScreen.LblUsrRNm.Text = "Welcome Back Miss/Mrs. " & Usr.PUsrRlNm)
                 Invoke(Sub() WelcomeScreen.Text = "VOCA Plus - " & "Welcome Back Miss/Mrs. " & Usr.PUsrRlNm)
@@ -747,12 +527,36 @@ sec_UsrErr_:
 
             Invoke(Sub() NonEditableLbl(WelcomeScreen.LblUsrRNm))
             Invoke(Sub() WelcomeScreen.Show())
+            Invoke(Sub() LodUsrPic())
             Invoke(Sub() TimerClose.Start())
         Else
             Invoke(Sub() Timer1.Start())
         End If
         Invoke(Sub() Me.Enabled = True)
 
+    End Sub
+    Public Sub LodUsrPic()
+        Dim request As FtpWebRequest = WebRequest.Create("ftp://10.10.26.4/UserPic/" & Usr.PUsrID & " " & Usr.PUsrNm & ".jpg")
+        request.Credentials = New NetworkCredential("administrator", "Hemonad105046")
+        request.Method = WebRequestMethods.Ftp.DownloadFile
+        request.Timeout = 10000
+        Try
+            Dim ftpStream As Stream = request.GetResponse().GetResponseStream()
+            Dim buffer As Byte() = New Byte(10240 - 1) {}
+            WelcomeScreen.PictureBox1.Image = Image.FromStream(ftpStream) 'Image.FromFile(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile.MyDocuments) & "\" & Usr.PUsrID & ".jpg")
+            WelcomeScreen.PictureBox1.Refresh()
+            WelcomeScreen.PictureBox1.SizeMode = PictureBoxSizeMode.StretchImage
+            WelcomeScreen.PictureBox1.BorderStyle = BorderStyle.None
+            request.Abort()
+            ftpStream.Close()
+            ftpStream.Dispose()
+            WelcomeScreen.StatBrPnlAr.Text = ""
+        Catch ex As Exception
+            WelcomeScreen.PictureBox1.Image = My.Resources.UsrResm
+            WelcomeScreen.PictureBox1.Refresh()
+            WelcomeScreen.PictureBox1.SizeMode = PictureBoxSizeMode.StretchImage
+            WelcomeScreen.PictureBox1.BorderStyle = BorderStyle.None
+        End Try
     End Sub
     Private Sub WrkrLogin_ProgressChanged(sender As Object, e As System.ComponentModel.ProgressChangedEventArgs) Handles WrkrLogin.ProgressChanged
         Dim state As APblicClss.Defntion = CType(e.UserState, APblicClss.Defntion)
@@ -761,8 +565,6 @@ sec_UsrErr_:
 
     End Sub
 #End Region
-
-
 #Region "Event"
     Public Sub TabClick(sender As System.Object, e As System.EventArgs)
         Dim Fn As New APblicClss.Func

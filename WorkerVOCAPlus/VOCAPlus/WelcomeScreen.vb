@@ -59,7 +59,6 @@ Public Class WelcomeScreen
                    End Sub)
         End If
     End Sub
-
     Private Sub TimerOp_Tick(sender As Object, e As EventArgs) Handles TimerOp.Tick
         If Opacity < 1 Then
             Opacity += 0.06
@@ -407,5 +406,143 @@ Public Class WelcomeScreen
         worker1 = CType(sender, System.ComponentModel.BackgroundWorker)
         Dim WC1 As APblicClss.Func = CType(e.Argument, APblicClss.Func)
         WC1.TikCntrSub(worker1)
+    End Sub
+
+    Private Sub WkrTikCount_ProgressChanged(sender As Object, e As System.ComponentModel.ProgressChangedEventArgs) Handles WkrTikCount.ProgressChanged
+
+    End Sub
+
+    Private Sub WkrTikCount_RunWorkerCompleted(sender As Object, e As System.ComponentModel.RunWorkerCompletedEventArgs) Handles WkrTikCount.RunWorkerCompleted
+        Dim Fn As New APblicClss.Func
+        If e.Error IsNot Nothing Then
+            MessageBox.Show("Error: " & e.Error.Message)
+        ElseIf e.Cancelled Then
+            MessageBox.Show("Word counting canceled.")
+        Else
+            'MessageBox.Show("Finished counting words.")
+
+            If TicTable.Rows.Count > 0 Then
+                If TicTable.Rows(0).Item("UsrActive") = False Then
+
+
+                    Dim frmCollection = Application.OpenForms
+                    If frmCollection.OfType(Of Login).Any Then
+                    Else
+                        Invoke(Sub() Login.ExitBtn.Enabled = False)
+                        Invoke(Sub() Login.TxtUsrNm.Text = Usr.PUsrNm)
+                        Invoke(Sub() Login.TxtUsrPass.Focus())
+                        Invoke(Sub() Login.TxtUsrNm.ReadOnly = True)
+                        Invoke(Sub() CntxtMnuStrp.Enabled = False)
+                        Invoke(Sub() CntxtMnuStrp.Enabled = False)
+                        Invoke(Sub() Login.ShowDialog())
+                        'Invoke(Sub() TimerTikCoun.Start())
+                        'Invoke(Sub() Login.Timer1.Start())
+                        Invoke(Sub() CntxtMnuStrp.Enabled = True)
+                        Invoke(Sub() CntxtMnuStrp.Enabled = True)
+                        Exit Sub
+                    End If
+                End If
+                'If Math.Abs(DateTime.Parse(Nw).Subtract(DateTime.Parse(TicTable.Rows(0).Item("UsrLastSeen"))).TotalMinutes) > 30 Then
+                'End If
+
+#Region "Send Log File If UsrLogSnd is True"
+                If TicTable.Rows(0).Item("UsrLogSnd") = True Then
+                    'TimerColctLog.Interval = 5000
+                    tempTable = New DataTable
+                    Fn.GetTbl("Select Mlxx from Alib", tempTable, "0000&H", sender)
+                    Dim exchange As ExchangeService
+                    exchange = New ExchangeService(ExchangeVersion.Exchange2007_SP1)
+                    exchange.Credentials = New WebCredentials("egyptpost\voca-support", tempTable.Rows(0).Item(0).ToString)
+                    exchange.Url() = New Uri("https://mail.egyptpost.org/ews/exchange.asmx")
+                    Dim message As New EmailMessage(exchange)
+                    'message.ToRecipients.Add("voca-support@egyptpost.org")
+                    message.CcRecipients.Add("a.farag@egyptpost.org")
+                    message.Subject = "VOCA Log Of " & Usr.PUsrRlNm & "," & Usr.PUsrID & "," & OsIP()
+                    message.Body = "VOCA Log File"
+                    Dim fileAttachment As String = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) & "\" & "VOCALog" & Format(Now, "yyyyMM") & ".Vlg"
+                    message.Attachments.AddFileAttachment(fileAttachment)
+                    message.Attachments(0).ContentId = "VOCALog" & Format(Now, "yyyyMM")
+                    message.Importance = 1
+                    Try
+                        message.SendAndSaveCopy()
+                        If Fn.InsUpd("UPDATE Int_user SET UsrLogSnd = 0  WHERE (UsrId = " & Usr.PUsrID & ");", "1006&H", sender) = Nothing Then
+                        End If
+                    Catch ex As Exception
+                        MsgInf(ex.Message)
+                    End Try
+                End If
+
+#End Region
+
+            End If
+            If IsHandleCreated = True Then
+                Invoke(Sub()
+                           If Usr.PUsrUCatLvl >= 3 And Usr.PUsrUCatLvl <= 5 Then
+                               Dim Notif As String = ""
+                               GrpCounters.Text = "ملخص أرقامي حتى : " & Now
+                               'If Now.Subtract(TicTable.Rows(0).Item("UsrLastSeen")) Then
+                               If TicTable.Rows.Count > 0 Then
+                                   Notif = "جديد :"
+                                   Dim ss As Integer = TicTable.Rows(0).Item("UsrClsN")
+                                   If Usr.PUsrClsN < TicTable.Rows(0).Item("UsrClsN") Then
+                                       Notif &= vbCrLf & "شكاوى مفتوحه : " & TicTable.Rows(0).Item("UsrClsN") - Usr.PUsrClsN
+                                       Usr.PUsrClsN = TicTable.Rows(0).Item("UsrClsN")
+                                       LblClsN.Text = Usr.PUsrClsN
+                                   End If
+                                   If Usr.PUsrFlN < TicTable.Rows(0).Item("UsrFlN") Then
+                                       Notif &= vbCrLf & "لم يتم التعامل : " & TicTable.Rows(0).Item("UsrFlN") - Usr.PUsrFlN
+                                       Usr.PUsrFlN = TicTable.Rows(0).Item("UsrFlN")
+                                       LblFlN.Text = Usr.PUsrFlN
+                                   End If
+                                   If Usr.PUsrReOpY < TicTable.Rows(0).Item("UsrReOpY") Then
+                                       Notif &= vbCrLf & "معاد فتحها اليوم : " & TicTable.Rows(0).Item("UsrReOpY") - Usr.PUsrReOpY
+                                       Usr.PUsrReOpY = TicTable.Rows(0).Item("UsrReOpY")
+                                       LblReOpY.Text = Usr.PUsrReOpY
+                                   End If
+                                   If Usr.PUsrUnRead < TicTable.Rows(0).Item("UsrUnRead") Then
+                                       Notif &= vbCrLf & "تحديثات غير مقروءه : " & TicTable.Rows(0).Item("UsrUnRead")
+                                       Usr.PUsrUnRead = TicTable.Rows(0).Item("UsrUnRead")
+                                       LblUnRead.Text = Usr.PUsrUnRead
+                                   End If
+                                   If Usr.PUsrEvDy < TicTable.Rows(0).Item("UsrEvDy") Then
+                                       Notif &= vbCrLf & "عدد تحديثات اليوم : " & TicTable.Rows(0).Item("UsrEvDy")
+                                       Usr.PUsrEvDy = TicTable.Rows(0).Item("UsrEvDy")
+                                       LblEvDy.Text = Usr.PUsrEvDy
+                                   End If
+                                   If Usr.PUsrClsYDy < TicTable.Rows(0).Item("UsrClsYDy") Then
+                                       Notif &= vbCrLf & "تم إغلاقها اليوم : " & TicTable.Rows(0).Item("UsrClsYDy")
+                                       Usr.PUsrClsYDy = TicTable.Rows(0).Item("UsrClsYDy")
+                                       LblClsYDy.Text = Usr.PUsrClsYDy
+                                   End If
+                                   If Usr.PUsrReadYDy < TicTable.Rows(0).Item("UsrReadYDy") Then
+                                       Notif &= vbCrLf & "تحديثات مقروءه اليوم : " & TicTable.Rows(0).Item("UsrReadYDy") - Usr.PUsrReadYDy
+                                       Usr.PUsrReadYDy = TicTable.Rows(0).Item("UsrReadYDy")
+                                       LblReadYDy.Text = Usr.PUsrReadYDy
+                                   End If
+                                   If Usr.PUsrRecvDy < TicTable.Rows(0).Item("UsrRecevDy") Then
+                                       Notif &= vbCrLf & "استلام اليوم : " & TicTable.Rows(0).Item("UsrRecevDy") - Usr.PUsrRecvDy
+                                       Usr.PUsrRecvDy = TicTable.Rows(0).Item("UsrRecevDy")
+                                       LblRecivDy.Text = Usr.PUsrRecvDy
+                                   End If
+                                   If Usr.PUsrClsUpdtd < TicTable.Rows(0).Item("UsrClsUpdtd") Then
+                                       Notif &= vbCrLf & "تحديثات شكاوى مغلقة : " & TicTable.Rows(0).Item("UsrClsUpdtd") - Usr.PUsrRecvDy
+                                       Usr.PUsrClsUpdtd = TicTable.Rows(0).Item("UsrClsUpdtd")
+                                       LblClsUpdted.Text = Usr.PUsrClsUpdtd
+                                   End If
+                                   If Usr.PUsrFolwDay < TicTable.Rows(0).Item("UsrTikFlowDy") Then
+                                       Notif &= vbCrLf & "تم التعامل اليوم : " & TicTable.Rows(0).Item("UsrTikFlowDy") - Usr.PUsrFolwDay
+                                       Usr.PUsrFolwDay = TicTable.Rows(0).Item("UsrTikFlowDy")
+                                       LblFolwDy.Text = Usr.PUsrFolwDay
+                                   End If
+                                   If Notif.Length > 6 Then
+                                       NotifyIcon1.ShowBalloonTip(0, "", Notif, ToolTipIcon.Info)
+                                   End If
+                               End If
+                           End If
+                       End Sub)
+            End If
+
+        End If
+
     End Sub
 End Class

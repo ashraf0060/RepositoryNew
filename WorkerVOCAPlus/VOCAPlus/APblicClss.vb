@@ -1,32 +1,42 @@
 ﻿Imports System.IO
 Imports System.Management
 Imports System.Net
+Imports System.Threading
 Imports Microsoft.Exchange.WebServices.Data
 Imports VOCAPlus.Strc
 
 Public Class APblicClss
 
     Public Class Defntion
+        Public Thread_ As Thread
         Public Str As String
         Public StatStr As String
         Public Errmsg As String
         Public RwCnt As Integer
         '"Data Source=ASHRAF-PC\ASHRAFSQL;Initial Catalog=VOCAPlus;Persist Security Info=True;User ID=sa;Password=Hemonad105046"
         '"Data Source=10.10.26.4;Initial Catalog=VOCAPlus;Persist Security Info=True;User ID=vocaplus21;Password=@VocaPlus$21-4"
+        Public CONSQL As New SqlConnection(strConn) ' I Have assigned conn STR here and delete this row from all project
         Public ElapsedTimeSpan As String
         Public sqlComm As New SqlCommand                    'SQL Command
         Public sqlComminsert_1 As New SqlCommand            'SQL Command
         Public sqlComminsert_2 As New SqlCommand            'SQL Command
         Public sqlComminsert_3 As New SqlCommand            'SQL Command
         Public sqlComminsert_4 As New SqlCommand            'SQL Command
+
         Public Tran As SqlTransaction
         Public cntXXX As Integer
         Public Nw As DateTime
+        Public TickKind As Integer = 0       'ticket kind      0=Inquiry and 1=Complaint
+        Public PrdKind As String = ""        'Product kind     1=Financial and 2=Postal   3=Governmental and 4=Social and 5=Other
+        Public TickKindFltr As Integer = 2   'ticket kind      0=Inquiry and 1=Complaint
+        Public TicOpnFltr As Integer = 2      'ticket Sttaus   0=Open and 1=Close and 2=All
 
+
+        Public reader As SqlDataReader
+        Public MacTable As DataTable
 
         Public BolString As Boolean
         Public Admn As Boolean
-
         Public CompList As New List(Of String) 'list of tickets to get tickets updates
     End Class
     Public Class Func
@@ -60,15 +70,15 @@ Public Class APblicClss
         Public Sub MacTblSub(worker As System.ComponentModel.BackgroundWorker)
             Dim Def As New APblicClss.Defntion
             Dim Fn As New APblicClss.Func
-            MacTable = New DataTable
-            If (Fn.GetTbl("select Mac, Admin from AMac where Mac ='" & GetMACAddressNew() & "'", MacTable, "8888&H", worker)) = Nothing Then
-                Def.RwCnt = MacTable.Rows.Count
+            Def.MacTable = New DataTable
+            If (Fn.GetTbl("select Mac, Admin from AMac where Mac ='" & GetMACAddressNew() & "'", Def.MacTable, "8888&H", worker)) = Nothing Then
+                Def.RwCnt = Def.MacTable.Rows.Count
                 worker.ReportProgress(0, Def)
-                If MacTable.Rows.Count > 0 Then
-                    If DBNull.Value.Equals(MacTable.Rows(0).Item("Admin")) = True Then
+                If Def.MacTable.Rows.Count > 0 Then
+                    If DBNull.Value.Equals(Def.MacTable.Rows(0).Item("Admin")) = True Then
                         Def.Admn = False
                         worker.ReportProgress(0, Def)
-                    ElseIf MacTable.Rows(0).Item("Admin") = False Or MacTable.Rows(0).Item("Admin") = True Then
+                    ElseIf Def.MacTable.Rows(0).Item("Admin") = False Or Def.MacTable.Rows(0).Item("Admin") = True Then
                         Def.Admn = True
                         worker.ReportProgress(0, Def)
                     End If
@@ -86,17 +96,14 @@ Public Class APblicClss
             Try
                 state.StatStr = " ..."
                 worker.ReportProgress(0, state)
-                'sqlCon = New SqlConnection
-                If sqlCon.State = ConnectionState.Closed Then
-                    sqlCon.Open()
+                state.CONSQL = New SqlConnection(strConn)
+                If state.CONSQL.State <> ConnectionState.Connecting Then state.CONSQL = New SqlConnection(strConn)
+                If state.CONSQL.State = ConnectionState.Closed Then
+                    state.CONSQL.Open()
                 End If
-                'sqlComm = New SqlCommand("Select GetDate() as Now_", sqlCon)
-                'sqlComm.CommandTimeout = 5
-                'sqlComm.Connection = sqlCon
-                'SQLGetAdptr.SelectCommand = sqlComm
-                'sqlComm.CommandType = CommandType.Text
-                'SQLGetAdptr.Fill(TimeTble)
-
+                Dim sqlCommW As New SqlCommand("Select GetDate() as Now_", state.CONSQL)
+                state.reader = sqlCommW.ExecuteReader
+                TimeTble.Load(state.reader)
                 state.BolString = True
                 worker.ReportProgress(0, state)
             Catch ex As Exception
@@ -105,9 +112,8 @@ Public Class APblicClss
                 worker.ReportProgress(0, state)
                 AppLog("0000&H", ex.Message, "Select GetDate() as Now_")
             End Try
-            'sqlCon.Close()
-            'sqlCon.Dispose()
-            'SqlConnection.ClearPool(sqlCon)
+            state.CONSQL.Close()
+            SqlConnection.ClearPool(state.CONSQL)
             Bol = state.BolString
             sqlComm.CommandTimeout = 30
         End Sub
@@ -116,69 +122,103 @@ Public Class APblicClss
             state.StatStr = Nothing
             Dim StW As New Stopwatch
             StW.Start()
+            state.CONSQL = New SqlConnection(strConn)
+            Dim sqlCommW As New SqlCommand(SSqlStr, state.CONSQL)
             Try
-                If sqlCon.State = ConnectionState.Closed Or sqlCon.State = ConnectionState.Broken Then
-                    sqlCon.Open()
+                If state.CONSQL.State = ConnectionState.Closed Or state.CONSQL.State = ConnectionState.Broken Then
+                    state.CONSQL.Open()
                 End If
-                Dim sqlCommW As New SqlCommand
-                sqlCommW = New SqlCommand(SSqlStr, sqlCon)
-                Dim reader As SqlDataReader = sqlCommW.ExecuteReader
-                SqlTbl.Load(reader)
+
+                state.reader = sqlCommW.ExecuteReader
+                SqlTbl.Load(state.reader)
+                worker.ReportProgress(0, state)
                 StW.Stop()
                 Dim TimSpn As TimeSpan = (StW.Elapsed)
                 ElapsedTimeSpan = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", TimSpn.Hours, TimSpn.Minutes, TimSpn.Seconds, TimSpn.Milliseconds / 10)
             Catch ex As Exception
                 If ex.Message.Contains("The connection is broken and recovery is not possible") Then
-                    sqlCon.Close()
-                    SqlConnection.ClearPool(sqlCon)
+                    state.CONSQL.Close()
+                    SqlConnection.ClearPool(state.CONSQL)
                 End If
                 state.StatStr = ex.Message
-                worker.ReportProgress(0, state)
                 AppLog(ErrHndl, ex.Message, SSqlStr)
             End Try
-            SqlTbl.Dispose()
+            state.CONSQL.Close()
+            SqlConnection.ClearPool(state.CONSQL)
+            state.sqlComm.Dispose()
+            Return state.StatStr
+        End Function
+        Public Function GetTblXX(SSqlStr As String, SqlTbl As DataTable, ErrHndl As String) As String
+            Dim state As New Defntion
+            state.StatStr = Nothing
+            Dim StW As New Stopwatch
+            StW.Start()
+            state.CONSQL = New SqlConnection(strConn)
+            Dim sqlCommW As New SqlCommand(SSqlStr, state.CONSQL)
+            Try
+                If state.CONSQL.State = ConnectionState.Closed Or state.CONSQL.State = ConnectionState.Broken Then
+                    state.CONSQL.Open()
+                End If
+
+                state.reader = sqlCommW.ExecuteReader
+                SqlTbl.Load(state.reader)
+                StW.Stop()
+                Dim TimSpn As TimeSpan = (StW.Elapsed)
+                ElapsedTimeSpan = String.Format("{0:00}:{1:00}:{2:00}.{3:00}", TimSpn.Hours, TimSpn.Minutes, TimSpn.Seconds, TimSpn.Milliseconds / 10)
+            Catch ex As Exception
+                If ex.Message.Contains("The connection is broken and recovery is not possible") Then
+                    state.CONSQL.Close()
+                    SqlConnection.ClearPool(state.CONSQL)
+                End If
+                state.StatStr = ex.Message
+                AppLog(ErrHndl, ex.Message, SSqlStr)
+            End Try
+            state.CONSQL.Close()
+            SqlConnection.ClearPool(state.CONSQL)
+            state.sqlComm.Dispose()
             Return state.StatStr
         End Function
         Public Function InsUpd(SSqlStr As String, ErrHndl As String, worker As System.ComponentModel.BackgroundWorker) As String
             Errmsg = Nothing
-            'sqlCon = New SqlConnection(strConn)
-            sqlComm = New SqlCommand(SSqlStr, sqlCon)
-            sqlComm.Connection = sqlCon
+            Dim state As New Defntion
+            state.CONSQL = New SqlConnection(strConn)
+            sqlComm = New SqlCommand(SSqlStr, state.CONSQL)
+            sqlComm.Connection = state.CONSQL
             sqlComm.CommandType = CommandType.Text
             Try
-                If sqlCon.State = ConnectionState.Closed Then
-                    sqlCon.Open()
+                If state.CONSQL.State = ConnectionState.Closed Then
+                    state.CONSQL.Open()
                 End If
                 sqlComm.ExecuteNonQuery()
             Catch ex As Exception
                 Errmsg = ex.Message
                 AppLog(ErrHndl, ex.Message, SSqlStr)
             End Try
-            'sqlCon.Close()
-            'SqlConnection.ClearPool(sqlCon)
+            state.CONSQL.Close()
+            SqlConnection.ClearPool(state.CONSQL)
             Return Errmsg
         End Function
         Public Function InsTrans(TranStr1 As String, TranStr2 As String, ErrHndl As String) As String
-            Dim Def As New APblicClss.Defntion
-            Def.StatStr = Nothing
+            Dim state As New APblicClss.Defntion
+            state.StatStr = Nothing
             Try
-                If sqlCon.State = ConnectionState.Closed Then
-                    sqlCon.Open()
+                If state.CONSQL.State = ConnectionState.Closed Then
+                    state.CONSQL.Open()
                 End If
-                Def.sqlComminsert_1.Connection = sqlCon
-                Def.sqlComminsert_2.Connection = sqlCon
-                Def.sqlComminsert_1.CommandType = CommandType.Text
-                Def.sqlComminsert_2.CommandType = CommandType.Text
-                Def.sqlComminsert_1.CommandText = TranStr1
-                Def.sqlComminsert_2.CommandText = TranStr2
-                Def.Tran = sqlCon.BeginTransaction()
-                Def.sqlComminsert_1.Transaction = Tran
-                Def.sqlComminsert_2.Transaction = Tran
-                Def.sqlComminsert_1.ExecuteNonQuery()
-                Def.sqlComminsert_2.ExecuteNonQuery()
-                Def.Tran.Commit()
+                state.sqlComminsert_1.Connection = state.CONSQL
+                state.sqlComminsert_2.Connection = state.CONSQL
+                state.sqlComminsert_1.CommandType = CommandType.Text
+                state.sqlComminsert_2.CommandType = CommandType.Text
+                state.sqlComminsert_1.CommandText = TranStr1
+                state.sqlComminsert_2.CommandText = TranStr2
+                state.Tran = state.CONSQL.BeginTransaction()
+                state.sqlComminsert_1.Transaction = Tran
+                state.sqlComminsert_2.Transaction = Tran
+                state.sqlComminsert_1.ExecuteNonQuery()
+                state.sqlComminsert_2.ExecuteNonQuery()
+                state.Tran.Commit()
             Catch ex As Exception
-                Def.Tran.Rollback()
+                state.Tran.Rollback()
 
                 Dim frmCollection = Application.OpenForms
                 If frmCollection.OfType(Of WelcomeScreen).Any Then
@@ -187,9 +227,9 @@ Public Class APblicClss
                 End If
                 AppLog(ErrHndl, ex.Message, TranStr1 & "_" & TranStr2)
             End Try
-            'sqlCon.Close()
-            'SqlConnection.ClearPool(sqlCon)
-            Return Def.StatStr
+            state.CONSQL.Close()
+            SqlConnection.ClearPool(state.CONSQL)
+            Return state.StatStr
         End Function
         Public Sub AppLog(ErrHndls As String, LogMsg As String, SSqlStrs As String)
             On Error Resume Next
@@ -675,168 +715,25 @@ Sec2:
                 Fn.MsgErr(My.Resources.ConnErr & vbCrLf & My.Resources.TryAgain & vbCrLf)
             End If
         End Sub
-        Public Sub LodUsrPic(worker As System.ComponentModel.BackgroundWorker)
-            Dim Def As New APblicClss.Defntion
-            Dim Fn As New APblicClss.Func
-            Dim request As FtpWebRequest = WebRequest.Create("ftp://10.10.26.4/UserPic/" & Usr.PUsrID & " " & Usr.PUsrNm & ".jpg")
-            request.Credentials = New NetworkCredential("administrator", "Hemonad105046")
-            request.Method = WebRequestMethods.Ftp.DownloadFile
-            request.Timeout = 10000
-            Def.StatStr += vbCrLf & "جاري تحميل الصورة الشخصية .................."
-            worker.ReportProgress(0, Def)
-            Try
-                Dim ftpStream As Stream = request.GetResponse().GetResponseStream()
-                Dim buffer As Byte() = New Byte(10240 - 1) {}
-                WelcomeScreen.PictureBox1.Image = Image.FromStream(ftpStream) 'Image.FromFile(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile.MyDocuments) & "\" & Usr.PUsrID & ".jpg")
-                WelcomeScreen.PictureBox1.Refresh()
-                WelcomeScreen.PictureBox1.SizeMode = PictureBoxSizeMode.StretchImage
-                WelcomeScreen.PictureBox1.BorderStyle = BorderStyle.None
-                request.Abort()
-                ftpStream.Close()
-                ftpStream.Dispose()
-                WelcomeScreen.StatBrPnlAr.Text = ""
-                Def.StatStr += vbCrLf & "تم تحميل الصورة الشخصية .................."
-                worker.ReportProgress(0, Def)
-            Catch ex As Exception
-                Def.StatStr += vbCrLf & "لم يتم تحميل الصورة الشخصية"
-                worker.ReportProgress(0, Def)
-                WelcomeScreen.PictureBox1.Image = My.Resources.UsrResm
-                WelcomeScreen.PictureBox1.Refresh()
-                WelcomeScreen.PictureBox1.SizeMode = PictureBoxSizeMode.StretchImage
-                WelcomeScreen.PictureBox1.BorderStyle = BorderStyle.None
-            End Try
-        End Sub
         Public Sub TikCntrSub(worker As System.ComponentModel.BackgroundWorker)
             Dim state As New APblicClss.Defntion
             Dim Fn As New APblicClss.Func
-            'Ckeck User Tickets Count And Update It in Int_User Table If Different
-            state.Nw = ServrTime(worker)
             TicTable = New DataTable
-            If Fn.GetTbl("select UsrClsN, UsrFlN, UsrReOpY, UsrUnRead, UsrEvDy, UsrClsYDy, UsrReadYDy, UsrRecevDy, UsrClsUpdtd, UsrLastSeen, UsrTikFlowDy, UsrActive,UsrLogSnd from Int_user where UsrId = " & Usr.PUsrID & ";", TicTable, "1005&H", worker) = Nothing Then
-                If TicTable.Rows.Count > 0 Then
-                    If TicTable.Rows(0).Item("UsrActive") = False Then
-                        'Login.ExitBtn.Enabled = False
-                        Login.TxtUsrNm.Text = Usr.PUsrNm
-                        'Login.ExitBtn.Enabled = False
-                        Login.TxtUsrNm.Enabled = False
-                        Dim frmCollection = Application.OpenForms
-                        If frmCollection.OfType(Of Login).Any Then
-                            Login.TxtUsrPass.Focus()
-                        Else
-                            WelcomeScreen.CntxtMnuStrp.Enabled = False
-                            WelcomeScreen.CntxtMnuStrp.Enabled = False
-                            Login.ShowDialog()
-                            WelcomeScreen.TimerTikCoun.Stop()
-                            WelcomeScreen.CntxtMnuStrp.Enabled = True
-                            WelcomeScreen.CntxtMnuStrp.Enabled = True
-                        End If
-                    End If
-                    'If Math.Abs(DateTime.Parse(Nw).Subtract(DateTime.Parse(TicTable.Rows(0).Item("UsrLastSeen"))).TotalMinutes) > 30 Then
-                    'End If
-
-#Region "Send Log File If UsrLogSnd is True"
-                    If TicTable.Rows(0).Item("UsrLogSnd") = True Then
-                        'TimerColctLog.Interval = 5000
-                        tempTable = New DataTable
-                        Fn.GetTbl("Select Mlxx from Alib", tempTable, "0000&H", worker)
-                        Dim exchange As ExchangeService
-                        exchange = New ExchangeService(ExchangeVersion.Exchange2007_SP1)
-                        exchange.Credentials = New WebCredentials("egyptpost\voca-support", tempTable.Rows(0).Item(0).ToString)
-                        exchange.Url() = New Uri("https://mail.egyptpost.org/ews/exchange.asmx")
-                        Dim message As New EmailMessage(exchange)
-                        'message.ToRecipients.Add("voca-support@egyptpost.org")
-                        message.CcRecipients.Add("a.farag@egyptpost.org")
-                        message.Subject = "VOCA Log Of " & Usr.PUsrRlNm & "," & Usr.PUsrID & "," & OsIP()
-                        message.Body = "VOCA Log File"
-                        Dim fileAttachment As String = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) & "\" & "VOCALog" & Format(Now, "yyyyMM") & ".Vlg"
-                        message.Attachments.AddFileAttachment(fileAttachment)
-                        message.Attachments(0).ContentId = "VOCALog" & Format(Now, "yyyyMM")
-                        message.Importance = 1
-                        Try
-                            message.SendAndSaveCopy()
-                            If Fn.InsUpd("UPDATE Int_user SET UsrLogSnd = 0  WHERE (UsrId = " & Usr.PUsrID & ");", "1006&H", worker) = Nothing Then
-                            End If
-                        Catch ex As Exception
-                            MsgInf(ex.Message)
-                        End Try
-                    End If
-
-#End Region
-
-                End If
-            End If
-            If Usr.PUsrUCatLvl >= 3 And Usr.PUsrUCatLvl <= 5 Then
-                Dim Notif As String = ""
-                WelcomeScreen.GrpCounters.Text = "ملخص أرقامي حتى : " & Now
-                'If Now.Subtract(TicTable.Rows(0).Item("UsrLastSeen")) Then
-                If TicTable.Rows.Count > 0 Then
-                    Notif = "جديد :"
-                    Dim ss As Integer = TicTable.Rows(0).Item("UsrClsN")
-                    If Usr.PUsrClsN < TicTable.Rows(0).Item("UsrClsN") Then
-                        Notif &= vbCrLf & "شكاوى مفتوحه : " & TicTable.Rows(0).Item("UsrClsN") - Usr.PUsrClsN
-                        Usr.PUsrClsN = TicTable.Rows(0).Item("UsrClsN")
-                        WelcomeScreen.LblClsN.Text = Usr.PUsrClsN
-                    End If
-                    If Usr.PUsrFlN < TicTable.Rows(0).Item("UsrFlN") Then
-                        Notif &= vbCrLf & "لم يتم التعامل : " & TicTable.Rows(0).Item("UsrFlN") - Usr.PUsrFlN
-                        Usr.PUsrFlN = TicTable.Rows(0).Item("UsrFlN")
-                        WelcomeScreen.LblFlN.Text = Usr.PUsrFlN
-                    End If
-                    If Usr.PUsrReOpY < TicTable.Rows(0).Item("UsrReOpY") Then
-                        Notif &= vbCrLf & "معاد فتحها اليوم : " & TicTable.Rows(0).Item("UsrReOpY") - Usr.PUsrReOpY
-                        Usr.PUsrReOpY = TicTable.Rows(0).Item("UsrReOpY")
-                        WelcomeScreen.LblReOpY.Text = Usr.PUsrReOpY
-                    End If
-                    If Usr.PUsrUnRead < TicTable.Rows(0).Item("UsrUnRead") Then
-                        Notif &= vbCrLf & "تحديثات غير مقروءه : " & TicTable.Rows(0).Item("UsrUnRead")
-                        Usr.PUsrUnRead = TicTable.Rows(0).Item("UsrUnRead")
-                        WelcomeScreen.LblUnRead.Text = Usr.PUsrUnRead
-                    End If
-                    If Usr.PUsrEvDy < TicTable.Rows(0).Item("UsrEvDy") Then
-                        Notif &= vbCrLf & "عدد تحديثات اليوم : " & TicTable.Rows(0).Item("UsrEvDy")
-                        Usr.PUsrEvDy = TicTable.Rows(0).Item("UsrEvDy")
-                        WelcomeScreen.LblEvDy.Text = Usr.PUsrEvDy
-                    End If
-                    If Usr.PUsrClsYDy < TicTable.Rows(0).Item("UsrClsYDy") Then
-                        Notif &= vbCrLf & "تم إغلاقها اليوم : " & TicTable.Rows(0).Item("UsrClsYDy")
-                        Usr.PUsrClsYDy = TicTable.Rows(0).Item("UsrClsYDy")
-                        WelcomeScreen.LblClsYDy.Text = Usr.PUsrClsYDy
-                    End If
-                    If Usr.PUsrReadYDy < TicTable.Rows(0).Item("UsrReadYDy") Then
-                        Notif &= vbCrLf & "تحديثات مقروءه اليوم : " & TicTable.Rows(0).Item("UsrReadYDy") - Usr.PUsrReadYDy
-                        Usr.PUsrReadYDy = TicTable.Rows(0).Item("UsrReadYDy")
-                        WelcomeScreen.LblReadYDy.Text = Usr.PUsrReadYDy
-                    End If
-                    If Usr.PUsrRecvDy < TicTable.Rows(0).Item("UsrRecevDy") Then
-                        Notif &= vbCrLf & "استلام اليوم : " & TicTable.Rows(0).Item("UsrRecevDy") - Usr.PUsrRecvDy
-                        Usr.PUsrRecvDy = TicTable.Rows(0).Item("UsrRecevDy")
-                        WelcomeScreen.LblRecivDy.Text = Usr.PUsrRecvDy
-                    End If
-                    If Usr.PUsrClsUpdtd < TicTable.Rows(0).Item("UsrClsUpdtd") Then
-                        Notif &= vbCrLf & "تحديثات شكاوى مغلقة : " & TicTable.Rows(0).Item("UsrClsUpdtd") - Usr.PUsrRecvDy
-                        Usr.PUsrClsUpdtd = TicTable.Rows(0).Item("UsrClsUpdtd")
-                        WelcomeScreen.LblClsUpdted.Text = Usr.PUsrClsUpdtd
-                    End If
-                    If Usr.PUsrFolwDay < TicTable.Rows(0).Item("UsrTikFlowDy") Then
-                        Notif &= vbCrLf & "تم التعامل اليوم : " & TicTable.Rows(0).Item("UsrTikFlowDy") - Usr.PUsrFolwDay
-                        Usr.PUsrFolwDay = TicTable.Rows(0).Item("UsrTikFlowDy")
-                        WelcomeScreen.LblFolwDy.Text = Usr.PUsrFolwDay
-                    End If
-                    If Notif.Length > 6 Then
-                        WelcomeScreen.NotifyIcon1.ShowBalloonTip(0, "", Notif, ToolTipIcon.Info)
-                    End If
-                End If
+            If GetTbl("select UsrClsN, UsrFlN, UsrReOpY, UsrUnRead, UsrEvDy, UsrClsYDy, UsrReadYDy, UsrRecevDy, UsrClsUpdtd, UsrLastSeen, UsrTikFlowDy, UsrActive,UsrLogSnd from Int_user where UsrId = " & Usr.PUsrID & ";", TicTable, "0000&H", worker) = Nothing Then
             End If
         End Sub
+
 #Region "Tik"
         Public Sub GetUpdtEvnt_(worker As System.ComponentModel.BackgroundWorker)
             Dim Fn As New APblicClss.Func
+            Dim Def As New APblicClss.Defntion
             UpdtCurrTbl = New DataTable
             '                                 0        1         2         3         4        5        6         7         8         9
-            If Fn.GetTbl("SELECT TkupSTime, TkupTxt, UsrRealNm,TkupReDt, TkupUser,TkupSQL,TkupTkSql,TkupEvtId, EvSusp, UCatLvl,TkupUnread FROM TkEvent INNER JOIN Int_user ON TkupUser = UsrId INNER JOIN CDEvent ON TkupEvtId = EvId INNER JOIN IntUserCat ON Int_user.UsrCat = IntUserCat.UCatId Where ( " & CompIds & ") ORDER BY TkupTkSql,TkupSQL DESC", UpdtCurrTbl, "1019&H", worker) = Nothing Then
-                UpdtCurrTbl.Columns.Add("File")        ' Add files Columns 
-            Else
-                MsgErr(My.Resources.ConnErr & vbCrLf & My.Resources.TryAgain & vbCrLf & Errmsg)
+            'If Fn.GetTbl("SELECT TkupSTime, TkupTxt, UsrRealNm,TkupReDt, TkupUser,TkupSQL,TkupTkSql,TkupEvtId, EvSusp, UCatLvl,TkupUnread FROM TkEvent INNER JOIN Int_user ON TkupUser = UsrId INNER JOIN CDEvent ON TkupEvtId = EvId INNER JOIN IntUserCat ON Int_user.UsrCat = IntUserCat.UCatId Where ( " & CompIds & ") ORDER BY TkupTkSql,TkupSQL DESC", UpdtCurrTbl, "1019&H", worker) = Nothing Then
+            If Fn.GetTbl("SELECT TkupSTime, TkupTxt, UsrRealNm,TkupReDt, TkupUser,TkupSQL,TkupTkSql,TkupEvtId, EvSusp, UCatLvl,TkupUnread FROM TkEvent inner join Tickets on Tickets.TkSQL = TkEvent.TkupTkSql INNER JOIN Int_user ON TkupUser = UsrId INNER JOIN CDEvent ON TkupEvtId = EvId INNER JOIN IntUserCat ON Int_user.UsrCat = IntUserCat.UCatId   " & FltrStr & " ORDER BY TkupTkSql,TkupSQL DESC", UpdtCurrTbl, "1019&H", worker) = Nothing Then
+                    UpdtCurrTbl.Columns.Add("File")        ' Add files Columns 
+                Else
+                    MsgErr(My.Resources.ConnErr & vbCrLf & My.Resources.TryAgain & vbCrLf & Errmsg)
             End If
         End Sub
         Public Function CompGrdTikFill(GrdTick As DataGridView, Tbl As DataTable, ProgBar As ProgressBar, worker As System.ComponentModel.BackgroundWorker) As String
@@ -876,12 +773,12 @@ Sec2:
                     End If
                 Next
                 ProgBar.Maximum = GrdTick.Rows.Count
-                For GG = 0 To GrdTick.Rows.Count - 1
-                    ProgBar.Value = GG + 1
-                    ProgBar.Refresh()
-                    Def.CompList.Add("TkupTkSql = " & GrdTick.Rows(GG).Cells("TkSQL").Value)
-                Next
-                CompIds = String.Join(" OR ", Def.CompList)
+                'For GG = 0 To GrdTick.Rows.Count - 1
+                '    ProgBar.Value = GG + 1
+                '    ProgBar.Refresh()
+                '    Def.CompList.Add("TkupTkSql = " & GrdTick.Rows(GG).Cells("TkSQL").Value)
+                'Next
+                'CompIds = String.Join(" OR ", Def.CompList)
                 Tbl.Columns.Add("تاريخ آخر تحديث")
                 Tbl.Columns.Add("نص آخر تحديث")
                 Tbl.Columns.Add("محرر آخر تحديث")
@@ -891,7 +788,6 @@ Sec2:
                 Tbl.Columns.Add("EvSusp")
                 Tbl.Columns.Add("UCatLvl")
                 Tbl.Columns.Add("TkupUnread")
-
             Catch ex As Exception
                 Def.Errmsg = ex.Message
                 worker.ReportProgress(0, Def)
@@ -941,7 +837,296 @@ Sec2:
             ProgBar.Visible = False
             Return GridCuntRtrn 'Return Counters Structure
         End Function
-#End Region
+        Public Sub DoSearch(worker As System.ComponentModel.BackgroundWorker)
+            Dim Fn As New APblicClss.Func
+            Dim Def As New APblicClss.Defntion
+            If FltrStr.Length > 0 Then
+                FltrStr = " Where " & FltrStr
+                TikSearchNew.GridTicket.Visible = False
+                TickSrchTable = New DataTable
+                If Fn.GetTbl("SELECT TkSQL, TkKind, TkDtStart, TkID, SrcNm, TkClNm, TkClPh, TkClPh1, TkMail, TkClAdr, TkCardNo, TkShpNo, TkGBNo, TkClNtID, TkAmount, TkTransDate, PrdKind, PrdNm, CompNm, CounNmSender, CounNmConsign, OffNm1, OffArea, TkDetails, TkClsStatus, TkFolw, TkEmpNm, UsrRealNm, TkReOp, TkRecieveDt, TkEscTyp, ProdKNm, CompHelp FROM dbo.TicketsAll " & FltrStr & " ORDER BY TkSQL DESC;", TickSrchTable, "0000&H", worker) = Nothing Then
+                    'TikSearchNew.Text = "بحث الشكاوى والاستفسارات" & "_" & ElapsedTimeSpan
+                    If TickSrchTable.Rows.Count > 0 Then
 
+                    Else
+                        TikSearchNew.LblMsg.Text = ("لا توجد نتيجة للبحث بـ" & TikSearchNew.FilterComb.Text)
+                        TikSearchNew.LblMsg.ForeColor = Color.Red
+                    End If
+                Else
+                    TikSearchNew.LblMsg.Text = "لم ينجح البحث - يرجى المحاولة مرة أخرى"
+                    TikSearchNew.LblMsg.ForeColor = Color.Red
+                End If
+                TikSearchNew.GridTicket.Visible = True
+            Else
+            End If
+            FltrStr = Nothing
+        End Sub
+        Public Sub DoSearch1(worker As System.ComponentModel.BackgroundWorker)
+            Dim Fn As New APblicClss.Func
+            Dim Def As New APblicClss.Defntion
+            'Fn.CompGrdTikFill(TikSearchNew.GridTicket, TickSrchTable, TikSearchNew.ProgressBar1, worker) 'Adjust Fill Table and assign Grid Data source of Ticket Gridview
+            Fn.GetUpdtEvnt_(worker)
+
+            Fn.TikFormat(TickSrchTable, UpdtCurrTbl, TikSearchNew.ProgressBar1, worker)
+
+
+
+
+            FltrStr = Nothing
+        End Sub
+        Public Sub DoSearch2(worker As System.ComponentModel.BackgroundWorker)
+            Dim Fn As New APblicClss.Func
+            Dim Def As New APblicClss.Defntion
+            If FltrStr.Length > 0 Then
+                FltrStr = " Where " & FltrStr
+                TikSearchNew.GridTicket.Visible = False
+                If Fn.GetTbl("SELECT TkSQL, TkKind, TkDtStart, TkID, SrcNm, TkClNm, TkClPh, TkClPh1, TkMail, TkClAdr, TkCardNo, TkShpNo, TkGBNo, TkClNtID, TkAmount, TkTransDate, PrdKind, PrdNm, CompNm, CounNmSender, CounNmConsign, OffNm1, OffArea, TkDetails, TkClsStatus, TkFolw, TkEmpNm, UsrRealNm, TkReOp, TkRecieveDt, TkEscTyp, ProdKNm, CompHelp FROM dbo.TicketsAll " & FltrStr & " ORDER BY TkSQL DESC;", TickSrchTable, "1042&H", worker) = Nothing Then
+                    TikSearchNew.Text = "بحث الشكاوى والاستفسارات" & "_" & ElapsedTimeSpan
+                    If TickSrchTable.Rows.Count > 0 Then
+#Region ""
+                        'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+                        'Try
+                        '   GridTicket.DataSource = TickSrchTable.DefaultView)
+                        '    Def.CompList = New List(Of String)
+                        '   ProgressBar1.Visible = True)
+                        '    ProgressBar1.Maximum = TickSrchTable.Columns.Count
+                        '    For HH = 0 To TickSrchTable.Columns.Count - 1
+                        '       ProgressBar1.Value = HH + 1)
+                        '       ProgressBar1.Refresh())
+                        '        If TickSrchTable.Columns(HH).ColumnName = "TkDtStart" Then
+                        '           GridTicket.Columns(HH).HeaderText = "تاريخ الشكوى")
+                        '        ElseIf TickSrchTable.Columns(HH).ColumnName = "TkID" Then
+                        '           GridTicket.Columns(HH).HeaderText = "رقم الشكوى")
+                        '        ElseIf TickSrchTable.Columns(HH).ColumnName = "SrcNm" Then
+                        '           GridTicket.Columns(HH).HeaderText = "مصدر الشكوى")
+                        '        ElseIf TickSrchTable.Columns(HH).ColumnName = "TkClNm" Then
+                        '           GridTicket.Columns(HH).HeaderText = "اسم العميل")
+                        '        ElseIf TickSrchTable.Columns(HH).ColumnName = "TkClPh" Then
+                        '           GridTicket.Columns(HH).HeaderText = "تليفون العميل1")
+                        '        ElseIf TickSrchTable.Columns(HH).ColumnName = "TkClPh1" Then
+                        '           GridTicket.Columns(HH).HeaderText = "تليفون العميل2")
+                        '        ElseIf TickSrchTable.Columns(HH).ColumnName = "PrdNm" Then
+                        '           GridTicket.Columns(HH).HeaderText = "اسم المنتج")
+                        '        ElseIf TickSrchTable.Columns(HH).ColumnName = "CompNm" Then
+                        '           GridTicket.Columns(HH).HeaderText = "نوع الشكوى")
+                        '        ElseIf TickSrchTable.Columns(HH).ColumnName = "UsrRealNm" Then
+                        '           GridTicket.Columns(HH).HeaderText = "متابع الشكوى")
+                        '        Else
+                        '           GridTicket.Columns(HH).HeaderText = "unknown")
+                        '           GridTicket.Columns(HH).Visible = False)
+                        '        End If
+                        '    Next
+                        '   ProgressBar1.Maximum = GridTicket.Rows.Count)
+                        '    For GG = 0 To GridTicket.Rows.Count - 1
+                        '       ProgressBar1.Value = GG + 1)
+                        '        'Invoke(Sub() ProgressBar1.Refresh())
+                        '       Def.CompList.Add("TkupTkSql = " & GridTicket.Rows(GG).Cells("TkSQL").Value))
+                        '    Next
+                        '   CompIds = String.Join(" OR ", Def.CompList))
+                        '   TickSrchTable.Columns.Add("تاريخ آخر تحديث"))
+                        '   TickSrchTable.Columns.Add("نص آخر تحديث"))
+                        '   TickSrchTable.Columns.Add("محرر آخر تحديث"))
+                        '   TickSrchTable.Columns.Add("TkupReDt"))
+                        '   TickSrchTable.Columns.Add("TkupUser"))
+                        '   TickSrchTable.Columns.Add("LastUpdateID"))
+                        '   TickSrchTable.Columns.Add("EvSusp"))
+                        '   TickSrchTable.Columns.Add("UCatLvl"))
+                        '   TickSrchTable.Columns.Add("TkupUnread"))
+
+                        'Catch ex As Exception
+                        '    Def.Errmsg = ex.Message
+                        'End Try
+                        'Invoke(Sub() ProgressBar1.Visible = False)
+                        'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+#End Region
+                        Fn.CompGrdTikFill(TikSearchNew.GridTicket, TickSrchTable, TikSearchNew.ProgressBar1, worker) 'Adjust Fill Table and assign Grid Data source of Ticket Gridview
+                        Fn.GetUpdtEvnt_(worker)
+                        TikSearchNew.Text = "بحث الشكاوى والاستفسارات" & "_" & ElapsedTimeSpan
+                        TikSearchNew.LblMsg.Text = "جاري تنسيق البيانات ..........."
+                        TikSearchNew.LblMsg.ForeColor = Color.Blue
+                        TikSearchNew.LblMsg.Refresh()
+                        TikSearchNew.GridTicket.Columns("TkupReDt").Visible = False
+                        TikSearchNew.GridTicket.Columns("TkupUser").Visible = False
+                        TikSearchNew.GridTicket.Columns("LastUpdateID").Visible = False
+                        TikSearchNew.GridTicket.Columns("EvSusp").Visible = False
+                        TikSearchNew.GridTicket.Columns("UCatLvl").Visible = False
+                        TikSearchNew.GridTicket.Columns("TkupUnread").Visible = False
+#Region ""
+                        'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+                        ' GridCuntRtrn = New TickInfo
+                        ' ProgressBar1.Visible = True)
+                        ' For Rws = 0 To TickSrchTable.Rows.Count - 1
+                        '     GridCuntRtrn.TickCount += 1)       'Grid record count
+                        '    ProgressBar1.Maximum = TickSrchTable.Rows.Count)
+                        '    ProgressBar1.Value = GridCuntRtrn.TickCount)
+                        '    ProgressBar1.Refresh())
+                        '     Try
+                        '         UpdtCurrTbl.DefaultView.RowFilter = "[TkupTkSql]" & " = " & TickSrchTable.Rows(Rws).Item("TkSQL"))
+                        '        TickSrchTable.Rows(Rws).Item("تاريخ آخر تحديث") = UpdtCurrTbl.DefaultView(0).Item("TkupSTime"))
+                        '        TickSrchTable.Rows(Rws).Item("نص آخر تحديث") = UpdtCurrTbl.DefaultView(0).Item("TkupTxt"))
+                        '        TickSrchTable.Rows(Rws).Item("محرر آخر تحديث") = UpdtCurrTbl.DefaultView(0).Item("UsrRealNm"))
+                        '        TickSrchTable.Rows(Rws).Item("TkupReDt") = UpdtCurrTbl.DefaultView(0).Item("TkupReDt"))
+                        '        TickSrchTable.Rows(Rws).Item("TkupUser") = UpdtCurrTbl.DefaultView(0).Item("TkupUser"))
+                        '        TickSrchTable.Rows(Rws).Item("LastUpdateID") = UpdtCurrTbl.DefaultView(0).Item("TkupEvtId"))
+                        '        TickSrchTable.Rows(Rws).Item("EvSusp") = UpdtCurrTbl.DefaultView(0).Item("EvSusp"))
+                        '        TickSrchTable.Rows(Rws).Item("UCatLvl") = UpdtCurrTbl.DefaultView(0).Item("UCatLvl"))
+                        '        TickSrchTable.Rows(Rws).Item("TkupUnread") = UpdtCurrTbl.DefaultView(0).Item("TkupUnread"))
+
+                        '        StruGrdTk.LstUpDt = UpdtCurrTbl.DefaultView(0).Item("TkupSTime"))
+                        '        StruGrdTk.LstUpTxt = UpdtCurrTbl.DefaultView(0).Item("TkupTxt"))
+                        '        StruGrdTk.LstUpUsrNm = UpdtCurrTbl.DefaultView(0).Item("UsrRealNm"))
+                        '        StruGrdTk.LstUpEvId = UpdtCurrTbl.DefaultView(0).Item("TkupEvtId"))
+                        '     Catch ex As Exception
+                        '         TickSrchTable.Rows(Rws).Delete())
+                        '     End Try
+                        '     Me.Text = "بحث الشكاوى والاستفسارات" & "_" & ElapsedTimeSpan & "_" & Rws + 1 & " Of " & TickSrchTable.Rows.Count)
+                        ' Next Rws
+                        ' Me.Text = "بحث الشكاوى والاستفسارات" & "_" & ElapsedTimeSpan)
+                        'GridCuntRtrn.CompCount = Convert.ToInt32(TickSrchTable.Compute("count(TkSQL)", String.Empty)))
+                        'GridCuntRtrn.NoFlwCount = Convert.ToInt32(TickSrchTable.Compute("count(TkFolw)", "TkFolw = 'False'")))
+                        'GridCuntRtrn.Recved = Convert.ToInt32(TickSrchTable.Compute("count(TkRecieveDt)", "TkRecieveDt = '" & Format(Nw, "yyyy/MM/dd").ToString & "'")))
+                        'GridCuntRtrn.ClsCount = Convert.ToInt32(TickSrchTable.Compute("count(TkClsStatus)", "TkClsStatus = 'True' And TkKind = 'True'")))
+                        'GridCuntRtrn.UpdtFollow = Convert.ToInt32(TickSrchTable.Compute("count(UsrRealNm)", "[محرر آخر تحديث] = UsrRealNm")))
+                        'GridCuntRtrn.UpdtColleg = Convert.ToInt32(TickSrchTable.Compute("count(UsrRealNm)", "[محرر آخر تحديث] <> UsrRealNm AND UCatLvl >= 3 And UCatLvl <= 5")))
+                        'GridCuntRtrn.UpdtOthrs = Convert.ToInt32(TickSrchTable.Compute("count(UsrRealNm)", "[محرر آخر تحديث] <> UsrRealNm AND UCatLvl < 3 And UCatLvl > 5")))
+                        'GridCuntRtrn.UnReadCount = Convert.ToInt32(TickSrchTable.Compute("count(TkupUnread)", "TkupUnread = 'False'")))
+                        'GridCuntRtrn.Esc1 = Convert.ToInt32(TickSrchTable.Compute("count(LastUpdateID)", "LastUpdateID = 902")))
+                        'GridCuntRtrn.Esc2 = Convert.ToInt32(TickSrchTable.Compute("count(LastUpdateID)", "LastUpdateID = 903")))
+                        'GridCuntRtrn.Esc3 = Convert.ToInt32(TickSrchTable.Compute("count(LastUpdateID)", "LastUpdateID = 904")))
+                        'ProgressBar1.Visible = False)
+
+#End Region
+                        Fn.TikFormat(TickSrchTable, UpdtCurrTbl, TikSearchNew.ProgressBar1, worker)
+                        TikSearchNew.LblMsg.Text = ("نتيجة البحث : إجمالي عدد " & GridCuntRtrn.TickCount & " -- عدد الشكاوى : " & GridCuntRtrn.CompCount & " -- عدد الاستفسارات : " & GridCuntRtrn.TickCount - GridCuntRtrn.CompCount & " -- شكاوى مغلقة : " & GridCuntRtrn.ClsCount & " -- شكاوى مفتوحة : " & GridCuntRtrn.CompCount - GridCuntRtrn.ClsCount & " -- لم يتم المتابعة : " & GridCuntRtrn.NoFlwCount)
+                        TikSearchNew.LblMsg.ForeColor = Color.Green
+                        TikSearchNew.GridTicket.ClearSelection()
+                    Else
+                        TikSearchNew.LblMsg.Text = ("لا توجد نتيجة للبحث بـ" & TikSearchNew.FilterComb.Text)
+                        TikSearchNew.LblMsg.ForeColor = Color.Red
+                    End If
+                    TikSearchNew.GridTicket.Visible = True
+                Else
+                    TikSearchNew.LblMsg.Text = "لم ينجح البحث - يرجى المحاولة مرة أخرى"
+                    TikSearchNew.LblMsg.ForeColor = Color.Red
+                    Beep()
+                End If
+            Else
+            End If
+            FltrStr = Nothing
+        End Sub
+#End Region
+#Region "Tik1"
+        Public Sub GetUpdtEvnt_1()
+            Dim Fn As New APblicClss.Func
+            Dim Def As New APblicClss.Defntion
+            UpdtCurrTbl = New DataTable
+            '                                 0        1         2         3         4        5        6         7         8         9
+            'If Fn.GetTbl("SELECT TkupSTime, TkupTxt, UsrRealNm,TkupReDt, TkupUser,TkupSQL,TkupTkSql,TkupEvtId, EvSusp, UCatLvl,TkupUnread FROM TkEvent INNER JOIN Int_user ON TkupUser = UsrId INNER JOIN CDEvent ON TkupEvtId = EvId INNER JOIN IntUserCat ON Int_user.UsrCat = IntUserCat.UCatId Where ( " & CompIds & ") ORDER BY TkupTkSql,TkupSQL DESC", UpdtCurrTbl, "1019&H", worker) = Nothing Then
+            If Fn.GetTblXX("SELECT TkupSTime, TkupTxt, UsrRealNm,TkupReDt, TkupUser,TkupSQL,TkupTkSql,TkupEvtId, EvSusp, UCatLvl,TkupUnread FROM TkEvent inner join Tickets on Tickets.TkSQL = TkEvent.TkupTkSql INNER JOIN Int_user ON TkupUser = UsrId INNER JOIN CDEvent ON TkupEvtId = EvId INNER JOIN IntUserCat ON Int_user.UsrCat = IntUserCat.UCatId   " & FltrStr & " ORDER BY TkupTkSql,TkupSQL DESC", UpdtCurrTbl, "1019&H") = Nothing Then
+                UpdtCurrTbl.Columns.Add("File")        ' Add files Columns 
+            Else
+                MsgErr(My.Resources.ConnErr & vbCrLf & My.Resources.TryAgain & vbCrLf & Errmsg)
+            End If
+        End Sub
+        Public Function CompGrdTikFill1(GrdTick As DataGridView, Tbl As DataTable, ProgBar As ProgressBar) As String
+            Dim Def As New APblicClss.Defntion
+            Dim Fn As New APblicClss.Func
+            Def.Errmsg = Nothing
+            Try
+                GrdTick.DataSource = Tbl.DefaultView
+                Def.CompList = New List(Of String)
+                ProgBar.Visible = True
+                ProgBar.Maximum = Tbl.Columns.Count
+                For HH = 0 To Tbl.Columns.Count - 1
+                    ProgBar.Value = HH + 1
+                    'ProgBar.Refresh()
+                    If Tbl.Columns(HH).ColumnName = "TkDtStart" Then
+                        GrdTick.Columns(HH).HeaderText = "تاريخ الشكوى"
+                    ElseIf Tbl.Columns(HH).ColumnName = "TkID" Then
+                        GrdTick.Columns(HH).HeaderText = "رقم الشكوى"
+                    ElseIf Tbl.Columns(HH).ColumnName = "SrcNm" Then
+                        GrdTick.Columns(HH).HeaderText = "مصدر الشكوى"
+                    ElseIf Tbl.Columns(HH).ColumnName = "TkClNm" Then
+                        GrdTick.Columns(HH).HeaderText = "اسم العميل"
+                    ElseIf Tbl.Columns(HH).ColumnName = "TkClPh" Then
+                        GrdTick.Columns(HH).HeaderText = "تليفون العميل1"
+                    ElseIf Tbl.Columns(HH).ColumnName = "TkClPh1" Then
+                        GrdTick.Columns(HH).HeaderText = "تليفون العميل2"
+                    ElseIf Tbl.Columns(HH).ColumnName = "PrdNm" Then
+                        GrdTick.Columns(HH).HeaderText = "اسم المنتج"
+                    ElseIf Tbl.Columns(HH).ColumnName = "CompNm" Then
+                        GrdTick.Columns(HH).HeaderText = "نوع الشكوى"
+                    ElseIf Tbl.Columns(HH).ColumnName = "UsrRealNm" Then
+                        GrdTick.Columns(HH).HeaderText = "متابع الشكوى"
+                    Else
+                        GrdTick.Columns(HH).HeaderText = "unknown"
+                        GrdTick.Columns(HH).Visible = False
+                    End If
+                Next
+                ProgBar.Maximum = GrdTick.Rows.Count
+                For GG = 0 To GrdTick.Rows.Count - 1
+                    ProgBar.Value = GG + 1
+                    'ProgBar.Refresh()
+                    Def.CompList.Add("TkupTkSql = " & GrdTick.Rows(GG).Cells("TkSQL").Value)
+                Next
+                CompIds = String.Join(" OR ", Def.CompList)
+                Tbl.Columns.Add("تاريخ آخر تحديث")
+                Tbl.Columns.Add("نص آخر تحديث")
+                Tbl.Columns.Add("محرر آخر تحديث")
+                Tbl.Columns.Add("TkupReDt")
+                Tbl.Columns.Add("TkupUser")
+                Tbl.Columns.Add("LastUpdateID")
+                Tbl.Columns.Add("EvSusp")
+                Tbl.Columns.Add("UCatLvl")
+                Tbl.Columns.Add("TkupUnread")
+            Catch ex As Exception
+                Def.Errmsg = ex.Message
+            End Try
+            ProgBar.Visible = False
+            Return Errmsg
+        End Function
+        Public Function TikFormat1(TblTicket As DataTable, TblUpdt As DataTable, ProgBar As ProgressBar) As TickInfo ' Function to Adjust Ticket Gridview
+            GridCuntRtrn = New TickInfo
+            ProgBar.Visible = True
+            For Rws = 0 To TblTicket.Rows.Count - 1
+                GridCuntRtrn.TickCount += 1                                          'Grid record count
+                ProgBar.Maximum = TblTicket.Rows.Count
+                ProgBar.Value = GridCuntRtrn.TickCount
+                'ProgBar.Refresh()
+                Try
+                    TblUpdt.DefaultView.RowFilter = "[TkupTkSql]" & " = " & TblTicket.Rows(Rws).Item("TkSQL")
+                    TblTicket.Rows(Rws).Item("تاريخ آخر تحديث") = TblUpdt.DefaultView(0).Item("TkupSTime")
+                    TblTicket.Rows(Rws).Item("نص آخر تحديث") = TblUpdt.DefaultView(0).Item("TkupTxt")
+                    TblTicket.Rows(Rws).Item("محرر آخر تحديث") = TblUpdt.DefaultView(0).Item("UsrRealNm")
+                    TblTicket.Rows(Rws).Item("TkupReDt") = TblUpdt.DefaultView(0).Item("TkupReDt")
+                    TblTicket.Rows(Rws).Item("TkupUser") = TblUpdt.DefaultView(0).Item("TkupUser")
+                    TblTicket.Rows(Rws).Item("LastUpdateID") = TblUpdt.DefaultView(0).Item("TkupEvtId")
+                    TblTicket.Rows(Rws).Item("EvSusp") = TblUpdt.DefaultView(0).Item("EvSusp")
+                    TblTicket.Rows(Rws).Item("UCatLvl") = TblUpdt.DefaultView(0).Item("UCatLvl")
+                    TblTicket.Rows(Rws).Item("TkupUnread") = TblUpdt.DefaultView(0).Item("TkupUnread")
+
+                    StruGrdTk.LstUpDt = TblUpdt.DefaultView(0).Item("TkupSTime")
+                    StruGrdTk.LstUpTxt = TblUpdt.DefaultView(0).Item("TkupTxt")
+                    StruGrdTk.LstUpUsrNm = TblUpdt.DefaultView(0).Item("UsrRealNm")
+                    StruGrdTk.LstUpEvId = TblUpdt.DefaultView(0).Item("TkupEvtId")
+                Catch ex As Exception
+                    TblTicket.Rows(Rws).Delete()
+                End Try
+            Next Rws
+            GridCuntRtrn.CompCount = Convert.ToInt32(TblTicket.Compute("count(TkSQL)", String.Empty))
+            GridCuntRtrn.NoFlwCount = Convert.ToInt32(TblTicket.Compute("count(TkFolw)", "TkFolw = 'False'"))
+            GridCuntRtrn.Recved = Convert.ToInt32(TblTicket.Compute("count(TkRecieveDt)", "TkRecieveDt = '" & Format(Nw, "yyyy/MM/dd").ToString & "'"))
+            GridCuntRtrn.ClsCount = Convert.ToInt32(TblTicket.Compute("count(TkClsStatus)", "TkClsStatus = 'True' And TkKind = 'True'"))
+            GridCuntRtrn.UpdtFollow = Convert.ToInt32(TblTicket.Compute("count(UsrRealNm)", "[محرر آخر تحديث] = UsrRealNm"))
+            GridCuntRtrn.UpdtColleg = Convert.ToInt32(TblTicket.Compute("count(UsrRealNm)", "[محرر آخر تحديث] <> UsrRealNm AND UCatLvl >= 3 And UCatLvl <= 5"))
+            GridCuntRtrn.UpdtOthrs = Convert.ToInt32(TblTicket.Compute("count(UsrRealNm)", "[محرر آخر تحديث] <> UsrRealNm AND UCatLvl < 3 And UCatLvl > 5"))
+            GridCuntRtrn.UnReadCount = Convert.ToInt32(TblTicket.Compute("count(TkupUnread)", "TkupUnread = 'False'"))
+            GridCuntRtrn.Esc1 = Convert.ToInt32(TblTicket.Compute("count(LastUpdateID)", "LastUpdateID = 902"))
+            GridCuntRtrn.Esc2 = Convert.ToInt32(TblTicket.Compute("count(LastUpdateID)", "LastUpdateID = 903"))
+            GridCuntRtrn.Esc3 = Convert.ToInt32(TblTicket.Compute("count(LastUpdateID)", "LastUpdateID = 904"))
+            ProgBar.Visible = False
+            Return GridCuntRtrn 'Return Counters Structure
+        End Function
+#End Region
     End Class
 End Class

@@ -127,7 +127,7 @@ Partial Class WelcomeScreen
         'TimerTikCoun
         '
         Me.TimerTikCoun.Enabled = True
-        Me.TimerTikCoun.Interval = 600000
+        Me.TimerTikCoun.Interval = 1000
         '
         'MenuSw
         '

@@ -29,7 +29,7 @@
     <ProductName>VOCA Plus</ProductName>
     <PublisherName>Ashaf Farag</PublisherName>
     <MinimumRequiredVersion>4.0.0.1</MinimumRequiredVersion>
-    <ApplicationRevision>8</ApplicationRevision>
+    <ApplicationRevision>13</ApplicationRevision>
     <ApplicationVersion>4.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <CreateDesktopShortcut>true</CreateDesktopShortcut>

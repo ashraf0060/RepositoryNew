@@ -14,6 +14,7 @@ Module PublicCode
     Public Menu_ As New MenuStrip
     Public CntxMenu As New ContextMenuStrip
     Public MacStr As String
+    Public FltrStr As String = ""
     Public screenWidth As Integer = Screen.PrimaryScreen.Bounds.Width
     Public screenHeight As Integer = Screen.PrimaryScreen.Bounds.Height
     Public ServerCD As String = "Eg Server"
@@ -23,7 +24,7 @@ Module PublicCode
     Public Bol As Boolean
 
     Public HardTable As DataTable = New DataTable
-    Public MacTable As New DataTable
+
     Public UserTable As DataTable = New DataTable
     Public tempTable As DataTable = New DataTable
 
@@ -41,6 +42,7 @@ Module PublicCode
     Public CompfflinTbl As New DataTable
     Public TicTable As DataTable = New DataTable
 
+    Public TickSrchTable As New DataTable
     Public PreciFlag As Boolean = False                 'Load princible tables
     Public PrciTblCnt As Integer = 0                    'Counter for Thread
     'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
