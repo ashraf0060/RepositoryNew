@@ -1,4 +1,5 @@
 ﻿Imports System.IO
+Imports System.Net
 Imports System.Net.Sockets
 
 Public Class Form1
@@ -10,7 +11,7 @@ Public Class Form1
         Try
             REM IP, Port
             REM If port is in a textbox, use: integer.parse(textbox1.text)  instead of the port number vvv
-            Client = New TcpClient("192.168.1.3", 4305)
+            Client = New TcpClient("192.168.1.240", 4305)
             If Client.GetStream.CanRead = True Then
                 RX = New StreamReader(Client.GetStream)
                 TX = New StreamWriter(Client.GetStream)
@@ -27,11 +28,14 @@ Public Class Form1
             Try
                 While RX.BaseStream.CanRead = True
                     Dim RawData As String = RX.ReadLine
-                    .If RawData.ToUpper = "/MSG" Then
-                        Threading.ThreadPool.QueueUserWorkItem(AddressOf MSG1, "Hello World.")
-                    Else
-                        RichTextBox1.Text += "Server>>" + RawData + vbNewLine
+                    If Not IsNothing(RawData) = True Then
+                        If RawData.ToUpper = "/MSG" Then
+                            Threading.ThreadPool.QueueUserWorkItem(AddressOf MSG1, "Hello World.")
+                        Else
+                            RichTextBox1.Text += "Server>>" + RawData + vbNewLine
+                        End If
                     End If
+
                 End While
             Catch ex As Exception
                 Client.Close()

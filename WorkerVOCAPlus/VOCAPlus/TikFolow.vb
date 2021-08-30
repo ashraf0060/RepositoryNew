@@ -139,6 +139,7 @@ Public Class TikFolow
 
 
                 Invoke(Sub() ProgressBar1.Visible = True)
+
                 For Rws = 0 To TickTblMain.Rows.Count - 1
                     GridCuntRtrn.TickCount += 1                                          'Grid record count
                     Invoke(Sub() StatBrPnlAr.Text = Rws + 1 & " من " & TickTblMain.Rows.Count)

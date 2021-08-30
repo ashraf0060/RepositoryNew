@@ -964,12 +964,12 @@ Sec2:
                     End If
                 Next
                 ProgBar.Maximum = GrdTick.Rows.Count
-                For GG = 0 To GrdTick.Rows.Count - 1
-                    ProgBar.Value = GG + 1
-                    'ProgBar.Refresh()
-                    Def.CompList.Add("TkupTkSql = " & GrdTick.Rows(GG).Cells("TkSQL").Value)
-                Next
-                CompIds = String.Join(" OR ", Def.CompList)
+                'For GG = 0 To GrdTick.Rows.Count - 1
+                '    ProgBar.Value = GG + 1
+                '    'ProgBar.Refresh()
+                '    Def.CompList.Add("TkupTkSql = " & GrdTick.Rows(GG).Cells("TkSQL").Value)
+                'Next
+                'CompIds = String.Join(" OR ", Def.CompList)
                 Tbl.Columns.Add("تاريخ آخر تحديث")
                 Tbl.Columns.Add("نص آخر تحديث")
                 Tbl.Columns.Add("محرر آخر تحديث")

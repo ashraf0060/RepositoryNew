@@ -55,16 +55,12 @@ Public Class Form1
 
         Try
             Using Client As TcpClient = Server.AcceptTcpClient
-                ''     Console.Beep()
-
                 If ServerTrying = False Then
                     Threading.ThreadPool.QueueUserWorkItem(AddressOf Handler_Client)
                 End If
 
                 Clients.Add(Client)
                 TempClient = Client
-
-
 
                 Dim TX As New StreamWriter(Client.GetStream)
                 Dim RX As New StreamReader(Client.GetStream)
@@ -74,8 +70,6 @@ Public Class Form1
                             Dim RawData As String = RX.ReadLine
                             If Client.Client.Connected = True AndAlso Client.Connected = True AndAlso Client.GetStream.CanRead = True Then
                                 REM For some reason this seems to stop the comon tcp connection bug vvv
-
-
                                 Dim RawDataLength As String
                                 If Not IsNothing(RawData.Length.ToString) = True Then
                                     RawDataLength = RawData.Length.ToString()
@@ -152,7 +146,6 @@ Public Class Form1
     REM   Timer1 enabled = true
     REM Just if you want to always have a count of connected clients.
     Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
-
         Label1.Text = Clients.Count.ToString
     End Sub
 End Class

@@ -251,7 +251,7 @@ Partial Class TikSearchNew
         '
         'CloseBtn
         '
-        Me.CloseBtn.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.CloseBtn.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
         Me.CloseBtn.BackgroundImage = Global.VOCAPlus.My.Resources.Resources._Exit1
         Me.CloseBtn.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
         Me.CloseBtn.FlatAppearance.BorderColor = System.Drawing.Color.White
@@ -260,7 +260,7 @@ Partial Class TikSearchNew
         Me.CloseBtn.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent
         Me.CloseBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.CloseBtn.Font = New System.Drawing.Font("Times New Roman", 14.0!)
-        Me.CloseBtn.Location = New System.Drawing.Point(1286, 393)
+        Me.CloseBtn.Location = New System.Drawing.Point(15, 413)
         Me.CloseBtn.Name = "CloseBtn"
         Me.CloseBtn.Size = New System.Drawing.Size(57, 36)
         Me.CloseBtn.TabIndex = 2024
@@ -329,6 +329,7 @@ Partial Class TikSearchNew
         Me.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink
         Me.BackColor = System.Drawing.Color.White
         Me.ClientSize = New System.Drawing.Size(1370, 465)
+        Me.Controls.Add(Me.CloseBtn)
         Me.Controls.Add(Me.BtnCncl)
         Me.Controls.Add(Me.ProgressBar1)
         Me.Controls.Add(Me.LblMsg)
@@ -336,7 +337,6 @@ Partial Class TikSearchNew
         Me.Controls.Add(Me.GroupBox1)
         Me.Controls.Add(Me.SerchTxt)
         Me.Controls.Add(Me.GroupBox2)
-        Me.Controls.Add(Me.CloseBtn)
         Me.Controls.Add(Me.BtnSerch)
         Me.Controls.Add(Me.FilterComb)
         Me.Controls.Add(Me.PrdKComb)

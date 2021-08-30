@@ -18,7 +18,7 @@ Public Class TikSearchNew
     Private Sub TikSearch_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Me.Size = New Point(screenWidth, screenHeight - 120)
         Me.GridTicket.Width = screenWidth - 30
-        Me.GridTicket.Height = Me.Height - 150
+        Me.GridTicket.Height = Me.Height - 180
         If PreciFlag = False Then
             Me.Close()
             WelcomeScreen.StatBrPnlAr.Text = "لم يكتمل تحميل جميع البيانات"
@@ -205,6 +205,7 @@ Public Class TikSearchNew
 
 
                         Invoke(Sub() ProgressBar1.Visible = True)
+
                         For Rws = 0 To TickSrchTable.Rows.Count - 1
                             GridCuntRtrn.TickCount += 1                                          'Grid record count
                             Invoke(Sub() LblMsg.Text = Rws + 1 & " من " & TickSrchTable.Rows.Count)

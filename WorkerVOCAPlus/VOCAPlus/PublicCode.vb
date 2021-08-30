@@ -1155,29 +1155,7 @@ End_:
         AddHandler Cnrol.MouseEnter, AddressOf Ctrl_MouseEnter
         Return Cnrol
     End Function
-    Private Sub SndCntls(Ctrl As Control)
-        If Ctrl.Dock = DockStyle.None Then
-            Ctrl.ContextMenuStrip = DefCmStrip
-            CtrlsTbl.Rows.Add()
-            CtrlsTbl.Rows(CtlCnt).Item(1) = Form_.Name
-            CtrlsTbl.Rows(CtlCnt).Item(2) = Ctrl.Name
-            Dim Typ_ As Type = Ctrl.GetType
-            CtrlsTbl.Rows(CtlCnt).Item(3) = Split(Typ_.ToString, ".")(3)
-            CtrlsTbl.Rows(CtlCnt).Item(4) = Ctrl.Location.X
-            CtrlsTbl.Rows(CtlCnt).Item(5) = Ctrl.Location.Y
-            CtrlsTbl.Rows(CtlCnt).Item(6) = Ctrl.Font.SizeInPoints
-            CtrlsTbl.Rows(CtlCnt).Item(7) = (Ctrl.Width)
-            CtrlsTbl.Rows(CtlCnt).Item(8) = (Ctrl.Height)
-            Dim rr As FlowLayoutPanel = Ctrl.Parent
-            CtrlsTbl.Rows(CtlCnt).Item(9) = rr.Controls.GetChildIndex(Ctrl)
-            CtrlsTbl.Rows(CtlCnt).Item(10) = Ctrl.Margin.Left
-            CtrlsTbl.Rows(CtlCnt).Item(11) = Ctrl.Margin.Top
-            CtrlsTbl.Rows(CtlCnt).Item(12) = Ctrl.Margin.Right
-            CtrlsTbl.Rows(CtlCnt).Item(13) = Ctrl.Margin.Bottom
-            CtrlsTbl.Rows(CtlCnt).Item(14) = rr.GetFlowBreak(Ctrl)
-            CtlCnt += 1
-        End If
-    End Sub
+
     Public Sub CalIfBtn(Btn As Button)
         VCtheme.BtnCtrl(Btn)
         RemoveHandler Btn.MouseEnter, (AddressOf Btn_MouseEnter)
@@ -1224,6 +1202,29 @@ End_:
     Public Sub Btn_MouseLeave(sender As Object, e As EventArgs)
         Dim Botn As Control = sender
         BtnDecrease(Botn)
+    End Sub
+    Private Sub SndCntls(Ctrl As Control)
+        If Ctrl.Dock = DockStyle.None Then
+            Ctrl.ContextMenuStrip = DefCmStrip
+            CtrlsTbl.Rows.Add()
+            CtrlsTbl.Rows(CtlCnt).Item(1) = Form_.Name
+            CtrlsTbl.Rows(CtlCnt).Item(2) = Ctrl.Name
+            Dim Typ_ As Type = Ctrl.GetType
+            CtrlsTbl.Rows(CtlCnt).Item(3) = Split(Typ_.ToString, ".")(3)
+            CtrlsTbl.Rows(CtlCnt).Item(4) = Ctrl.Location.X
+            CtrlsTbl.Rows(CtlCnt).Item(5) = Ctrl.Location.Y
+            CtrlsTbl.Rows(CtlCnt).Item(6) = Ctrl.Font.SizeInPoints
+            CtrlsTbl.Rows(CtlCnt).Item(7) = (Ctrl.Width)
+            CtrlsTbl.Rows(CtlCnt).Item(8) = (Ctrl.Height)
+            Dim rr As FlowLayoutPanel = Ctrl.Parent
+            CtrlsTbl.Rows(CtlCnt).Item(9) = rr.Controls.GetChildIndex(Ctrl)
+            CtrlsTbl.Rows(CtlCnt).Item(10) = Ctrl.Margin.Left
+            CtrlsTbl.Rows(CtlCnt).Item(11) = Ctrl.Margin.Top
+            CtrlsTbl.Rows(CtlCnt).Item(12) = Ctrl.Margin.Right
+            CtrlsTbl.Rows(CtlCnt).Item(13) = Ctrl.Margin.Bottom
+            CtrlsTbl.Rows(CtlCnt).Item(14) = rr.GetFlowBreak(Ctrl)
+            CtlCnt += 1
+        End If
     End Sub
     Private Sub CopySelectedToolStripMenuItem_Click_1(sender As Object, e As EventArgs)
         Dim sms = (sender.GetCurrentParent()).SourceControl
