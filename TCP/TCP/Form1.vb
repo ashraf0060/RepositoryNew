@@ -62,6 +62,7 @@ Public Class Form1
                 Clients.Add(Client)
                 TempClient = Client
 
+
                 Dim TX As New StreamWriter(Client.GetStream)
                 Dim RX As New StreamReader(Client.GetStream)
                 Try
@@ -77,8 +78,8 @@ Public Class Form1
                                     RawDataLength = ""
                                 End If
                                 REM ^^^^ Comment it out and test it in your own projects. Mine might be the only stupid one.
-                                RichTextBox1.Text += Client.Client.RemoteEndPoint.ToString + ">>" + RawData + vbNewLine
-                                ListBox1.Items.Add(Client.Client.RemoteEndPoint.ToString)
+                                Invoke(Sub() RichTextBox1.Text += Client.Client.RemoteEndPoint.ToString + ">>" + RawData + vbNewLine)
+                                Invoke(Sub() ListBox1.Items.Add(Client.Client.RemoteEndPoint.ToString))
                             Else
                                 ListBox1.Items.Remove(Client.Client.RemoteEndPoint.ToString)
                                 Exit While
@@ -88,7 +89,7 @@ Public Class Form1
                 Catch ex As Exception
                     If Clients.Contains(Client) Then
                         Clients.Remove(Client)
-                        ListBox1.Items.Remove(Client.Client.RemoteEndPoint.ToString)
+                        Invoke(Sub() ListBox1.Items.Remove(Client.Client.RemoteEndPoint.ToString))
                         Client.Close()
                     End If
 
@@ -98,9 +99,9 @@ Public Class Form1
                 If RX.BaseStream.CanRead = False Then
                     Client.Close()
                     Clients.Remove(Client)
-                    ListBox1.Items.Add(Client.Client.RemoteEndPoint.ToString)
+                    Invoke(Sub() ListBox1.Items.Add(Client.Client.RemoteEndPoint.ToString))
                 Else
-                    ListBox1.Items.Remove(Client.Client.RemoteEndPoint.ToString)
+                    Invoke(Sub() ListBox1.Items.Remove(Client.Client.RemoteEndPoint.ToString))
                 End If
                 ''   Console.Beep()
             End Using

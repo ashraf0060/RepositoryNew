@@ -22,14 +22,18 @@ Partial Class TCP_Server
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Me.components = New System.ComponentModel.Container()
         Me.BtnStpSrvr = New System.Windows.Forms.Button()
         Me.BtnStrtSrvr = New System.Windows.Forms.Button()
-        Me.ListBox1 = New System.Windows.Forms.ListBox()
         Me.RichTextBox1 = New System.Windows.Forms.RichTextBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.TextBox1 = New System.Windows.Forms.TextBox()
-        Me.Button1 = New System.Windows.Forms.Button()
+        Me.BtnSnd = New System.Windows.Forms.Button()
         Me.CheckBox1 = New System.Windows.Forms.CheckBox()
+        Me.Timer1 = New System.Windows.Forms.Timer(Me.components)
+        Me.DataGridView1 = New System.Windows.Forms.DataGridView()
+        Me.Clients = New System.Windows.Forms.DataGridViewTextBoxColumn()
+        CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.SuspendLayout()
         '
         'BtnStpSrvr
@@ -49,14 +53,6 @@ Partial Class TCP_Server
         Me.BtnStrtSrvr.TabIndex = 3
         Me.BtnStrtSrvr.Text = "Start Server"
         Me.BtnStrtSrvr.UseVisualStyleBackColor = True
-        '
-        'ListBox1
-        '
-        Me.ListBox1.FormattingEnabled = True
-        Me.ListBox1.Location = New System.Drawing.Point(500, 59)
-        Me.ListBox1.Name = "ListBox1"
-        Me.ListBox1.Size = New System.Drawing.Size(296, 134)
-        Me.ListBox1.TabIndex = 8
         '
         'RichTextBox1
         '
@@ -85,14 +81,14 @@ Partial Class TCP_Server
         Me.TextBox1.Size = New System.Drawing.Size(482, 141)
         Me.TextBox1.TabIndex = 10
         '
-        'Button1
+        'BtnSnd
         '
-        Me.Button1.Location = New System.Drawing.Point(537, 300)
-        Me.Button1.Name = "Button1"
-        Me.Button1.Size = New System.Drawing.Size(75, 23)
-        Me.Button1.TabIndex = 11
-        Me.Button1.Text = "Button1"
-        Me.Button1.UseVisualStyleBackColor = True
+        Me.BtnSnd.Location = New System.Drawing.Point(513, 314)
+        Me.BtnSnd.Name = "BtnSnd"
+        Me.BtnSnd.Size = New System.Drawing.Size(75, 23)
+        Me.BtnSnd.TabIndex = 11
+        Me.BtnSnd.Text = "Send"
+        Me.BtnSnd.UseVisualStyleBackColor = True
         '
         'CheckBox1
         '
@@ -104,21 +100,46 @@ Partial Class TCP_Server
         Me.CheckBox1.Text = "Enter To Send"
         Me.CheckBox1.UseVisualStyleBackColor = True
         '
+        'Timer1
+        '
+        Me.Timer1.Enabled = True
+        Me.Timer1.Interval = 500
+        '
+        'DataGridView1
+        '
+        Me.DataGridView1.AllowUserToAddRows = False
+        Me.DataGridView1.AllowUserToDeleteRows = False
+        Me.DataGridView1.BackgroundColor = System.Drawing.Color.White
+        Me.DataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        Me.DataGridView1.Columns.AddRange(New System.Windows.Forms.DataGridViewColumn() {Me.Clients})
+        Me.DataGridView1.Location = New System.Drawing.Point(513, 59)
+        Me.DataGridView1.Name = "DataGridView1"
+        Me.DataGridView1.ReadOnly = True
+        Me.DataGridView1.Size = New System.Drawing.Size(199, 150)
+        Me.DataGridView1.TabIndex = 13
+        '
+        'Clients
+        '
+        Me.Clients.HeaderText = "Clients"
+        Me.Clients.Name = "Clients"
+        Me.Clients.ReadOnly = True
+        '
         'TCP_Server
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(800, 450)
+        Me.Controls.Add(Me.DataGridView1)
         Me.Controls.Add(Me.CheckBox1)
-        Me.Controls.Add(Me.Button1)
+        Me.Controls.Add(Me.BtnSnd)
         Me.Controls.Add(Me.TextBox1)
         Me.Controls.Add(Me.Label1)
-        Me.Controls.Add(Me.ListBox1)
         Me.Controls.Add(Me.RichTextBox1)
         Me.Controls.Add(Me.BtnStrtSrvr)
         Me.Controls.Add(Me.BtnStpSrvr)
         Me.Name = "TCP_Server"
         Me.Text = "TCP_Server"
+        CType(Me.DataGridView1, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -126,10 +147,12 @@ Partial Class TCP_Server
 
     Friend WithEvents BtnStpSrvr As Button
     Friend WithEvents BtnStrtSrvr As Button
-    Friend WithEvents ListBox1 As ListBox
     Friend WithEvents RichTextBox1 As RichTextBox
     Friend WithEvents Label1 As Label
     Friend WithEvents TextBox1 As TextBox
-    Friend WithEvents Button1 As Button
+    Friend WithEvents BtnSnd As Button
     Friend WithEvents CheckBox1 As CheckBox
+    Friend WithEvents Timer1 As Timer
+    Friend WithEvents DataGridView1 As DataGridView
+    Friend WithEvents Clients As DataGridViewTextBoxColumn
 End Class

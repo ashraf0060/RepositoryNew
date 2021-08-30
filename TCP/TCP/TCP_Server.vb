@@ -11,6 +11,7 @@ Public Class TCP_Server
     'https://www.dreamincode.net/forums/topic/375960-tcpip-list-of-connected-clients/
     Private Sub TCP_Server_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         CheckBox1.Checked = True
+        BtnSnd.Visible = False
         StartServer()
     End Sub
     Private Sub BtnStpSrvr_Click(sender As Object, e As EventArgs) Handles BtnStpSrvr.Click
@@ -64,7 +65,6 @@ Public Class TCP_Server
 
     Function Handler_Client(ByVal state As Object)
         Dim TempClient As TcpClient
-        Dim ClientStrng As String
         Try
             Using Client As TcpClient = Server.AcceptTcpClient
                 If ServerTrying = False Then
@@ -72,8 +72,25 @@ Public Class TCP_Server
                 End If
                 ClientsLst.Add(Client)
                 TempClient = Client
-                ClientStrng = Client.Client.RemoteEndPoint.ToString
-                Invoke(Sub() ListBox1.Items.Add(Client.Client.RemoteEndPoint.ToString))
+
+                Dim ipend As Net.IPEndPoint = Client.Client.RemoteEndPoint
+                Dim IPAdrss As String = ipend.Address.ToString
+
+                If DataGridView1.Rows.Count > 0 Then
+                    For Each G As DataGridViewRow In DataGridView1.Rows
+                        If G.Cells(0).Value.ToString.Contains(IPAdrss) = False Then
+                            Invoke(Sub() DataGridView1.Rows.Add(IPAdrss))
+                            Exit For
+                        ElseIf G.Cells(0).Value.ToString.Contains(IPAdrss) = True Then
+                            Invoke(Sub() DataGridView1.Rows(G.Index).DefaultCellStyle.ForeColor = Color.Green)
+                        End If
+                    Next
+                Else
+                    Invoke(Sub() DataGridView1.Rows.Add(IPAdrss))
+                    Invoke(Sub() DataGridView1.AutoResizeColumns())
+                End If
+
+                Invoke(Sub() DataGridView1.ClearSelection())
 
                 Dim TX As New StreamWriter(Client.GetStream)
                 Dim RX As New StreamReader(Client.GetStream)
@@ -83,52 +100,68 @@ Public Class TCP_Server
                             Dim RawData As String = RX.ReadLine
                             If Client.Client.Connected = True AndAlso Client.Connected = True AndAlso Client.GetStream.CanRead = True Then
                                 REM For some reason this seems to stop the comon tcp connection bug vvv
-                                Dim RawDataLength As String
                                 If Not IsNothing(RawData) = True Then
-                                    RawDataLength = RawData.Length.ToString()
-                                    Invoke(Sub() RichTextBox1.Text += Client.Client.RemoteEndPoint.ToString + ">>" + RawData + vbNewLine)
+
+                                    If RawData = "Typing" Then
+                                        For Each G As DataGridViewRow In DataGridView1.Rows
+                                            If G.Cells(0).Value.ToString.Contains(IPAdrss) = True Then
+                                                Invoke(Sub() DataGridView1.Rows(G.Index).DefaultCellStyle.ForeColor = Color.Gold)
+                                            End If
+                                        Next
+                                    ElseIf RawData = "NotTyping" Then
+                                        For Each G As DataGridViewRow In DataGridView1.Rows
+                                            If G.Cells(0).Value.ToString.Contains(IPAdrss) = True Then
+                                                Invoke(Sub() DataGridView1.Rows(G.Index).DefaultCellStyle.ForeColor = Color.Green)
+                                            End If
+                                        Next
+                                    Else
+                                        Invoke(Sub() RichTextBox1.Text += IPAdrss + ">>" + RawData + vbNewLine)
+                                    End If
                                 ElseIf Not IsNothing(RawData) = False Then
-                                    RawDataLength = ""
                                     Client.Close()
                                     ClientsLst.Remove(Client)
-                                    Invoke(Sub() ListBox1.Items.Remove(ClientStrng))
+                                    For Each G As DataGridViewRow In DataGridView1.Rows
+                                        If G.Cells(0).Value.ToString.Contains(IPAdrss) = True Then
+                                            'Invoke(Sub() DataGridView1.Rows.RemoveAt(G.Index))
+                                            Invoke(Sub() DataGridView1.Rows(G.Index).DefaultCellStyle.ForeColor = Color.Red)
+                                            Exit For
+                                        End If
+                                    Next
+                                    'MsgBox("Session has ended by Remote Client  ==> " & ClientStrng)
                                 End If
                                 REM ^^^^ Comment it out and test it in your own projects. Mine might be the only stupid one.
                             Else
                                 Client.Close()
                                 ClientsLst.Remove(Client)
-                                Invoke(Sub() ListBox1.Items.Remove(Client.Client.RemoteEndPoint.ToString))
+                                For Each G As DataGridViewRow In DataGridView1.Rows
+                                    If G.Cells(0).Value.ToString.Contains(IPAdrss) = True Then
+                                        Invoke(Sub() DataGridView1.Rows(G.Index).DefaultCellStyle.ForeColor = Color.Red)
+                                        Exit For
+                                    End If
+                                Next
                                 Exit While
                             End If
                         End While
                     ElseIf RX.BaseStream.CanRead = False Then
                         Client.Close()
                         ClientsLst.Remove(Client)
-                        Invoke(Sub() ListBox1.Items.Add(Client.Client.RemoteEndPoint.ToString))
+                        Invoke(Sub() DataGridView1.Rows.RemoveAt(Client.Client.RemoteEndPoint.ToString))
                     End If
                 Catch ex As Exception
                     If ClientsLst.Contains(Client) Then
                         ClientsLst.Remove(Client)
-                        Invoke(Sub() ListBox1.Items.Remove(ClientStrng))
                         Client.Close()
                     End If
-
+                    For Each G As DataGridViewRow In DataGridView1.Rows
+                        If G.Cells(0).Value.ToString.Contains(IPAdrss) = True Then
+                            'Invoke(Sub() DataGridView1.Rows.RemoveAt(G.Index))
+                            Invoke(Sub() DataGridView1.Rows(G.Index).DefaultCellStyle.ForeColor = Color.Red)
+                            Exit For
+                        End If
+                    Next
+                    'MsgBox("Server has been Stoped and all clients has been Dropped")
                 End Try
-
-
-                'If RX.BaseStream.CanRead = False Then
-                'Client.Close()
-                'ClientsLst.Remove(Client)
-                'Invoke(Sub() ListBox1.Items.Add(Client.Client.RemoteEndPoint.ToString))
-                'Else
-                'Invoke(Sub() ListBox1.Items.Remove(Client.Client.RemoteEndPoint.ToString))
-                'End If
-                ''   Console.Beep()
             End Using
-            'If ClientsLst.Contains(TempClient) Then
-            '    ClientsLst.Remove(TempClient)
-            '    TempClient.Close()
-            'End If
         Catch ex As Exception
             If ClientsLst.Contains(TempClient) Then
                 '    ClientsLst.Remove(TempClient)
@@ -138,7 +171,7 @@ Public Class TCP_Server
         Return True
     End Function
 
-    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles Button1.Click
+    Private Sub Button1_Click(sender As Object, e As EventArgs) Handles BtnSnd.Click
         Threading.ThreadPool.QueueUserWorkItem(AddressOf SendToClients, TextBox1.Text)
     End Sub
     Function SendToClients(ByVal Data As String)
@@ -154,7 +187,7 @@ Public Class TCP_Server
                         Dim TX1 As New StreamWriter(Client.GetStream)
                         ''   Dim RX1 As New StreamReader(Client.GetStream)
                         TX1.WriteLine(Data)
-                        Invoke(Sub() RichTextBox1.Text += Client.Client.RemoteEndPoint.ToString + ">>" + TextBox1.Text + vbNewLine)
+                        Invoke(Sub() RichTextBox1.AppendText(Client.Client.RemoteEndPoint.ToString + ">>" + TextBox1.Text + vbNewLine))
                         TX1.Flush()
                         Invoke(Sub() TextBox1.Clear())
                     Next
@@ -176,5 +209,17 @@ Public Class TCP_Server
             End If
         End If
 
+    End Sub
+
+    Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
+        Label1.Text = ClientsLst.Count.ToString
+    End Sub
+
+    Private Sub CheckBox1_CheckedChanged(sender As Object, e As EventArgs) Handles CheckBox1.CheckedChanged
+        If CheckBox1.Checked = True Then
+            BtnSnd.Visible = False
+        Else
+            BtnSnd.Visible = True
+        End If
     End Sub
 End Class
