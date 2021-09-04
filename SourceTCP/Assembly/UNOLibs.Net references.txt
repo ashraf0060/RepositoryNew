@@ -1,0 +1,4 @@
+The truth is that i have not written the detailed
+references in here heheh...
+Well anyway it's too easy so just have a look at
+the code of the example app.

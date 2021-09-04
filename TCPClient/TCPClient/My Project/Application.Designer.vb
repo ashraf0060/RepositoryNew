@@ -32,7 +32,7 @@ Namespace My
         
         <Global.System.Diagnostics.DebuggerStepThroughAttribute()>  _
         Protected Overrides Sub OnCreateMainForm()
-            Me.MainForm = Global.TCPClint.TCPClient_
+            Me.MainForm = Global.TCPClint.NewClient
         End Sub
     End Class
 End Namespace

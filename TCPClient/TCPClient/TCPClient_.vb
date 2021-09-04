@@ -40,7 +40,7 @@ Jkjkjk_:
         Dim ipProperties As IPGlobalProperties = IPGlobalProperties.GetIPGlobalProperties()
         Dim ipEndPoints As IPEndPoint() = ipProperties.GetActiveTcpListeners()
         For Each EndPoint As IPEndPoint In ipEndPoints
-            If EndPoint.ToString = "192.168.1.240:4305" Then
+            If EndPoint.ToString = "10.11.51.233:4305" Then
                 Bol = True
                 Exit For
             End If
@@ -135,12 +135,14 @@ Jkjkjk_:
         Invoke(Sub() Me.Text = "Connecting .... ")
         Invoke(Sub() RichTextBox1.SelectionStart = RichTextBox1.Text.Length)
         Invoke(Sub() BtnCnct.Enabled = False)
+        'Try
+        REM IP, Port
+        REM If port is in a textbox, use: integer.parse(textbox1.text)  instead of the port number vvv
+        Client = New TcpClient()
+        Client.Connect("192.168.1.240", 4305)
+        'Client.ConnectAsync("10.11.51.232", 4305)
 
-        Try
-            REM IP, Port
-            REM If port is in a textbox, use: integer.parse(textbox1.text)  instead of the port number vvv
-            Client = New TcpClient("192.168.1.240", 4305)
-            If Client.GetStream.CanRead = True Then
+        If Client.GetStream.CanRead = True Then
                 Invoke(Sub() TextBox1.Enabled = True)
                 RX = New StreamReader(Client.GetStream)
                 TX = New StreamWriter(Client.GetStream)
@@ -150,12 +152,13 @@ Jkjkjk_:
                 Invoke(Sub() Me.Text = "Connected")
                 Invoke(Sub() RichTextBox1.SelectionStart = RichTextBox1.Text.Length)
             End If
-        Catch ex As Exception
-            Invoke(Sub() BtnCnct.Enabled = True)
-            Invoke(Sub() BtnDscnct.Enabled = False)
-            Invoke(Sub() RichTextBox1.Text += "Failed to connect, E: " + ex.Message + vbNewLine)
-            Invoke(Sub() RichTextBox1.SelectionStart = RichTextBox1.Text.Length)
-        End Try
+        'Catch ex As Exception
+        '    Invoke(Sub() BtnCnct.Enabled = True)
+        '    Invoke(Sub() BtnDscnct.Enabled = False)
+        '    Invoke(Sub() Me.Text = ex.Message)
+        '    Invoke(Sub() RichTextBox1.Text += "Failed to connect, E: " + ex.Message + vbNewLine)
+        '    Invoke(Sub() RichTextBox1.SelectionStart = RichTextBox1.Text.Length)
+        'End Try
     End Sub
     Private Sub TextBox1_KeyUp(sender As Object, e As KeyEventArgs) Handles TextBox1.KeyUp
         SendToServer("NotTyping")

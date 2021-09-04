@@ -450,9 +450,9 @@ PopulCompTree_:
         End With
         D.FileName = "ComplaintsReport" '& GroupBox1.Tag & GroupBox2.Tag & GroupBox3.Tag & GrpDtKnd.Tag
         If D.ShowDialog() = DialogResult.OK Then
-            LoadFrm((screenWidth - LodngFrm.Width) / 2, (screenHeight - LodngFrm.Height) / 2)
-            Invoke(Sub() LodngFrm.LblMsg.Text += vbCrLf & "جاري استخراج البيانات ...")
-            Invoke(Sub() LodngFrm.LblMsg.Refresh())
+            'LoadFrm((screenWidth - LodngFrm.Width) / 2, (screenHeight - LodngFrm.Height) / 2)
+            'Invoke(Sub() LodngFrm.LblMsg.Text += vbCrLf & "جاري استخراج البيانات ...")
+            'Invoke(Sub() LodngFrm.LblMsg.Refresh())
             Try
                 'ExpDTable.Rows.Add("")
                 Dim Workbook As XLWorkbook = New XLWorkbook()
