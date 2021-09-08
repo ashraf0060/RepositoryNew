@@ -1202,6 +1202,8 @@ End_:
         Dim Botn As Control = sender
         BtnDecrease(Botn)
     End Sub
+
+
     Private Sub SndCntls(Ctrl As Control)
         If Ctrl.Dock = DockStyle.None Then
             Ctrl.ContextMenuStrip = DefCmStrip
