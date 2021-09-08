@@ -1155,7 +1155,6 @@ End_:
         AddHandler Cnrol.MouseEnter, AddressOf Ctrl_MouseEnter
         Return Cnrol
     End Function
-
     Public Sub CalIfBtn(Btn As Button)
         VCtheme.BtnCtrl(Btn)
         RemoveHandler Btn.MouseEnter, (AddressOf Btn_MouseEnter)
