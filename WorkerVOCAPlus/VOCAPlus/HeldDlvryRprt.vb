@@ -2,7 +2,7 @@
     Dim NtfTbl As New DataTable
 
     Private Sub HeldRepFrm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        Me.Size = New Point(screenWidth, screenHeight - 100)
+        Me.Size = New Point(screenWidth, screenHeight - 120)
         DataGridView1.Size = New Point(screenWidth - 250, Me.Height - 250)
         tempTable.Rows.Clear()
         tempTable.Columns.Clear()

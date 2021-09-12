@@ -8,6 +8,10 @@
     'Dim sqlCon As New SqlConnection("Data Source=10.10.26.4;Initial Catalog=CSSYS;Persist Security Info=True;User ID=ntf;Password=@asdasdasd123321") ' I Have assigned conn STR here and delete this row from all project
     'Dim sqlCon As New SqlConnection("Data Source=ASHRAF-PC\ASHRAFSQL;Initial Catalog=vocaplus;Persist Security Info=True;User ID=sa;Password=Hemonad105046") ' I Have assigned conn STR here and delete this row from all project
     Private Sub HeldPhPool_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Me.Size = New Point(screenWidth, screenHeight - 120)
+        Me.GridHeld.Width = Me.Size.Width - 30
+        Me.GridHeld.Height = Me.Size.Height - 200
+        CloseBtn.Location = New Point(Me.Width - 80, CloseBtn.Location.Y)
         RdioPaperAll.Checked = True
         FilPhPool()
     End Sub

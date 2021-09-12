@@ -101,4 +101,8 @@ Public Class SupLog
         '  & "\VOCALog" & Format(Now, "yyyyMM") & ".Vlg", Format(Now, "yyyyMMdd HH:mm:ss") & " ," & ECnt_Hndls & LogMsg & " &H" & PassEncoding(SSqlStrs, GenSaltKey) & vbCrLf, True)
 
     End Sub
+
+    Private Sub SupLog_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Me.Size = New Point(screenWidth, screenHeight - 120)
+    End Sub
 End Class

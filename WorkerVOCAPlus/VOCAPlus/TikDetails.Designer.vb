@@ -24,6 +24,7 @@ Partial Class TikDetails
     Private Sub InitializeComponent()
         Me.components = New System.ComponentModel.Container()
         Me.FlowDetls = New System.Windows.Forms.FlowLayoutPanel()
+        Me.TxtTikID = New System.Windows.Forms.Label()
         Me.FlowLayoutPanel1 = New System.Windows.Forms.FlowLayoutPanel()
         Me.Label37 = New System.Windows.Forms.Label()
         Me.TxtPh1 = New System.Windows.Forms.TextBox()
@@ -82,7 +83,6 @@ Partial Class TikDetails
         Me.LblHelp = New System.Windows.Forms.Label()
         Me.TimerVisInvs = New System.Windows.Forms.Timer(Me.components)
         Me.ToolTip1 = New System.Windows.Forms.ToolTip(Me.components)
-        Me.TxtTikID = New System.Windows.Forms.Label()
         Me.FlowDetls.SuspendLayout()
         Me.FlowLayoutPanel1.SuspendLayout()
         Me.GroupBox4.SuspendLayout()
@@ -96,6 +96,7 @@ Partial Class TikDetails
         '
         'FlowDetls
         '
+        Me.FlowDetls.AutoScroll = True
         Me.FlowDetls.Controls.Add(Me.TxtTikID)
         Me.FlowDetls.Controls.Add(Me.FlowLayoutPanel1)
         Me.FlowDetls.Controls.Add(Me.FlowLayoutPanel2)
@@ -104,8 +105,20 @@ Partial Class TikDetails
         Me.FlowDetls.Location = New System.Drawing.Point(0, 0)
         Me.FlowDetls.Name = "FlowDetls"
         Me.FlowDetls.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.FlowDetls.Size = New System.Drawing.Size(1350, 621)
+        Me.FlowDetls.Size = New System.Drawing.Size(1284, 621)
         Me.FlowDetls.TabIndex = 2121
+        '
+        'TxtTikID
+        '
+        Me.FlowDetls.SetFlowBreak(Me.TxtTikID, True)
+        Me.TxtTikID.Font = New System.Drawing.Font("Times New Roman", 12.0!)
+        Me.TxtTikID.ForeColor = System.Drawing.Color.Red
+        Me.TxtTikID.Location = New System.Drawing.Point(3, 0)
+        Me.TxtTikID.Name = "TxtTikID"
+        Me.TxtTikID.Size = New System.Drawing.Size(1325, 23)
+        Me.TxtTikID.TabIndex = 2122
+        Me.TxtTikID.Text = "Label2"
+        Me.TxtTikID.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
         '
         'FlowLayoutPanel1
         '
@@ -138,7 +151,7 @@ Partial Class TikDetails
         Me.FlowLayoutPanel1.Controls.Add(Me.GroupBox4)
         Me.FlowLayoutPanel1.Controls.Add(Me.GroupBox3)
         Me.FlowLayoutPanel1.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft
-        Me.FlowLayoutPanel1.Location = New System.Drawing.Point(645, 26)
+        Me.FlowLayoutPanel1.Location = New System.Drawing.Point(626, 26)
         Me.FlowLayoutPanel1.Name = "FlowLayoutPanel1"
         Me.FlowLayoutPanel1.RightToLeft = System.Windows.Forms.RightToLeft.No
         Me.FlowLayoutPanel1.Size = New System.Drawing.Size(702, 598)
@@ -725,7 +738,7 @@ Partial Class TikDetails
         Me.FlowLayoutPanel2.Controls.Add(Me.LblWDays)
         Me.FlowLayoutPanel2.Controls.Add(Me.LblHelp)
         Me.FlowLayoutPanel2.FlowDirection = System.Windows.Forms.FlowDirection.RightToLeft
-        Me.FlowLayoutPanel2.Location = New System.Drawing.Point(12, 26)
+        Me.FlowLayoutPanel2.Location = New System.Drawing.Point(701, 630)
         Me.FlowLayoutPanel2.Name = "FlowLayoutPanel2"
         Me.FlowLayoutPanel2.Size = New System.Drawing.Size(627, 598)
         Me.FlowLayoutPanel2.TabIndex = 2116
@@ -859,24 +872,12 @@ Partial Class TikDetails
         Me.TimerVisInvs.Enabled = True
         Me.TimerVisInvs.Interval = 500
         '
-        'TxtTikID
-        '
-        Me.FlowDetls.SetFlowBreak(Me.TxtTikID, True)
-        Me.TxtTikID.Font = New System.Drawing.Font("Times New Roman", 12.0!)
-        Me.TxtTikID.ForeColor = System.Drawing.Color.Red
-        Me.TxtTikID.Location = New System.Drawing.Point(22, 0)
-        Me.TxtTikID.Name = "TxtTikID"
-        Me.TxtTikID.Size = New System.Drawing.Size(1325, 23)
-        Me.TxtTikID.TabIndex = 2122
-        Me.TxtTikID.Text = "Label2"
-        Me.TxtTikID.TextAlign = System.Drawing.ContentAlignment.MiddleCenter
-        '
         'TikDetails
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
-        Me.ClientSize = New System.Drawing.Size(1350, 621)
+        Me.ClientSize = New System.Drawing.Size(1284, 621)
         Me.Controls.Add(Me.FlowDetls)
         Me.Location = New System.Drawing.Point(0, 52)
         Me.Name = "TikDetails"

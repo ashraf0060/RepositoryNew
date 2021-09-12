@@ -3,6 +3,7 @@ Public Class TikDetails
     Dim Def As New APblicClss.Defntion
     Dim Fn As New APblicClss.Func
     Private Sub TikDetails_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        Me.Size = New Point(screenWidth, screenHeight - 120)
         If StruGrdTk.FlwStat = True Then
             TcktImg.BackgroundImage = My.Resources.Tckoff
             TcktImg.BackgroundImageLayout = ImageLayout.Stretch
@@ -73,7 +74,6 @@ Public Class TikDetails
         TxtTikID.TextAlign = ContentAlignment.BottomCenter
         SelctSerchTxt(TxtDetails, "تعديل : بواسطة")
     End Sub
-
     Private Sub BtnAddEdt_Click(sender As Object, e As EventArgs) Handles BtnAddEdt.Click
         If Trim(TxtDetailsAdd.Text).Length > 0 Then
             If InsUpd("update Tickets set TkDetails = '" & TxtDetails.Text & vbCrLf & "تعديل : بواسطة  " & Usr.PUsrRlNm & " في " & ServrTime() & " من خلال IP : " & OsIP() & vbCrLf & TxtDetailsAdd.Text & "' where TkSQL = " & StruGrdTk.Sql, "000&H") = Nothing Then

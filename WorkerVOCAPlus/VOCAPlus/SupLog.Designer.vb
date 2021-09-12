@@ -65,9 +65,9 @@ Partial Class SupLog
         Me.LogData.ClipboardCopyMode = System.Windows.Forms.DataGridViewClipboardCopyMode.Disable
         Me.LogData.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.LogData.Dock = System.Windows.Forms.DockStyle.Bottom
-        Me.LogData.Location = New System.Drawing.Point(0, 119)
+        Me.LogData.Location = New System.Drawing.Point(0, 70)
         Me.LogData.Name = "LogData"
-        Me.LogData.Size = New System.Drawing.Size(1350, 630)
+        Me.LogData.Size = New System.Drawing.Size(1350, 679)
         Me.LogData.TabIndex = 17
         '
         'BtnWrFl

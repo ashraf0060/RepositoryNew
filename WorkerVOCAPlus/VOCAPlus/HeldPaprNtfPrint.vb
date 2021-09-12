@@ -26,7 +26,10 @@
                 Else
                     DateTimePicker1.Value = DateTimePicker1.MaxDate
                 End If
-                GridPHHeld.Width = Me.Width - 50
+
+                Me.Size = New Point(screenWidth, screenHeight - 120)
+                Me.GridPHHeld.Width = Me.Size.Width - 30
+                Me.GridPHHeld.Height = Me.Size.Height - 200
                 CloseBtn.Location = New Point(Me.Width - 80, CloseBtn.Location.Y)
                 FilPhPool()
             Else

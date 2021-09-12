@@ -68,7 +68,8 @@ Partial Class TikFolow
         '
         'ProgressBar1
         '
-        Me.ProgressBar1.Location = New System.Drawing.Point(468, 12)
+        Me.ProgressBar1.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.ProgressBar1.Location = New System.Drawing.Point(807, 12)
         Me.ProgressBar1.Name = "ProgressBar1"
         Me.ProgressBar1.Size = New System.Drawing.Size(309, 23)
         Me.ProgressBar1.TabIndex = 2033
@@ -76,9 +77,10 @@ Partial Class TikFolow
         '
         'SerchTxt
         '
+        Me.SerchTxt.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.SerchTxt.Font = New System.Drawing.Font("Times New Roman", 12.0!)
         Me.SerchTxt.ForeColor = System.Drawing.Color.Silver
-        Me.SerchTxt.Location = New System.Drawing.Point(800, 10)
+        Me.SerchTxt.Location = New System.Drawing.Point(466, 10)
         Me.SerchTxt.Name = "SerchTxt"
         Me.SerchTxt.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.SerchTxt.Size = New System.Drawing.Size(218, 26)
@@ -88,9 +90,10 @@ Partial Class TikFolow
         '
         'FilterComb
         '
+        Me.FilterComb.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.FilterComb.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList
         Me.FilterComb.FormattingEnabled = True
-        Me.FilterComb.Location = New System.Drawing.Point(1024, 12)
+        Me.FilterComb.Location = New System.Drawing.Point(264, 12)
         Me.FilterComb.MinimumSize = New System.Drawing.Size(70, 0)
         Me.FilterComb.Name = "FilterComb"
         Me.FilterComb.Size = New System.Drawing.Size(196, 21)
@@ -105,7 +108,7 @@ Partial Class TikFolow
         Me.CloseBtn.FlatAppearance.BorderSize = 0
         Me.CloseBtn.FlatStyle = System.Windows.Forms.FlatStyle.Flat
         Me.CloseBtn.Font = New System.Drawing.Font("Times New Roman", 16.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.CloseBtn.Location = New System.Drawing.Point(28, 520)
+        Me.CloseBtn.Location = New System.Drawing.Point(28, 595)
         Me.CloseBtn.Name = "CloseBtn"
         Me.CloseBtn.Size = New System.Drawing.Size(64, 64)
         Me.CloseBtn.TabIndex = 129
@@ -116,10 +119,11 @@ Partial Class TikFolow
         '
         Me.GridTicket.AllowUserToAddRows = False
         Me.GridTicket.AllowUserToDeleteRows = False
-        Me.GridTicket.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.GridTicket.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.GridTicket.BackgroundColor = System.Drawing.Color.White
         Me.GridTicket.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.GridTicket.Location = New System.Drawing.Point(12, 47)
+        Me.GridTicket.Location = New System.Drawing.Point(12, 56)
         Me.GridTicket.MultiSelect = False
         Me.GridTicket.Name = "GridTicket"
         Me.GridTicket.ReadOnly = True
@@ -174,12 +178,12 @@ Partial Class TikFolow
         '
         Me.StatusBar1.Enabled = False
         Me.StatusBar1.Font = New System.Drawing.Font("Times New Roman", 14.0!)
-        Me.StatusBar1.Location = New System.Drawing.Point(0, 588)
+        Me.StatusBar1.Location = New System.Drawing.Point(0, 663)
         Me.StatusBar1.Name = "StatusBar1"
         Me.StatusBar1.Panels.AddRange(New System.Windows.Forms.StatusBarPanel() {Me.StatBrPnlEn, Me.StatBrPnlAr})
         Me.StatusBar1.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.StatusBar1.ShowPanels = True
-        Me.StatusBar1.Size = New System.Drawing.Size(1350, 33)
+        Me.StatusBar1.Size = New System.Drawing.Size(1501, 33)
         Me.StatusBar1.SizingGrip = False
         Me.StatusBar1.TabIndex = 126
         '
@@ -199,8 +203,9 @@ Partial Class TikFolow
         '
         'BtnRefrsh
         '
+        Me.BtnRefrsh.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.BtnRefrsh.BackgroundImage = Global.VOCAPlus.My.Resources.Resources.recgreen
-        Me.BtnRefrsh.Location = New System.Drawing.Point(335, 11)
+        Me.BtnRefrsh.Location = New System.Drawing.Point(700, 9)
         Me.BtnRefrsh.Name = "BtnRefrsh"
         Me.BtnRefrsh.Size = New System.Drawing.Size(90, 29)
         Me.BtnRefrsh.TabIndex = 2034
@@ -209,7 +214,8 @@ Partial Class TikFolow
         '
         'GroupBox1
         '
-        Me.GroupBox1.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.GroupBox1.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.GroupBox1.Controls.Add(Me.Lbl6)
         Me.GroupBox1.Controls.Add(Me.ChckEsc1)
         Me.GroupBox1.Controls.Add(Me.Lbl7)
@@ -230,9 +236,9 @@ Partial Class TikFolow
         Me.GroupBox1.Controls.Add(Me.ChckTrnsDy)
         Me.GroupBox1.Controls.Add(Me.ChckUpdColeg)
         Me.GroupBox1.Controls.Add(Me.ChckUpdOther)
-        Me.GroupBox1.Location = New System.Drawing.Point(154, 511)
+        Me.GroupBox1.Location = New System.Drawing.Point(154, 586)
         Me.GroupBox1.Name = "GroupBox1"
-        Me.GroupBox1.Size = New System.Drawing.Size(989, 75)
+        Me.GroupBox1.Size = New System.Drawing.Size(1140, 75)
         Me.GroupBox1.TabIndex = 2093
         Me.GroupBox1.TabStop = False
         Me.GroupBox1.Text = "تصفيه"
@@ -494,7 +500,7 @@ Partial Class TikFolow
         Me.BtnCncl.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
         Me.BtnCncl.FlatAppearance.BorderSize = 0
         Me.BtnCncl.Font = New System.Drawing.Font("Times New Roman", 12.0!)
-        Me.BtnCncl.Location = New System.Drawing.Point(231, 7)
+        Me.BtnCncl.Location = New System.Drawing.Point(1135, 7)
         Me.BtnCncl.Name = "BtnCncl"
         Me.BtnCncl.RightToLeft = System.Windows.Forms.RightToLeft.Yes
         Me.BtnCncl.Size = New System.Drawing.Size(69, 34)
@@ -507,7 +513,7 @@ Partial Class TikFolow
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.BackColor = System.Drawing.Color.White
-        Me.ClientSize = New System.Drawing.Size(1350, 621)
+        Me.ClientSize = New System.Drawing.Size(1501, 696)
         Me.Controls.Add(Me.BtnCncl)
         Me.Controls.Add(Me.GroupBox1)
         Me.Controls.Add(Me.BtnRefrsh)
@@ -518,11 +524,11 @@ Partial Class TikFolow
         Me.Controls.Add(Me.StatusBar1)
         Me.Controls.Add(Me.FilterComb)
         Me.MaximizeBox = False
-        Me.MaximumSize = New System.Drawing.Size(1366, 660)
         Me.MinimizeBox = False
         Me.MinimumSize = New System.Drawing.Size(1364, 660)
         Me.Name = "TikFolow"
         Me.RightToLeft = System.Windows.Forms.RightToLeft.Yes
+        Me.RightToLeftLayout = True
         Me.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen
         Me.Text = "متابعة الشكاوى"
         CType(Me.GridTicket, System.ComponentModel.ISupportInitialize).EndInit()

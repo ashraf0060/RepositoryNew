@@ -20,8 +20,8 @@ Public Class TikFolow
     End Property
     Private Sub FolwTicket_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Me.Size = New Point(screenWidth, screenHeight - 120)
-        Me.GridTicket.Width = screenWidth - 30
-        Me.GridTicket.Height = Me.Height - 200
+        Me.GridTicket.Width = Me.Size.Width - 30
+        Me.GridTicket.Height = Me.Size.Height - 200
         GroupBox1.Location = New Point((Me.Size.Width - GroupBox1.Size.Width) / 2, GroupBox1.Location.Y)
         If PreciFlag = False Then
             Beep()

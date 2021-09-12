@@ -22,8 +22,8 @@ Partial Class HeldPaprNtfPrint
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Dim DataGridViewCellStyle3 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
-        Dim DataGridViewCellStyle4 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle1 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
+        Dim DataGridViewCellStyle2 As System.Windows.Forms.DataGridViewCellStyle = New System.Windows.Forms.DataGridViewCellStyle()
         Me.GridPHHeld = New System.Windows.Forms.DataGridView()
         Me.LblMsg = New System.Windows.Forms.Label()
         Me.BtnPrv = New System.Windows.Forms.Button()
@@ -41,33 +41,34 @@ Partial Class HeldPaprNtfPrint
         Me.GridPHHeld.AllowUserToAddRows = False
         Me.GridPHHeld.AllowUserToDeleteRows = False
         Me.GridPHHeld.BackgroundColor = System.Drawing.Color.White
-        DataGridViewCellStyle3.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle3.BackColor = System.Drawing.SystemColors.Control
-        DataGridViewCellStyle3.Font = New System.Drawing.Font("Times New Roman", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        DataGridViewCellStyle3.ForeColor = System.Drawing.SystemColors.WindowText
-        DataGridViewCellStyle3.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle3.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle3.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
-        Me.GridPHHeld.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle3
+        DataGridViewCellStyle1.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle1.BackColor = System.Drawing.SystemColors.Control
+        DataGridViewCellStyle1.Font = New System.Drawing.Font("Times New Roman", 12.0!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        DataGridViewCellStyle1.ForeColor = System.Drawing.SystemColors.WindowText
+        DataGridViewCellStyle1.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle1.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle1.WrapMode = System.Windows.Forms.DataGridViewTriState.[True]
+        Me.GridPHHeld.ColumnHeadersDefaultCellStyle = DataGridViewCellStyle1
         Me.GridPHHeld.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        DataGridViewCellStyle4.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
-        DataGridViewCellStyle4.BackColor = System.Drawing.SystemColors.Window
-        DataGridViewCellStyle4.Font = New System.Drawing.Font("Times New Roman", 12.0!)
-        DataGridViewCellStyle4.ForeColor = System.Drawing.SystemColors.ControlText
-        DataGridViewCellStyle4.SelectionBackColor = System.Drawing.SystemColors.Highlight
-        DataGridViewCellStyle4.SelectionForeColor = System.Drawing.SystemColors.HighlightText
-        DataGridViewCellStyle4.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
-        Me.GridPHHeld.DefaultCellStyle = DataGridViewCellStyle4
+        DataGridViewCellStyle2.Alignment = System.Windows.Forms.DataGridViewContentAlignment.MiddleLeft
+        DataGridViewCellStyle2.BackColor = System.Drawing.SystemColors.Window
+        DataGridViewCellStyle2.Font = New System.Drawing.Font("Times New Roman", 12.0!)
+        DataGridViewCellStyle2.ForeColor = System.Drawing.SystemColors.ControlText
+        DataGridViewCellStyle2.SelectionBackColor = System.Drawing.SystemColors.Highlight
+        DataGridViewCellStyle2.SelectionForeColor = System.Drawing.SystemColors.HighlightText
+        DataGridViewCellStyle2.WrapMode = System.Windows.Forms.DataGridViewTriState.[False]
+        Me.GridPHHeld.DefaultCellStyle = DataGridViewCellStyle2
         Me.GridPHHeld.Location = New System.Drawing.Point(27, 57)
         Me.GridPHHeld.Name = "GridPHHeld"
         Me.GridPHHeld.ReadOnly = True
         Me.GridPHHeld.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect
-        Me.GridPHHeld.Size = New System.Drawing.Size(1193, 558)
+        Me.GridPHHeld.Size = New System.Drawing.Size(1208, 558)
         Me.GridPHHeld.TabIndex = 0
         '
         'LblMsg
         '
-        Me.LblMsg.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.LblMsg.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.LblMsg.Font = New System.Drawing.Font("Times New Roman", 16.0!)
         Me.LblMsg.Location = New System.Drawing.Point(399, 618)
         Me.LblMsg.Name = "LblMsg"
@@ -78,10 +79,11 @@ Partial Class HeldPaprNtfPrint
         '
         'BtnPrv
         '
+        Me.BtnPrv.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.BtnPrv.BackgroundImage = Global.VOCAPlus.My.Resources.Resources.Preview1
         Me.BtnPrv.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Stretch
         Me.BtnPrv.Font = New System.Drawing.Font("Times New Roman", 12.0!, System.Drawing.FontStyle.Bold)
-        Me.BtnPrv.Location = New System.Drawing.Point(771, 11)
+        Me.BtnPrv.Location = New System.Drawing.Point(556, 11)
         Me.BtnPrv.Name = "BtnPrv"
         Me.BtnPrv.Size = New System.Drawing.Size(111, 40)
         Me.BtnPrv.TabIndex = 2122
@@ -106,8 +108,9 @@ Partial Class HeldPaprNtfPrint
         '
         'DateTimePicker1
         '
+        Me.DateTimePicker1.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.DateTimePicker1.Font = New System.Drawing.Font("Times New Roman", 12.0!, System.Drawing.FontStyle.Bold)
-        Me.DateTimePicker1.Location = New System.Drawing.Point(547, 19)
+        Me.DateTimePicker1.Location = New System.Drawing.Point(332, 19)
         Me.DateTimePicker1.MinDate = New Date(2019, 1, 1, 0, 0, 0, 0)
         Me.DateTimePicker1.Name = "DateTimePicker1"
         Me.DateTimePicker1.RightToLeft = System.Windows.Forms.RightToLeft.Yes
@@ -118,7 +121,8 @@ Partial Class HeldPaprNtfPrint
         '
         'LblLoad
         '
-        Me.LblLoad.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.LblLoad.Anchor = CType(((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.LblLoad.Font = New System.Drawing.Font("Times New Roman", 16.0!)
         Me.LblLoad.Location = New System.Drawing.Point(365, 329)
         Me.LblLoad.Name = "LblLoad"
@@ -129,9 +133,10 @@ Partial Class HeldPaprNtfPrint
         '
         'RdioPaperAll
         '
+        Me.RdioPaperAll.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.RdioPaperAll.AutoSize = True
         Me.RdioPaperAll.Font = New System.Drawing.Font("Times New Roman", 14.0!, System.Drawing.FontStyle.Bold)
-        Me.RdioPaperAll.Location = New System.Drawing.Point(450, 19)
+        Me.RdioPaperAll.Location = New System.Drawing.Point(235, 19)
         Me.RdioPaperAll.Name = "RdioPaperAll"
         Me.RdioPaperAll.Size = New System.Drawing.Size(64, 26)
         Me.RdioPaperAll.TabIndex = 2138
@@ -141,9 +146,10 @@ Partial Class HeldPaprNtfPrint
         '
         'RdioPapNoPrnt
         '
+        Me.RdioPapNoPrnt.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.RdioPapNoPrnt.AutoSize = True
         Me.RdioPapNoPrnt.Font = New System.Drawing.Font("Times New Roman", 14.0!, System.Drawing.FontStyle.Bold)
-        Me.RdioPapNoPrnt.Location = New System.Drawing.Point(342, 19)
+        Me.RdioPapNoPrnt.Location = New System.Drawing.Point(127, 19)
         Me.RdioPapNoPrnt.Name = "RdioPapNoPrnt"
         Me.RdioPapNoPrnt.Size = New System.Drawing.Size(106, 26)
         Me.RdioPapNoPrnt.TabIndex = 2137
@@ -153,9 +159,10 @@ Partial Class HeldPaprNtfPrint
         '
         'RdioPapPrnt
         '
+        Me.RdioPapPrnt.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.RdioPapPrnt.AutoSize = True
         Me.RdioPapPrnt.Font = New System.Drawing.Font("Times New Roman", 14.0!, System.Drawing.FontStyle.Bold)
-        Me.RdioPapPrnt.Location = New System.Drawing.Point(233, 19)
+        Me.RdioPapPrnt.Location = New System.Drawing.Point(18, 19)
         Me.RdioPapPrnt.Name = "RdioPapPrnt"
         Me.RdioPapPrnt.Size = New System.Drawing.Size(105, 26)
         Me.RdioPapPrnt.TabIndex = 2136

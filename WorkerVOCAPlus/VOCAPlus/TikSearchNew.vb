@@ -45,21 +45,6 @@ Public Class TikSearchNew
             FilterComb.DisplayMember = "Item"
             FilterComb.ValueMember = "Kind"
 
-            PrdItmTable.Rows.Clear()
-            PrdItmTable.Columns.Clear()
-            PrdItmTable.Columns.Add("ID")
-            PrdItmTable.Columns.Add("Item")
-
-            PrdItmTable.Rows.Add("0", "All")
-            PrdItmTable.Rows.Add("1", "مالية")
-            PrdItmTable.Rows.Add("2", "بريدية")
-            PrdItmTable.Rows.Add("3", "حكومية")
-            PrdItmTable.Rows.Add("4", "مجتمعية")
-
-            PrdKComb.DataSource = PrdItmTable
-            PrdKComb.DisplayMember = "Item"
-            PrdKComb.ValueMember = "ID"
-
             WelcomeScreen.StatBrPnlAr.Text = ""
 
         End If
@@ -83,7 +68,6 @@ Public Class TikSearchNew
         Else
             SerchTxt.MaxLength = 50
         End If
-        Dim Def As New APblicClss.Defntion
         TickSrchTable.Rows.Clear()
         StruGrdTk.Sql = 0
         LblMsg.Text = ""
@@ -92,7 +76,6 @@ Public Class TikSearchNew
         SerchTxt.Text = ""
     End Sub
     Private Sub RadioButton1_CheckedChanged(sender As Object, e As EventArgs) Handles RadioButton1.CheckedChanged, RadioButton2.CheckedChanged, RadioButton3.CheckedChanged
-        Dim Def As New APblicClss.Defntion
         If RadioButton1.Checked = True Then
             Def.TickKindFltr = 0
         ElseIf RadioButton2.Checked = True Then
@@ -105,7 +88,6 @@ Public Class TikSearchNew
         LblMsg.Text = ""
     End Sub
     Private Sub RdioOpen_Click(sender As Object, e As EventArgs) Handles RdioOpen.Click, Rdiocls.Click, RdioAll.Click
-        Dim Def As New APblicClss.Defntion
         If RdioOpen.Checked = True Then
             Def.TicOpnFltr = 0
         ElseIf Rdiocls.Checked = True Then
@@ -118,13 +100,11 @@ Public Class TikSearchNew
         LblMsg.Text = ""
     End Sub
     Private Sub SerchTxt_TextChanged(sender As Object, e As EventArgs) Handles SerchTxt.TextChanged
-        Dim Def As New APblicClss.Defntion
         TickSrchTable.Rows.Clear()
         StruGrdTk.Sql = 0
         LblMsg.Text = ""
     End Sub
-    Private Sub PrdKComb_SelectedIndexChanged(sender As Object, e As EventArgs) Handles PrdKComb.SelectedIndexChanged
-        Dim Def As New APblicClss.Defntion
+    Private Sub PrdKComb_SelectedIndexChanged(sender As Object, e As EventArgs)
         TickSrchTable.Rows.Clear()
         StruGrdTk.Sql = 0
         LblMsg.Text = ""
@@ -138,7 +118,6 @@ Public Class TikSearchNew
         Invoke(Sub() BtnSerch.Enabled = False)
         Invoke(Sub() GroupBox1.Enabled = False)
         Invoke(Sub() GroupBox2.Enabled = False)
-        Invoke(Sub() PrdKComb.Enabled = False)
         Invoke(Sub() FilterComb.Enabled = False)
         If SerchTxt.Text <> "برجاء ادخال كلمات البحث" Or Trim(SerchTxt.Text).Length > 0 Then
             Invoke(Sub() LblMsg.Text = "جاري تحميل البيانات ...........")
@@ -149,14 +128,6 @@ Public Class TikSearchNew
                            FltrStr = "[" & Split(FilterComb.SelectedValue, "-")(1) & "]" & " = '" & SerchTxt.Text & "'"
                        Else
                            FltrStr = "[" & Split(FilterComb.SelectedValue, "-")(1) & "]" & " like '" & SerchTxt.Text & "%'"
-                       End If
-
-                       If PrdKComb.SelectedIndex <> 0 Then
-                           If FltrStr.Length > 0 Then
-                               FltrStr &= " and" & "[PrdKind]" & " = '" & PrdKComb.SelectedIndex & "'"
-                           Else
-                               FltrStr = "[PrdKind]" & " = '" & PrdKComb.SelectedIndex & "'"
-                           End If
                        End If
                        If Def.TickKindFltr <> 2 Then
                            If FltrStr.Length > 0 Then
@@ -276,7 +247,6 @@ Public Class TikSearchNew
         Invoke(Sub() BtnCncl.Enabled = False)
         Invoke(Sub() GroupBox1.Enabled = True)
         Invoke(Sub() GroupBox2.Enabled = True)
-        Invoke(Sub() PrdKComb.Enabled = True)
         Invoke(Sub() FilterComb.Enabled = True)
     End Sub
     Private Sub SerchTxt_Enter(sender As Object, e As EventArgs) Handles SerchTxt.Enter
@@ -336,7 +306,6 @@ Public Class TikSearchNew
         BtnSerch.Enabled = True
         GridTicket.Visible = False
         LblMsg.Text = ""
-        Invoke(Sub() PrdKComb.Enabled = True)
         Invoke(Sub() FilterComb.Enabled = True)
     End Sub
 End Class

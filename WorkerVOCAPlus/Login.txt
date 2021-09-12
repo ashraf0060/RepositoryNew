@@ -1,21 +1,12 @@
-﻿Imports System.IO
+Imports System.IO
 Imports System.Net
 Imports System.Threading
 
 Public Class Login
+    Dim Def As New APblicClss.Defntion
     Dim VerTbl As DataTable = New DataTable
     Dim NotComplete As String = "لم يتم تحميل"
-    Private Sub HrdWrWrkr_DoWork(ByVal sender As Object, ByVal e As System.ComponentModel.DoWorkEventArgs) Handles HrdWrWrkr.DoWork
-        ' This event handler is where the actual work is done.
-        ' This method runs on the background thread.
-        ' Get the BackgroundWorker object that raised this event.
-        Dim worker As System.ComponentModel.BackgroundWorker
-        worker = CType(sender, System.ComponentModel.BackgroundWorker)
-        ' Get the Words object and call the main method.
-        Dim WC As APblicClss.Func = CType(e.Argument, APblicClss.Func)
-        WC.ConStrFn(worker)
-        WC.HrdWre(worker)
-    End Sub
+
     <Obsolete>
     Private Sub Login_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         'CheckForIllegalCrossThreadCalls = False
@@ -43,7 +34,6 @@ Public Class Login
         Cmbo.Items.Add("Test Database")
         Cmbo.Items.Add("OnLine")
         Cmbo.SelectedItem = "Eg Server"
-        ServerCD = Cmbo.SelectedItem
 
         MacStr = GetMACAddressNew()
 
@@ -107,17 +97,20 @@ GoodVer:  '       *****      End Check Ver.
         'Else
         '    Close()
         'End If
-        Invoke(Sub()
-                   Dim WC As New APblicClss.Func
-                   If HrdWrWrkr.IsBusy = False Then
-                       HrdWrWrkr.RunWorkerAsync(WC)
-                   End If
-               End Sub)
 
-
+        ServerCD = Cmbo.SelectedItem
+        Dim Def As New APblicClss.Defntion
+        Dim Fn As New APblicClss.Func
+        Fn.ConStrFn1()
+        Def.Thread_ = New Thread(AddressOf HrdWre)
+        Def.Thread_.IsBackground = True
+        Def.Thread_.Start()
     End Sub
     Private Sub LogInBtn__Click(sender As Object, e As EventArgs) Handles LogInBtn.Click
-        Loginn()
+        Dim Def As New APblicClss.Defntion
+        Def.Thread_ = New Thread(AddressOf Loginn)
+        Def.Thread_.IsBackground = True
+        Def.Thread_.Start()
     End Sub
     Private Sub Loginn()
         Dim Def As New APblicClss.Defntion
@@ -133,7 +126,6 @@ GoodVer:  '       *****      End Check Ver.
         LblLogin.Image = My.Resources.Info
         LblLogin.ForeColor = Color.Blue
         LblLogin.Refresh()
-        Timer1.Stop()
         '                              0       1       2      3       4            5        6           7           8          9          10        11     as SaltKey                                                                                                                                                                     ,   12                        13         14       15      16        17        18         19         20         21         22         23        24              ************
         If GetTbl("SELECT UsrId, UsrCat, UsrNm, UsrPass, UsrLevel, UsrRealNm, UsrGender, UsrActive, UsrLastSeen, UsrSusp, UsrTkCount, RIGHT(dbo.IntGuid.PRGUID, CAST(LEFT(dbo.IntGuid.Id, 2) AS int) / 2) + SUBSTRING(dbo.IntGuid.GUID, 3, 5) + LEFT(dbo.IntGuid.PRGUID, CAST(RIGHT(dbo.IntGuid.Id, 2) AS int) / 2) AS SaltKey, UCatNm, UsrSisco, UsrGsm, UsrCalCntr, UsrClsN, UsrFlN, UsrReOpY, UsrUnRead, UsrEvDy, UsrClsYDy, UsrReadYDy, UCatLvl, UsrRecevDy, UsrClsUpdtd, UsrTikFlowDy, UsrEmail FROM int_user INNER JOIN dbo.IntGuid ON int_user.UsrKey = SUBSTRING(dbo.IntGuid.GUID, 26, 11) INNER JOIN dbo.IntUserCat ON int_user.UsrCat = dbo.IntUserCat.UCatId Where (UsrNm = N'" & Me.TxtUsrNm.Text & "');", UserTable, "1001&H") = Nothing Then
             StatusBarPanel1.Text = "Online"
@@ -280,10 +272,7 @@ sec_UsrErr_:
         LblLogin.Image = LblImg
         LblLogin.Refresh()
         GC.Collect()
-        Timer1.Start()
     End Sub
-
-
     Private Sub ExitBtn_Click(sender As Object, e As EventArgs) Handles ExitBtn.Click  ', Me.FormClosing
 
         'Dim frmCollection = Application.OpenForms
@@ -324,15 +313,9 @@ sec_UsrErr_:
         End If
     End Sub
     Private Sub Cmbo_SelectedIndexChanged(sender As Object, e As EventArgs)
-        Invoke(Sub()
-                   Timer1.Start()
-                   Dim Def As New APblicClss
-                   Dim Cn As New APblicClss.Func
-                   ServerCD = Cmbo.SelectedItem
-                   If ConStrWrkr.IsBusy = False Then
-                       ConStrWrkr.RunWorkerAsync(Cn)
-                   End If
-               End Sub)
+        Invoke(Sub() Def.Thread_.Abort())
+        Invoke(Sub() ServerCD = Cmbo.SelectedItem)
+        Invoke(Sub() Timer1.Start())
     End Sub
     Private Sub LblUsrIP_Click(sender As Object, e As EventArgs) Handles LblUsrIP.Click
         MsgBox(GetMACAddressNew())
@@ -361,7 +344,6 @@ sec_UsrErr_:
             Invoke(Sub() Me.Close())
         End If
     End Sub
-
     Private Sub Login_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
         RemoveHandler Cmbo.SelectedIndexChanged, AddressOf Cmbo_SelectedIndexChanged
         For Each CTRL In Me.Controls
@@ -378,73 +360,32 @@ sec_UsrErr_:
     Private Sub Login_Activated(sender As Object, e As EventArgs) Handles MyBase.Activated
         FrmAllSub(Me)
     End Sub
-    Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
-        If IsHandleCreated = True Then
-            Invoke(Sub()
-                       Dim state As New APblicClss.Defntion
-                       'WChckConn.CancelAsync()
-                       Dim Cn As New APblicClss.Func
-                       If WChckConn.IsBusy = False Then
-                           Invoke(Sub() WChckConn.RunWorkerAsync(Cn))
-                       End If
-                   End Sub)
-        End If
-
-    End Sub
-    Private Sub ConStrWrkr_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles ConStrWrkr.DoWork
-        Dim worker1 As System.ComponentModel.BackgroundWorker
-        worker1 = CType(sender, System.ComponentModel.BackgroundWorker)
-        Dim WC1 As APblicClss.Func = CType(e.Argument, APblicClss.Func)
-        WC1.ConStrFn(worker1)
-        'WC1.Conoff(worker1)
-        'WC1.MacTblSub(worker1)
-    End Sub
-    Private Sub ConStrWrkr_ProgressChanged(sender As Object, e As System.ComponentModel.ProgressChangedEventArgs) Handles ConStrWrkr.ProgressChanged
-        Dim state As APblicClss.Defntion = CType(e.UserState, APblicClss.Defntion)
-        If Bol = True Then
-            If state.Admn = False Then
-                Invoke(Sub() Cmbo.Visible = False)
-            ElseIf state.Admn = True Then
-                Invoke(Sub() Cmbo.Visible = True)
-            End If
-        End If
-
-    End Sub
-
-
 #Region "Check Connection"
-    Private Sub WChckConn_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles WChckConn.DoWork
-        Dim worker1 As System.ComponentModel.BackgroundWorker
-        worker1 = CType(sender, System.ComponentModel.BackgroundWorker)
-        Dim WC1 As APblicClss.Func = CType(e.Argument, APblicClss.Func)
-        'WC1.ConStrFn(worker1)
-        'WC1.MacTblSub(worker1)
-        WC1.Conoff(worker1)
-    End Sub
-    Private Sub WChckConn_ProgressChanged(sender As Object, e As System.ComponentModel.ProgressChangedEventArgs) Handles WChckConn.ProgressChanged
+    Private Sub ChckCon()
         If Me.IsHandleCreated = True Then
+            Dim Fn As New APblicClss.Func
             Invoke(Sub()
+                       Threading.ThreadPool.QueueUserWorkItem(AddressOf Fn.ConStrFn1)
+                       Threading.ThreadPool.QueueUserWorkItem(AddressOf Fn.Conoff1)
                        If MacStr = "6479F03979BB" Or MacStr = "020000000100" Then
                            Invoke(Sub() Cmbo.Visible = True)
                        End If
-                       Dim state As APblicClss.Defntion = CType(e.UserState, APblicClss.Defntion)
-
                        If Bol = True Then
                            Invoke(Sub() Me.LogInBtn.Enabled = True)
                            Invoke(Sub() Me.TxtUsrNm.Enabled = True)
                            Invoke(Sub() Me.TxtUsrPass.Enabled = True)
-                           Invoke(Sub() Me.StatusBarPanel1.Text = "Online " & ServerNm & state.StatStr)
+                           Invoke(Sub() Me.StatusBarPanel1.Text = "Online " & ServerNm)
                            Invoke(Sub() Me.StatusBarPanel1.Icon = My.Resources.WSOn032)
                        ElseIf Bol = False Then
                            Invoke(Sub() Me.LogInBtn.Enabled = False)
                            Invoke(Sub() Me.TxtUsrNm.Enabled = False)
                            Invoke(Sub() Me.TxtUsrPass.Enabled = False)
-                           Invoke(Sub() Me.StatusBarPanel1.Text = "Offline " & ServerNm & state.StatStr)
+                           Invoke(Sub() Me.StatusBarPanel1.Text = "Offline " & ServerNm)
                            Invoke(Sub() Me.StatusBarPanel1.Icon = My.Resources.WSOff032)
                        End If
                    End Sub)
         End If
-
+        Timer1.Start()
     End Sub
 #End Region
 
@@ -454,7 +395,6 @@ sec_UsrErr_:
         Dim worker As System.ComponentModel.BackgroundWorker
         worker = CType(sender, System.ComponentModel.BackgroundWorker)
         Dim WC As APblicClss.Func = CType(e.Argument, APblicClss.Func)
-        Invoke(Sub() Timer1.Stop())
         Invoke(Sub() Me.Enabled = False)
         Invoke(Sub() WC.SwitchBoard(worker))
 
@@ -529,8 +469,6 @@ sec_UsrErr_:
             Invoke(Sub() WelcomeScreen.Show())
             Invoke(Sub() LodUsrPic())
             Invoke(Sub() TimerClose.Start())
-        Else
-            Invoke(Sub() Timer1.Start())
         End If
         Invoke(Sub() Me.Enabled = True)
 
@@ -598,5 +536,31 @@ sec_UsrErr_:
         form_.ShowDialog()
     End Sub
 #End Region
-
+    Public Sub HrdWre()
+        Dim Def As New APblicClss.Defntion
+        Dim Fn As New APblicClss.Func
+        HardTable = New DataTable
+        Def.StatStr = "Not Updated"
+        If (Fn.GetTblXX("select IpId, IpStime FROM SdHardCollc WHERE ((IpId= '" & OsIP() & "'));", HardTable, "1000&H")) = Nothing Then
+            If HardTable.Rows.Count = 0 Then 'insert new computer hardware information if not founded into Hardware Table
+                Fn.HrdCol()
+                Fn.InsUpdate("insert into SdHardCollc (IpId, IpLocation, IpProsseccor, IpRam, IpNetwork, IpSerialNo, IpCollect) values ('" & Fn.OsIP() & "','" & "Location" & "','" & Fn.HrdCol.HProcc & "','" & Fn.HrdCol.HRam & "','" & Fn.HrdCol.HNetwrk & "','" & Fn.HrdCol.HSerNo & "','" & True & "');", "1000&H") 'Append access Record
+                Def.StatStr = "Inserted"
+            ElseIf Math.Abs(DateTime.Parse(Today).Subtract(DateTime.Parse(HardTable.Rows(0).Item(1))).TotalDays) > 30 Then
+                Fn.HrdCol()
+                Fn.InsUpdate("UPDATE SdHardCollc SET IpProsseccor ='" & Fn.HrdCol.HProcc & "', IpRam ='" & Fn.HrdCol.HRam & "', IpNetwork ='" & Fn.HrdCol.HNetwrk & "', IpSerialNo ='" & Fn.HrdCol.HSerNo & "', IpStime ='" & Format(Fn.ServrTime1(), "yyyy-MM-dd") & "' where IpId='" & Fn.OsIP() & "';", "1000&H")
+                Def.StatStr = "Updated"
+            End If
+        End If
+Sec2:
+        HardTable.Dispose()
+        GC.Collect()
+        Threading.ThreadPool.QueueUserWorkItem(AddressOf ChckCon)
+    End Sub
+    Private Sub Timer1_Tick(sender As Object, e As EventArgs) Handles Timer1.Tick
+        Def.Thread_ = New Thread(AddressOf ChckCon)
+        Def.Thread_.IsBackground = True
+        Def.Thread_.Start()
+        Invoke(Sub() Timer1.Stop())
+    End Sub
 End Class
