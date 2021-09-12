@@ -291,11 +291,11 @@ Partial Class VOCAPlusService
         '
         Me.LblTimer.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.LblTimer.AutoSize = True
-        Me.LblTimer.Font = New System.Drawing.Font("Times New Roman", 10.0!)
+        Me.LblTimer.Font = New System.Drawing.Font("Times New Roman", 12.0!)
         Me.LblTimer.ForeColor = System.Drawing.Color.Red
-        Me.LblTimer.Location = New System.Drawing.Point(470, 12)
+        Me.LblTimer.Location = New System.Drawing.Point(470, 8)
         Me.LblTimer.Name = "LblTimer"
-        Me.LblTimer.Size = New System.Drawing.Size(52, 16)
+        Me.LblTimer.Size = New System.Drawing.Size(59, 19)
         Me.LblTimer.TabIndex = 73
         Me.LblTimer.Text = "Label19"
         '
@@ -328,13 +328,13 @@ Partial Class VOCAPlusService
         '
         Me.TxtErr.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.TxtErr.BackColor = System.Drawing.Color.White
-        Me.TxtErr.Location = New System.Drawing.Point(972, 4)
+        Me.TxtErr.Location = New System.Drawing.Point(923, 4)
         Me.TxtErr.Multiline = True
         Me.TxtErr.Name = "TxtErr"
         Me.TxtErr.ReadOnly = True
         Me.TxtErr.RightToLeft = System.Windows.Forms.RightToLeft.No
         Me.TxtErr.ScrollBars = System.Windows.Forms.ScrollBars.Both
-        Me.TxtErr.Size = New System.Drawing.Size(413, 626)
+        Me.TxtErr.Size = New System.Drawing.Size(462, 626)
         Me.TxtErr.TabIndex = 71
         Me.TxtErr.Text = "Errors :"
         '
@@ -347,11 +347,11 @@ Partial Class VOCAPlusService
         '
         Me.Label1.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.Label1.AutoSize = True
-        Me.Label1.Font = New System.Drawing.Font("Times New Roman", 10.0!)
+        Me.Label1.Font = New System.Drawing.Font("Times New Roman", 12.0!)
         Me.Label1.ForeColor = System.Drawing.Color.Red
-        Me.Label1.Location = New System.Drawing.Point(470, 36)
+        Me.Label1.Location = New System.Drawing.Point(470, 32)
         Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(52, 16)
+        Me.Label1.Size = New System.Drawing.Size(59, 19)
         Me.Label1.TabIndex = 93
         Me.Label1.Text = "Label19"
         '

@@ -259,7 +259,7 @@ SendMail_:
                     Exit Sub
                 End If
             End If
-        ElseIf Format(WW, "HH:mm") = #1/1/0001 11:01 PM# Then
+        ElseIf Format(WW, "mm") = CombMin.Text Then
             If GetTbl("select * from AutoMail where AutoMail.MailRule = 'D'", MailTbl) = Nothing Then
                 If MailTbl.Rows.Count > 0 Then
                     Invoke(Sub() TxtErr.Text = Now & " :  Starting Auto Mail ..." & vbCrLf & TxtErr.Text)
@@ -495,6 +495,8 @@ Done_:
     End Sub
     Private Function SndMail() As String
         ExrtErr = Nothing
+
+
         Try
             Dim exchange As ExchangeService
             exchange = New ExchangeService(ExchangeVersion.Exchange2007_SP1)
@@ -529,20 +531,37 @@ Done_:
         For JJ = 0 To Split(Mail_.Slct_, "$").Count - 1
             ExpoTbl = New DataTable
             If GetTbl(Split(Mail_.Slct_, "$")(JJ), ExpoTbl) = Nothing Then
-                If ExpoTbl.Rows.Count > 0 Then
-                    ExpoTbl.Rows.Add()
+                'If ExpoTbl.Rows.Count > 0 Then
+                ExpoTbl.Rows.Add()
                     'For UU = 0 To ExpoTbl.Columns.Count - 1
                     '    If ExpoTbl.Columns(UU).DataType.Name.ToString = "Int32" Then
                     '        ExpoTbl.Rows(ExpoTbl.Rows.Count - 1).Item(UU) = Convert.ToInt32(ExpoTbl.Compute("SUM(" & ExpoTbl.Columns(UU).ColumnName & ")", String.Empty))
                     '    End If
                     'Next
                     Workbook.Worksheets.Add(ExpoTbl, FileNm & JJ + 1)
+                    'End If
                 End If
-            End If
         Next
         Try
             Workbook.SaveAs(FileExported)
+            'Workbook.Dispose()
+            'Dim XLApp As New Microsoft.Office.Interop.Excel.Application
+            'Dim XLWrkBk As Microsoft.Office.Interop.Excel.Workbook = XLApp.Workbooks.Open(FileExported)
+            'Dim XLWrkSht As Microsoft.Office.Interop.Excel.Worksheet
+            'Try
+            '    XLWrkSht = CType(XLWrkBk.Sheets(0), Microsoft.Office.Interop.Excel.Worksheet)
+            '    XLWrkSht.Activate()
+            '    XLWrkSht.Range("A:Z").WrapText = False
             ExpoTbl.Dispose()
+            '    XLWrkBk.Save()
+            '    XLWrkBk.Close()
+            '    XLApp.Quit()
+            'Catch ex As Exception
+            '    ExrtErr = ex.Message
+            'End Try
+            'XLApp = Nothing
+            'XLWrkBk = Nothing
+            'XLWrkSht = Nothing
         Catch ex As Exception
             ExrtErr = ex.Message
         End Try
