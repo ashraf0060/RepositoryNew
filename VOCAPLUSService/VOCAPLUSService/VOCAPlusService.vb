@@ -259,7 +259,7 @@ SendMail_:
                     Exit Sub
                 End If
             End If
-        ElseIf Format(WW, "mm") = CombMin.Text Then
+        ElseIf Format(WW, "HH:mm:ss") = #1/1/0001 11:00:00 PM# And Format(WW, "mm") = CombMin.Text Then
             If GetTbl("select * from AutoMail where AutoMail.MailRule = 'D'", MailTbl) = Nothing Then
                 If MailTbl.Rows.Count > 0 Then
                     Invoke(Sub() TxtErr.Text = Now & " :  Starting Auto Mail ..." & vbCrLf & TxtErr.Text)
@@ -499,7 +499,7 @@ Done_:
 
         Try
             Dim exchange As ExchangeService
-            exchange = New ExchangeService(ExchangeVersion.Exchange2007_SP1)
+            exchange = New ExchangeService(ExchangeVersion.Exchange2010)
             exchange.Credentials = New WebCredentials(My.Settings.MlUsr, My.Settings.MlPss)
             exchange.Url() = New Uri("https://mail.egyptpost.org/ews/exchange.asmx")
             Dim message As New EmailMessage(exchange)
@@ -509,11 +509,13 @@ Done_:
             For LL = 0 To Split(Mail_.CC_, ";").Count - 1
                 message.CcRecipients.Add(Trim(Split(Mail_.CC_, ";")(LL)))
             Next
+
             message.Subject = Mail_.Sub_
             message.Body = Mail_.Body_
             message.Attachments.AddFileAttachment(FileExported)
             message.Attachments(0).ContentId = Mail_.Sub_ & "_" & Format(Now, "yyyy-MM-dd")
             message.Importance = 1
+
             message.SendAndSaveCopy()
         Catch exs As Exception
             ExrtErr = exs.Message
@@ -526,42 +528,41 @@ Done_:
 
         Dim Workbook As New XLWorkbook
 
-        Dim hhhy As Integer = Split(Mail_.Slct_, "$").Count
-
         For JJ = 0 To Split(Mail_.Slct_, "$").Count - 1
             ExpoTbl = New DataTable
             If GetTbl(Split(Mail_.Slct_, "$")(JJ), ExpoTbl) = Nothing Then
                 'If ExpoTbl.Rows.Count > 0 Then
                 ExpoTbl.Rows.Add()
-                    'For UU = 0 To ExpoTbl.Columns.Count - 1
-                    '    If ExpoTbl.Columns(UU).DataType.Name.ToString = "Int32" Then
-                    '        ExpoTbl.Rows(ExpoTbl.Rows.Count - 1).Item(UU) = Convert.ToInt32(ExpoTbl.Compute("SUM(" & ExpoTbl.Columns(UU).ColumnName & ")", String.Empty))
-                    '    End If
-                    'Next
-                    Workbook.Worksheets.Add(ExpoTbl, FileNm & JJ + 1)
-                    'End If
-                End If
+                'For UU = 0 To ExpoTbl.Columns.Count - 1
+                '    If ExpoTbl.Columns(UU).DataType.Name.ToString = "Int32" Then
+                '        ExpoTbl.Rows(ExpoTbl.Rows.Count - 1).Item(UU) = Convert.ToInt32(ExpoTbl.Compute("SUM(" & ExpoTbl.Columns(UU).ColumnName & ")", String.Empty))
+                '    End If
+                'Next
+                Workbook.Worksheets.Add(ExpoTbl, FileNm & JJ + 1)
+                'End If
+            End If
         Next
         Try
             Workbook.SaveAs(FileExported)
-            'Workbook.Dispose()
-            'Dim XLApp As New Microsoft.Office.Interop.Excel.Application
-            'Dim XLWrkBk As Microsoft.Office.Interop.Excel.Workbook = XLApp.Workbooks.Open(FileExported)
-            'Dim XLWrkSht As Microsoft.Office.Interop.Excel.Worksheet
-            'Try
-            '    XLWrkSht = CType(XLWrkBk.Sheets(0), Microsoft.Office.Interop.Excel.Worksheet)
-            '    XLWrkSht.Activate()
-            '    XLWrkSht.Range("A:Z").WrapText = False
-            ExpoTbl.Dispose()
-            '    XLWrkBk.Save()
-            '    XLWrkBk.Close()
-            '    XLApp.Quit()
-            'Catch ex As Exception
-            '    ExrtErr = ex.Message
-            'End Try
-            'XLApp = Nothing
-            'XLWrkBk = Nothing
-            'XLWrkSht = Nothing
+            Workbook.Dispose()
+            Dim XLApp As New Microsoft.Office.Interop.Excel.Application
+            Dim XLWrkBk As Microsoft.Office.Interop.Excel.Workbook = XLApp.Workbooks.Open(FileExported)
+            Dim XLWrkSht As New Microsoft.Office.Interop.Excel.Worksheet
+            Try
+                Dim MMM As Integer = XLWrkBk.Sheets.Count
+                XLWrkSht = CType(XLWrkBk.Sheets(1), Microsoft.Office.Interop.Excel.Worksheet)
+                XLWrkSht.Activate()
+                XLWrkSht.Range("A:Z").WrapText = False
+                ExpoTbl.Dispose()
+                XLWrkBk.Save()
+                XLWrkBk.Close()
+                XLApp.Quit()
+            Catch ex As Exception
+                ExrtErr = ex.Message
+            End Try
+            XLApp = Nothing
+            XLWrkBk = Nothing
+            XLWrkSht = Nothing
         Catch ex As Exception
             ExrtErr = ex.Message
         End Try

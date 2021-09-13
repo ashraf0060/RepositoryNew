@@ -1541,7 +1541,6 @@ Popul_:
     Private Sub NewBtn_Click(sender As Object, e As EventArgs) Handles NewBtn.Click
         NewTickSub()
     End Sub
-
     'Second Tab                     XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
     Private Sub SerchTxt_TextChanged(sender As Object, e As EventArgs) Handles SerchTxt.TextChanged
         Filtr()
@@ -1725,7 +1724,6 @@ Popul_:
             End If
         Next
     End Sub
-
     Private Sub BtnSubmt_Click(sender As Object, e As EventArgs) Handles BtnSubmt.Click
         InsUpdtSub(StruGrdTk.Sql, CmbEvent, TxtUpdt, LblMsg)
         GetUpdtEvent(StruGrdTk.Sql)
@@ -1884,40 +1882,34 @@ Popul_:
     'Private Sub TxtUpdt2_KeyPress(sender As Object, e As KeyPressEventArgs) Handles TxtUpdt2.KeyPress
     '    IntUtly.ValdtIntLetter(e)
     'End Sub
-
     Private Sub GridUpdt_ColumnSortModeChanged(sender As Object, e As DataGridViewColumnEventArgs) Handles GridUpdt.ColumnSortModeChanged
         Dim FolwID As String = ""
         If DBNull.Value.Equals(StruGrdTk.UserId) Then FolwID = "" Else FolwID = StruGrdTk.UserId
         UpGrgFrmt(GridUpdt, FolwID)
     End Sub
-
     Private Sub IDTxtBx_KeyDown(sender As Object, e As KeyEventArgs) Handles IDTxtBx.KeyDown
         If e.Modifiers = Keys.Control Mod e.KeyCode = Keys.V Then
             IDTxtBx.Text = Clipboard.GetText()
         End If
         IDTxtBx.Text = Mid(IDTxtBx.Text, 1, IDTxtBx.MaxLength)
     End Sub
-
     Private Sub AccMskdBx_KeyDown(sender As Object, e As KeyEventArgs) Handles AccMskdBx.KeyDown
         If e.Modifiers = Keys.Control Mod e.KeyCode = Keys.V Then
             AccMskdBx.Text = Clipboard.GetText()
         End If
         AccMskdBx.Text = Mid(AccMskdBx.Text, 1, AccMskdBx.MaxLength)
     End Sub
-
     Private Sub GBTxtBx_KeyDown(sender As Object, e As KeyEventArgs) Handles GBTxtBx.KeyDown
         If e.Modifiers = Keys.Control Mod e.KeyCode = Keys.V Then
             GBTxtBx.Text = Clipboard.GetText()
         End If
         GBTxtBx.Text = Mid(GBTxtBx.Text, 1, GBTxtBx.MaxLength)
     End Sub
-
     Private Sub TxtUpdt_KeyDown(sender As Object, e As KeyEventArgs) Handles TxtUpdt.KeyDown
         If e.Modifiers = Keys.Control Mod e.KeyCode = Keys.V Then
             TxtUpdt.Text = Clipboard.GetText()
         End If
     End Sub
-
     Private Sub Phon1TxtBx_KeyDown(sender As Object, e As KeyEventArgs)
         If e.Modifiers = Keys.Control Mod e.KeyCode = Keys.V Then
             Phon1TxtBx.Text = Clipboard.GetText()
@@ -1927,7 +1919,6 @@ Popul_:
     Private Sub GBTxtBx_Enter(sender As Object, e As EventArgs) Handles GBTxtBx.Enter
         InputLanguage.CurrentInputLanguage = EnglishInput
     End Sub
-
     Private Sub TmrActv_Tick(sender As Object, e As EventArgs) Handles TmrActv.Tick
         Dim Cnter As Integer = 0
         For Cnt_1 = 1 To 11
@@ -1940,7 +1931,6 @@ Popul_:
         End If
 
     End Sub
-
     Private Sub RadNID_Click(sender As Object, e As EventArgs) Handles RadNID.Click, RadPss.Click
         IDTxtBx.Text = ""
         If RadNID.Checked = True Then
@@ -1957,7 +1947,6 @@ Popul_:
             Label11.Text = "رقم جواز السفر : "
         End If
     End Sub
-
     Private Sub BtnDublicate_Click(sender As Object, e As EventArgs) Handles BtnDublicate.Click
         DubStr = vbCrLf & vbCrLf & "إضافة تلقائية من النظام: " & vbCrLf & "تم تسجيل هذه الشكوى للعميل عن طريق استخدم زر التكرار"
         ComRefLbl.Text = ""
@@ -2000,12 +1989,10 @@ Popul_:
         Timer1.Start()
         Invoke(Sub() BtnDublicate.Visible = False)
     End Sub
-
     Private Sub CombProdRef_SelectedIndexChanged(sender As Object, e As EventArgs) Handles CombProdRef.SelectedIndexChanged
         CombProdRef.Width = 25 + CombProdRef.Text.Length * 8
         CombProdRef.Location = New Point(210 - (CombProdRef.Width / 2), 424)
     End Sub
-
     Private Sub ToolTip1_Draw(sender As Object, e As DrawToolTipEventArgs) Handles ToolTip1.Draw
         e.DrawBackground()
         e.DrawBorder()
@@ -2050,7 +2037,6 @@ Popul_:
             End If
         End If
     End Sub
-
     Private Sub NewTicket_FormClosing(sender As Object, e As FormClosingEventArgs) Handles MyBase.FormClosing
         Timer1.Stop()
         TimrPhons.Stop()

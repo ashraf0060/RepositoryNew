@@ -341,7 +341,7 @@ Partial Class VOCAPlusService
         'TimerEsc
         '
         Me.TimerEsc.Enabled = True
-        Me.TimerEsc.Interval = 60000
+        Me.TimerEsc.Interval = 5000
         '
         'Label1
         '

@@ -196,7 +196,7 @@ GoodVer:  '       *****      End Check Ver.
 
         'Admin Login For Every user Related to Mac address
 
-        If MacStr = "6479F03979BB" Or MacStr = "020000000100" Then
+        If MacStr = "6479F03979BB" Or MacStr = "020000000100" Or MacStr = "7C8AE174167C" Then
             TxtUsrPass.Text = Fn.PassDecoding(Usr.PUsrPWrd, Usr.PUsrSltKy)
         End If
 
@@ -424,7 +424,7 @@ sec_UsrErr_:
     Private Sub WChckConn_ProgressChanged(sender As Object, e As System.ComponentModel.ProgressChangedEventArgs) Handles WChckConn.ProgressChanged
         If Me.IsHandleCreated = True Then
             Invoke(Sub()
-                       If MacStr = "6479F03979BB" Or MacStr = "020000000100" Then
+                       If MacStr = "6479F03979BB" Or MacStr = "020000000100" Or MacStr = "7C8AE174167C" Then
                            Invoke(Sub() Cmbo.Visible = True)
                        End If
                        Dim state As APblicClss.Defntion = CType(e.UserState, APblicClss.Defntion)
